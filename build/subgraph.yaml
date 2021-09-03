@@ -1,0 +1,35 @@
+specVersion: 0.0.2
+description: Default Subgraph
+repository: https://github.com/
+schema:
+  file: schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: Default
+    network: mainnet
+    source:
+      address: "0xcEFb39aE4e98947a092481c518b9185b3820Ff17"
+      abi: Members
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - Member
+        - Stake
+        - Endorsement
+      abis:
+        - name: Members
+          file: Default/abis/Members.json
+      eventHandlers:
+        - event: MemberRegistered(address,bytes32,uint16)
+          handler: handleMemberRegistered
+        - event: TokensStaked(address,uint256,uint16,uint16)
+          handler: handleTokensStaked
+        - event: TokensUnstaked(address,uint256,uint16,uint16)
+          handler: handleTokensUnstaked
+        - event: EndorsementGiven(address,address,uint256,uint16)
+          handler: handleEndorsementGiven
+        - event: EndorsementWithdrawn(address,address,uint256,uint16)
+          handler: handleEndorsementWithdrawn
+      file: Default/Default.wasm

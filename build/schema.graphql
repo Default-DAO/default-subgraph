@@ -1,0 +1,39 @@
+type Member @entity {
+  id: ID!  # address
+  alias: String!
+  epoch: Int!
+  stakedAmt: BigDecimal!
+}
+
+type Stake @entity {
+  id: ID!  # unique event id
+  type: StakeType!
+  epoch: Int!
+  amount: BigDecimal!
+  lockDuration: Int!
+  
+  member: Member
+}
+
+type Endorsement @entity {
+  id: ID!  "toMember-fromMember-epoch"
+  epoch: Int!
+  amount: BigDecimal!
+  fromMember: MemberEndorsementInfo!
+  toMember: MemberEndorsementInfo!
+}
+
+type MemberEndorsementInfo @entity {
+  id: ID!  # member-epoch
+  epoch: Int!
+  member: Member!
+  endorsementGivenAmt: BigDecimal!
+  endorsementReceivedAmt: BigDecimal!
+  endorsementsGiven: [Endorsement!]! @derivedFrom(field: "fromMember")
+  endorsementsReceived: [Endorsement!]! @derivedFrom(field: "toMember")
+}
+
+enum StakeType {
+  STAKE
+  UNSTAKE
+}
