@@ -12,7 +12,7 @@ type Stake @entity {
   amount: BigDecimal!
   lockDuration: Int!
   
-  member: Member
+  member: Member!
 }
 
 type Endorsement @entity {

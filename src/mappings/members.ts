@@ -42,14 +42,15 @@ export function handleStakeEvent<T>(event: T, type: string): void {
   let id = generateEventId(event);
   let stake = new Stake(id);
   let amount = toDecimal(event.params.amount);
+  let member = Member.load(event.params.member.toHexString());
   stake.type = type;
   stake.epoch = event.params.currentEpoch;
   stake.amount = amount;
   stake.lockDuration = event.params.lockDuration;
+  stake.member = member;
 
   stake.save();
 
-  let member = Member.load(event.params.member.toHexString());
 
   // we should be able to do something like this:
   // member.stakedAmt[operator](amount) 
