@@ -93,7 +93,7 @@ export function handleEndorsementEvent<T>(
 
   } else {
     endorsement.amount = endorsement.amount.minus(amount);
-    fromMemberInfo.endorsementGivenAmt = fromMemberInfo.endorsementGivenAmt.minus(amount);
+    toMemberInfo.endorsementReceivedAmt = toMemberInfo.endorsementReceivedAmt.minus(amount);
     fromMemberInfo.endorsementGivenAmt = fromMemberInfo.endorsementGivenAmt.minus(amount);
   }
 
