@@ -12,13 +12,38 @@
         "type": "string"
       },
       {
-        "internalType": "contract DaoTracker",
-        "name": "daoTracker_",
+        "internalType": "contract DefaultOSFactory",
+        "name": "factory_",
         "type": "address"
       }
     ],
     "stateMutability": "nonpayable",
     "type": "constructor"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "bytes3",
+        "name": "moduleKeycode",
+        "type": "bytes3"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "OSAddress",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "moduleAddress",
+        "type": "address"
+      }
+    ],
+    "name": "ModuleInstalled",
+    "type": "event"
   },
   {
     "anonymous": false,

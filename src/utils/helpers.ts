@@ -12,7 +12,7 @@ export function toDecimal(
   decimals: number = DEFAULT_DECIMALS,
 ): BigDecimal {
   let precision = BigInt.fromI32(10)
-    .pow(<u8>decimals)
+    .pow(<number>decimals)
     .toBigDecimal();
 
   return value.divDecimal(precision);
@@ -37,7 +37,7 @@ export function getOrCreateMember(event: MemberRegistered): Member {
 export function getOrCreateEndorsement(
   toAddress: string,
   fromAddress: string,
-  epoch: i32,
+  epoch: number,
 ): Endorsement {
   let id = `${toAddress}-${fromAddress}-${epoch}`;
   let endorsement = Endorsement.load(id);
@@ -55,7 +55,7 @@ export function getOrCreateEndorsement(
 
 export function getOrCreateEndorsementInfo(
   address: string, 
-  epoch: i32,
+  epoch: number,
 ): MemberEndorsementInfo {
   let id = `${address}-${epoch}`;
   let endorseInfo = MemberEndorsementInfo.load(id);

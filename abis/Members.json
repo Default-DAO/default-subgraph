@@ -34,7 +34,7 @@
       {
         "indexed": false,
         "internalType": "uint16",
-        "name": "currentEpoch",
+        "name": "epoch",
         "type": "uint16"
       }
     ],
@@ -65,7 +65,7 @@
       {
         "indexed": false,
         "internalType": "uint16",
-        "name": "currentEpoch",
+        "name": "epoch",
         "type": "uint16"
       }
     ],
@@ -90,7 +90,7 @@
       {
         "indexed": false,
         "internalType": "uint16",
-        "name": "currentEpoch",
+        "name": "epoch",
         "type": "uint16"
       }
     ],
@@ -140,7 +140,7 @@
       {
         "indexed": false,
         "internalType": "uint16",
-        "name": "currentEpoch",
+        "name": "epoch",
         "type": "uint16"
       }
     ],
@@ -171,7 +171,7 @@
       {
         "indexed": false,
         "internalType": "uint16",
-        "name": "currentEpoch",
+        "name": "epoch",
         "type": "uint16"
       }
     ],
