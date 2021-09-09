@@ -35,7 +35,7 @@ export class EndorsementGiven__Params {
     return this._event.parameters[2].value.toBigInt();
   }
 
-  get currentEpoch(): i32 {
+  get epoch(): i32 {
     return this._event.parameters[3].value.toI32();
   }
 }
@@ -65,7 +65,7 @@ export class EndorsementWithdrawn__Params {
     return this._event.parameters[2].value.toBigInt();
   }
 
-  get currentEpoch(): i32 {
+  get epoch(): i32 {
     return this._event.parameters[3].value.toI32();
   }
 }
@@ -91,7 +91,7 @@ export class MemberRegistered__Params {
     return this._event.parameters[1].value.toBytes();
   }
 
-  get currentEpoch(): i32 {
+  get epoch(): i32 {
     return this._event.parameters[2].value.toI32();
   }
 }
@@ -143,7 +143,7 @@ export class TokensStaked__Params {
     return this._event.parameters[2].value.toI32();
   }
 
-  get currentEpoch(): i32 {
+  get epoch(): i32 {
     return this._event.parameters[3].value.toI32();
   }
 }
@@ -173,7 +173,7 @@ export class TokensUnstaked__Params {
     return this._event.parameters[2].value.toI32();
   }
 
-  get currentEpoch(): i32 {
+  get epoch(): i32 {
     return this._event.parameters[3].value.toI32();
   }
 }

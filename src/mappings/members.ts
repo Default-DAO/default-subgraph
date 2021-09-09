@@ -6,7 +6,7 @@ import {
   TokensUnstaked,
   EndorsementGiven,
   EndorsementWithdrawn,
-} from '../../generated/Default/Members';
+} from '../../generated/templates/Members/Members';
 
 import {
   Member,
@@ -38,16 +38,16 @@ export function handleMemberRegistered(event: MemberRegistered): void {
 }
 
 // STAKE ENTITY
-export function handleStakeEvent<T>(event: T, type: string): void {
+export function handleStakeEvent(event: TokensStaked | TokensUnstaked, type: string): void {
   let id = generateEventId(event);
   let stake = new Stake(id);
   let amount = toDecimal(event.params.amount);
   let member = Member.load(event.params.member.toHexString());
   stake.type = type;
-  stake.epoch = event.params.currentEpoch;
+  stake.epoch = event.params.epoch;
   stake.amount = amount;
   stake.lockDuration = event.params.lockDuration;
-  stake.member = member;
+  stake.member = member.id;
 
   stake.save();
 
@@ -72,14 +72,14 @@ export function handleTokensUnStaked(event: TokensUnstaked): void {
 }
 
 // ENDORSEMENT ENTITY
-export function handleEndorsementEvent<T>(
-  event: T,
+export function handleEndorsementEvent(
+  event: EndorsementGiven | EndorsementWithdrawn,
   type: string,
   amount: BigDecimal,
 ): void {
   let toMember = Member.load(event.params.toMember.toHexString());
   let fromMember = Member.load(event.params.fromMember.toHexString());
-  let epoch = event.params.currentEpoch;
+  let epoch = event.params.epoch;
   let endorsement = getOrCreateEndorsement(toMember.id, fromMember.id, epoch);
 
   

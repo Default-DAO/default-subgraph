@@ -12,6 +12,95 @@ import {
   BigDecimal
 } from "@graphprotocol/graph-ts";
 
+export class DefaultOSFactory extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id !== null, "Cannot save DefaultOSFactory entity without an ID");
+    assert(
+      id.kind == ValueKind.STRING,
+      "Cannot save DefaultOSFactory entity with non-string ID. " +
+        'Considering using .toHex() to convert the "id" to a string.'
+    );
+    store.set("DefaultOSFactory", id.toString(), this);
+  }
+
+  static load(id: string): DefaultOSFactory | null {
+    return store.get("DefaultOSFactory", id) as DefaultOSFactory | null;
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get osCount(): i32 {
+    let value = this.get("osCount");
+    return value.toI32();
+  }
+
+  set osCount(value: i32) {
+    this.set("osCount", Value.fromI32(value));
+  }
+}
+
+export class DefaultOS extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id !== null, "Cannot save DefaultOS entity without an ID");
+    assert(
+      id.kind == ValueKind.STRING,
+      "Cannot save DefaultOS entity with non-string ID. " +
+        'Considering using .toHex() to convert the "id" to a string.'
+    );
+    store.set("DefaultOS", id.toString(), this);
+  }
+
+  static load(id: string): DefaultOS | null {
+    return store.get("DefaultOS", id) as DefaultOS | null;
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get name(): string {
+    let value = this.get("name");
+    return value.toString();
+  }
+
+  set name(value: string) {
+    this.set("name", Value.fromString(value));
+  }
+
+  get address(): string {
+    let value = this.get("address");
+    return value.toString();
+  }
+
+  set address(value: string) {
+    this.set("address", Value.fromString(value));
+  }
+}
+
 export class Member extends Entity {
   constructor(id: string) {
     super();

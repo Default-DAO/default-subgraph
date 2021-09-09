@@ -4,6 +4,7 @@ export let BIGINT_ZERO = BigInt.fromI32(0);
 export let BIGDECIMAL_ZERO = new BigDecimal(BIGINT_ZERO);
 
 // StakeType enum
+export const FACTORY_ADDRESS = ''
 export const STAKETYPE_UNSTAKE = 'UNSTAKE';
 export const STAKETYPE_STAKE = 'STAKE';
 

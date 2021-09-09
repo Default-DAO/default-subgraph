@@ -5,22 +5,100 @@ schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum/contract
-    name: Default
+    name: DefaultOSFactory
     network: mainnet
     source:
       address: '0xcEFb39aE4e98947a092481c518b9185b3820Ff17'
-      abi: Members
+      abi: DefaultOSFactory
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
       language: wasm/assemblyscript
+      file: ./src/mappings/DefaultOSFactory.ts
       entities:
         - Member
         - Stake
         - Endorsement
       abis:
+        - name: DefaultOSFactory
+          file: ./abis/DefaultOSFactory.json      
+      eventHandlers:
+        - event: DaoCreated(address,string)
+          handler: handleDaoCreated
+templates:
+  - name: DefaultOS
+    kind: ethereum/contract
+    network: mainnet
+    source:
+      abi: DefaultOS
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/mappings/DefaultOS.ts
+      entities:
+        - DefaultOS
+      abis:
+        - name: DefaultOS
+          file: ./abis/DefaultOS.json
+      eventHandlers:
+        - event: ModuleInstalled(bytes3,address,address)
+          handler: handleModuleInstalled
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+  - name: Token
+    kind: ethereum/contract
+    network: mainnet
+    source:
+      abi: Token
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/mappings/Token.ts
+      entities:
+        - Token
+      abis:
+        - name: Token
+          file: ./abis/Token.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+        - event: Approval(indexed address,indexed address,uint256)
+          handler: handleApproval
+  - name: Epoch
+    kind: ethereum/contract
+    network: mainnet
+    source:
+      abi: Epoch
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/mappings/Epoch.ts
+      entities:
+        - Epoch
+      abis:
+        - name: Epoch
+          file: ./abis/Epoch.json
+      eventHandlers:
+        - event: EpochIncremented(uint16,uint256)
+          handler: handleEpochIncremented
+  - name: Members
+    kind: ethereum/contract
+    network: mainnet
+    source:
+      abi: Members
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/mappings/Members.ts
+      entities:
+        - Members
+      abis:
         - name: Members
-          file: ./abis/Members.json      
+          file: ./abis/Members.json
       eventHandlers:
         - event: MemberRegistered(address,bytes32,uint16)
           handler: handleMemberRegistered
@@ -32,4 +110,73 @@ dataSources:
           handler: handleEndorsementGiven
         - event: EndorsementWithdrawn(address,address,uint256,uint16)
           handler: handleEndorsementWithdrawn
-      file: ./src/mappings/members.ts
+  - name: Treasury
+    kind: ethereum/contract
+    network: mainnet
+    source:
+      abi: Treasury
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/mappings/Treasury.ts
+      entities:
+        - Treasury
+      abis:
+        - name: Treasury
+          file: ./abis/Treasury.json
+      eventHandlers:
+        - event: VaultOpened(address,uint16)
+          handler: handleVaultOpened
+        - event: VaultFeeChanged(address,uint8,uint16)
+          handler: handleVaultFeeChanged
+        - event: Deposited(address,address,uint256,uint16)
+          handler: handleDeposited
+        - event: Withdrawn(address,address,uint256,uint16)
+          handler: handleWithdrawn    
+  - name: PeerRewards
+    kind: ethereum/contract
+    network: mainnet
+    source:
+      abi: PeerRewards
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/mappings/PeerRewards.ts
+      entities:
+        - PeerRewards
+      abis:
+        - name: PeerRewards
+          file: ./abis/PeerRewards.json
+      eventHandlers:
+        - event: MemberRegistered(address,uint16,uint256)
+          handler: handleMemberRegistered
+        - event: AllocationSet(address,address,uint8)
+          handler: handleAllocationSet
+        - event: AllocationGiven(address,address,uint256,uint16)
+          handler: handleAllocationGiven
+        - event: RewardsClaimed(address,uint256,uint16)
+          handler: handleRewardsClaimed
+  - name: Mining
+    kind: ethereum/contract
+    network: mainnet
+    source:
+      abi: Mining
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/mappings/Mining.ts
+      entities:
+        - Mining
+      abis:
+        - name: Mining
+          file: ./abis/Mining.json
+      eventHandlers:
+        - event: RewardsIssued(uint16,uint256)
+          handler: handleRewardsInssued
+        - event: RewardsClaimed(uint16,address,uint256)
+          handler: handleRewardsClaimed
+        - event: Registered(uint16,address)
+          handler: handleRegistered
