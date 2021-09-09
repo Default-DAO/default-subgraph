@@ -12,7 +12,7 @@ type DefaultOSFactory @entity {
 ##################################
 
 type DefaultOS @entity {
-  id: String! #address
+  id: ID! #address
   address: String!  
 }
 
@@ -21,9 +21,9 @@ type DefaultOS @entity {
 ##################################
 
 type Epoch @entity {
-  id: String! #epoch
+  id: ID! #epoch
   os: DefaultOS!
-  epoch: Number!
+  epoch: Int!
   incrementedBy: Member!
 }
 

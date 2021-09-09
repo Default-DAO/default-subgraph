@@ -1,3 +1,6 @@
+# Removed generated (yarn codegen)
+generated
+
 # Logs
 logs
 *.log
