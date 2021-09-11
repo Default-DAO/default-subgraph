@@ -10,22 +10,22 @@ import { Treasury as TreasuryTemplate } from '../../generated/templates';
 export function handleModuleInstalled(event: ModuleInstalled): void {
   switch(event.params.moduleKeycode) {
     case(ByteArray.fromI32("EPC")):
-      EpochTemplate.create(event.params.moduleAddress)
+      EpochTemplate.create(event.params.module)
       break
     case(ByteArray.fromI32("MBR")):
-      MembersTemplate.create(event.params.moduleAddress)
+      MembersTemplate.create(event.params.module)
       break
     case(ByteArray.fromI32("MNG")):
-      MiningTemplate.create(event.params.moduleAddress)
+      MiningTemplate.create(event.params.module)
       break
     case(ByteArray.fromI32("PAY")):
-      PeerRewardsTemplate.create(event.params.moduleAddress)
+      PeerRewardsTemplate.create(event.params.module)
       break
     case(ByteArray.fromI32("TKN")):
-      TokenTemplate.create(event.params.moduleAddress)
+      TokenTemplate.create(event.params.module)
       break
     case(ByteArray.fromI32("TSY")):
-      TreasuryTemplate.create(event.params.moduleAddress)
+      TreasuryTemplate.create(event.params.module)
       break
   }  
 }

@@ -25,21 +25,21 @@
     "inputs": [
       {
         "indexed": false,
+        "internalType": "address",
+        "name": "os",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "module",
+        "type": "address"
+      },
+      {
+        "indexed": false,
         "internalType": "bytes3",
         "name": "moduleKeycode",
         "type": "bytes3"
-      },
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "OSAddress",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "moduleAddress",
-        "type": "address"
       }
     ],
     "name": "ModuleInstalled",

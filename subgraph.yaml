@@ -23,8 +23,8 @@ dataSources:
         - name: DefaultOSFactory
           file: ./abis/DefaultOSFactory.json      
       eventHandlers:
-        - event: DaoCreated(address,string)
-          handler: handleDaoCreated
+        - event: OSCreated(address,string,string)
+          handler: handleOSCreated
 templates:
   - name: DefaultOS
     kind: ethereum/contract
@@ -42,7 +42,7 @@ templates:
         - name: DefaultOS
           file: ./abis/DefaultOS.json
       eventHandlers:
-        - event: ModuleInstalled(bytes3,address,address)
+        - event: ModuleInstalled(address,address,bytes3)
           handler: handleModuleInstalled
         - event: OwnershipTransferred(indexed address,indexed address)
           handler: handleOwnershipTransferred
@@ -82,7 +82,7 @@ templates:
         - name: Epoch
           file: ./abis/Epoch.json
       eventHandlers:
-        - event: EpochIncremented(uint16,uint256)
+        - event: EpochIncremented(address,address,uint16,uint256)
           handler: handleEpochIncremented
   - name: Members
     kind: ethereum/contract
@@ -100,15 +100,15 @@ templates:
         - name: Members
           file: ./abis/Members.json
       eventHandlers:
-        - event: MemberRegistered(address,bytes32,uint16)
+        - event: MemberRegistered(address,address,bytes32,uint16)
           handler: handleMemberRegistered
-        - event: TokensStaked(address,uint256,uint16,uint16)
+        - event: TokensStaked(address,address,uint256,uint16,uint16)
           handler: handleTokensStaked
-        - event: TokensUnstaked(address,uint256,uint16,uint16)
+        - event: TokensUnstaked(address,address,uint256,uint16,uint16)
           handler: handleTokensUnstaked
-        - event: EndorsementGiven(address,address,uint256,uint16)
+        - event: EndorsementGiven(address,address,address,uint256,uint16)
           handler: handleEndorsementGiven
-        - event: EndorsementWithdrawn(address,address,uint256,uint16)
+        - event: EndorsementWithdrawn(address,address,address,uint256,uint16)
           handler: handleEndorsementWithdrawn
   - name: Treasury
     kind: ethereum/contract
@@ -126,13 +126,13 @@ templates:
         - name: Treasury
           file: ./abis/Treasury.json
       eventHandlers:
-        - event: VaultOpened(address,uint16)
+        - event: VaultOpened(address,address,uint16)
           handler: handleVaultOpened
-        - event: VaultFeeChanged(address,uint8,uint16)
+        - event: VaultFeeChanged(address,address,uint8,uint16)
           handler: handleVaultFeeChanged
-        - event: Deposited(address,address,uint256,uint16)
+        - event: Deposited(address,address,address,uint256,uint16)
           handler: handleDeposited
-        - event: Withdrawn(address,address,uint256,uint16)
+        - event: Withdrawn(address,address,address,uint256,uint16)
           handler: handleWithdrawn    
   - name: PeerRewards
     kind: ethereum/contract
@@ -150,13 +150,13 @@ templates:
         - name: PeerRewards
           file: ./abis/PeerRewards.json
       eventHandlers:
-        - event: MemberRegistered(address,uint16,uint256)
+        - event: MemberRegistered(address,address,uint16,uint256)
           handler: handleMemberRegistered
-        - event: AllocationSet(address,address,uint8)
+        - event: AllocationSet(address,address,address,uint8)
           handler: handleAllocationSet
-        - event: AllocationGiven(address,address,uint256,uint16)
+        - event: AllocationGiven(address,address,address,uint256,uint16)
           handler: handleAllocationGiven
-        - event: RewardsClaimed(address,uint256,uint16)
+        - event: RewardsClaimed(address,address,uint256,uint16)
           handler: handleRewardsClaimed
   - name: Mining
     kind: ethereum/contract
@@ -174,9 +174,9 @@ templates:
         - name: Mining
           file: ./abis/Mining.json
       eventHandlers:
-        - event: RewardsIssued(uint16,uint256)
+        - event: RewardsIssued(address,address,uint16,uint256)
           handler: handleRewardsInssued
-        - event: RewardsClaimed(uint16,address,uint256)
+        - event: RewardsClaimed(address,uint16,address,uint256)
           handler: handleRewardsClaimed
-        - event: Registered(uint16,address)
+        - event: Registered(address,uint16,address)
           handler: handleRegistered

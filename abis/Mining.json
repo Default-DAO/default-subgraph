@@ -34,6 +34,12 @@
     "inputs": [
       {
         "indexed": false,
+        "internalType": "address",
+        "name": "os",
+        "type": "address"
+      },
+      {
+        "indexed": false,
         "internalType": "uint16",
         "name": "currentEpoch",
         "type": "uint16"
@@ -51,6 +57,12 @@
   {
     "anonymous": false,
     "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "os",
+        "type": "address"
+      },
       {
         "indexed": false,
         "internalType": "uint16",
@@ -76,6 +88,18 @@
   {
     "anonymous": false,
     "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "os",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "issuer",
+        "type": "address"
+      },
       {
         "indexed": false,
         "internalType": "uint16",

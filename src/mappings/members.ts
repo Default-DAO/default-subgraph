@@ -81,8 +81,6 @@ export function handleEndorsementEvent(
   let fromMember = Member.load(event.params.fromMember.toHexString());
   let epoch = event.params.epoch;
   let endorsement = getOrCreateEndorsement(toMember.id, fromMember.id, epoch);
-
-  
   
   let toMemberInfo = MemberEndorsementInfo.load(endorsement.toMember);
   let fromMemberInfo = MemberEndorsementInfo.load(endorsement.fromMember);
