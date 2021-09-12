@@ -11,7 +11,7 @@ import {
 import {
   Member,
   Stake,
-  MemberEndorsementInfo,
+  EndorsementMemberInfo,
 } from '../../generated/schema';
 
 import {
@@ -82,8 +82,8 @@ export function handleEndorsementEvent(
   let epoch = event.params.epoch;
   let endorsement = getOrCreateEndorsement(toMember.id, fromMember.id, epoch);
   
-  let toMemberInfo = MemberEndorsementInfo.load(endorsement.toMember);
-  let fromMemberInfo = MemberEndorsementInfo.load(endorsement.fromMember);
+  let toMemberInfo = EndorsementMemberInfo.load(endorsement.toMember);
+  let fromMemberInfo = EndorsementMemberInfo.load(endorsement.fromMember);
   if (type === ENDORSEMENTTYPE_GIVEN) {
     endorsement.amount = endorsement.amount.plus(amount);
     toMemberInfo.endorsementReceivedAmt = toMemberInfo.endorsementReceivedAmt.plus(amount);

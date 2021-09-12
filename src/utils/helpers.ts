@@ -1,7 +1,7 @@
 import { ethereum, BigDecimal, BigInt } from "@graphprotocol/graph-ts";
 
-import { MemberRegistered } from "../../generated/Default/Members";
-import { MemberEndorsementInfo, Endorsement, Member } from '../../generated/schema';
+import { MemberRegistered } from "../../generated/templates/Members/Members";
+import { EndorsementMemberInfo, Endorsement, Member } from '../../generated/schema';
 
 import { BIGDECIMAL_ZERO } from './constants';
 
@@ -56,16 +56,16 @@ export function getOrCreateEndorsement(
 export function getOrCreateEndorsementInfo(
   address: string, 
   epoch: number,
-): MemberEndorsementInfo {
+): EndorsementMemberInfo {
   let id = `${address}-${epoch}`;
-  let endorseInfo = MemberEndorsementInfo.load(id);
+  let endorseInfo = EndorsementMemberInfo.load(id);
   if (endorseInfo === null) {
-    endorseInfo = new MemberEndorsementInfo(id);
+    endorseInfo = new EndorsementMemberInfo(id);
     endorseInfo.epoch = epoch;
     endorseInfo.member = address;
     endorseInfo.endorsementReceivedAmt = BIGDECIMAL_ZERO;
     endorseInfo.endorsementGivenAmt = BIGDECIMAL_ZERO;
   }
-  return endorseInfo as MemberEndorsementInfo;
+  return endorseInfo as EndorsementMemberInfo;
 }
 

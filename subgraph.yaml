@@ -82,7 +82,7 @@ templates:
         - name: Epoch
           file: ./abis/Epoch.json
       eventHandlers:
-        - event: EpochIncremented(address,address,uint16,uint256)
+        - event: EpochIncremented(address,address,uint16,uint256,uint256)
           handler: handleEpochIncremented
   - name: Members
     kind: ethereum/contract
@@ -126,7 +126,7 @@ templates:
         - name: Treasury
           file: ./abis/Treasury.json
       eventHandlers:
-        - event: VaultOpened(address,address,uint16)
+        - event: VaultOpened(address,address,address,string,string,uint8,uint8,uint16)
           handler: handleVaultOpened
         - event: VaultFeeChanged(address,address,uint8,uint16)
           handler: handleVaultFeeChanged
@@ -174,9 +174,9 @@ templates:
         - name: Mining
           file: ./abis/Mining.json
       eventHandlers:
-        - event: RewardsIssued(address,address,uint16,uint256)
-          handler: handleRewardsInssued
+        - event: RewardsIssued(address,address,uint16,uint256,uint256)
+          handler: handleRewardsIssued
         - event: RewardsClaimed(address,uint16,address,uint256)
           handler: handleRewardsClaimed
-        - event: Registered(address,uint16,address)
-          handler: handleRegistered
+        - event: MemberRegistered(address,uint16,address)
+          handler: handleMemberRegistered

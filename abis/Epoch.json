@@ -36,6 +36,12 @@
         "internalType": "uint256",
         "name": "epochTime",
         "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "tokenBonus",
+        "type": "uint256"
       }
     ],
     "name": "EpochIncremented",
