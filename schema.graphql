@@ -40,7 +40,7 @@ type Module @entity {
 ##################################
 
 type Member @entity {
-  id: ID!  # member-os
+  id: ID!  # os-member
   os: DefaultOS!
   epoch: Epoch!
   alias: String!
@@ -74,13 +74,13 @@ type Stake @entity {
 ##################################
 
 type Epoch @entity {
-  id: ID! #epoch-os
+  id: ID! #os-epoch
   os: DefaultOS!
   epoch: Int!
 }
 
 type EpochMemberInfo @entity {
-  id: ID! #epoch-os-member
+  id: ID! #os-epoch-member
   os: DefaultOS!
   member: Member!
   epoch: Int!
@@ -118,7 +118,7 @@ type Vault @entity {
 }
 
 type VaultEpochInfo @entity {
-  id: ID! #vault-epoch
+  id: ID! #epoch-vault
   os: DefaultOS!
   vault: Vault!  
   rewardsPerShare: BigDecimal!
@@ -126,7 +126,7 @@ type VaultEpochInfo @entity {
 }
 
 type VaultMemberInfo @entity {
-  id: ID! #vault-member
+  id: ID! #member-vault
   os: DefaultOS!
   epoch: Epoch!
   member: Member!
@@ -135,7 +135,7 @@ type VaultMemberInfo @entity {
 }
 
 type VaultMemberEpochInfo @entity {
-  id: ID! #vault-member-epoch
+  id: ID! #epoch-member-vault
   os: DefaultOS!
   epoch: Epoch!
   member: EpochMemberInfo!
@@ -160,7 +160,7 @@ enum TokenTransactionType {
 # What happens when def token sent to a non-member? 
 # Putting address for to/from instead of member for this reason
 type TokenTransaction @entity {
-  id: ID! #uid
+  id: ID! #token-uid
   os: DefaultOS!
   epoch: Epoch!
   token: Token!
@@ -176,7 +176,7 @@ enum VaultTransactionType {
 }
 
 type VaultTransaction @entity {
-  id: ID! #uid
+  id: ID! #vault-uid
   os: DefaultOS!
   epoch: Epoch!
   vault: Vault!
@@ -190,7 +190,7 @@ type VaultTransaction @entity {
 ##################################
 
 type MiningRegistration @entity {
-  id: ID! #member-os-epoch
+  id: ID! #os-epoch-member
   epoch: Epoch!
   member: Member!
   os: DefaultOS!
@@ -201,14 +201,14 @@ type MiningRegistration @entity {
 ##################################
 
 type RewardsRegistration @entity {
-  id: ID! #member-os-epoch
+  id: ID! #os-epoch-member
   os: DefaultOS!
   epoch: Epoch!
   member: Member!
 }
 
 type Allocation @entity {
-  id: ID! #from-to-os-epoch
+  id: ID! #os-epoch-from-to
   os: DefaultOS!
   epoch: Epoch!
   amount: Int!
@@ -218,7 +218,7 @@ type Allocation @entity {
 }
 
 type AllocationMemberInfo @entity {
-  id: ID!  # member-os-epoch
+  id: ID!  # os-epoch-member
   os: DefaultOS!
   epoch: Epoch!
   member: Member!
@@ -233,7 +233,7 @@ type AllocationMemberInfo @entity {
 ##################################
 
 type Endorsement @entity {
-  id: ID!  "toMember-fromMember-os-epoch"
+  id: ID!  "os-epoch-from-to"
   os: DefaultOS!
   epoch: Epoch!
   amount: BigDecimal!
@@ -242,7 +242,7 @@ type Endorsement @entity {
 }
 
 type EndorsementMemberInfo @entity {
-  id: ID!  # member-os-epoch
+  id: ID!  # os-epoch-member
   os: DefaultOS!
   epoch: Epoch!
   member: Member!

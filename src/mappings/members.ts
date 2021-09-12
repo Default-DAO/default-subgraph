@@ -31,7 +31,8 @@ import {
 
 // MEMBERS ENTITY
 export function handleMemberRegistered(event: MemberRegistered): void {
-  let member = getOrCreateMember(event);
+  let member = getOrCreateMember(event);  
+  member.os = event.params.os.toHexString();
   member.alias = event.params.alias_.toHexString();
 
   member.save();
@@ -43,6 +44,8 @@ export function handleStakeEvent(event: TokensStaked | TokensUnstaked, type: str
   let stake = new Stake(id);
   let amount = toDecimal(event.params.amount);
   let member = Member.load(event.params.member.toHexString());
+  let os = event.params.os.toHexString();
+  stake.os = os;
   stake.type = type;
   stake.epoch = event.params.epoch;
   stake.amount = amount;
@@ -80,10 +83,16 @@ export function handleEndorsementEvent(
   let toMember = Member.load(event.params.toMember.toHexString());
   let fromMember = Member.load(event.params.fromMember.toHexString());
   let epoch = event.params.epoch;
-  let endorsement = getOrCreateEndorsement(toMember.id, fromMember.id, epoch);
+  let os = event.params.os.toHexString();
+  let endorsement = getOrCreateEndorsement(
+    toMember.id, 
+    fromMember.id, 
+    os,
+    epoch
+  );
   
-  let toMemberInfo = EndorsementMemberInfo.load(endorsement.toMember);
-  let fromMemberInfo = EndorsementMemberInfo.load(endorsement.fromMember);
+  let toMemberInfo = EndorsementMemberInfo.load(endorsement.to);
+  let fromMemberInfo = EndorsementMemberInfo.load(endorsement.from);
   if (type === ENDORSEMENTTYPE_GIVEN) {
     endorsement.amount = endorsement.amount.plus(amount);
     toMemberInfo.endorsementReceivedAmt = toMemberInfo.endorsementReceivedAmt.plus(amount);
