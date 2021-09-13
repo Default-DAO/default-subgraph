@@ -11,13 +11,27 @@ import {
 import {
   MiningRegistration,
   Member,
-  EpochMemberInfo
+  EpochMemberInfo,
+  VaultEpochInfo
 } from '../../generated/schema'
 
 export function handleRewardsIssued(event: RewardsIssued): void {
-  const { os, issuer, currentEpoch, newRewardsPerShare, tokenBonus } = event.params
+  // TODO: add vault param to RewardsIssued event in Mining.sol contract!
+  const { os, vault, issuer, currentEpoch, newRewardsPerShare, tokenBonus } = event.params
+  const memberBonus = new BigDecimal(tokenBonus)
 
+  const vaultEpochInfo = new VaultEpochInfo(generateId(currentEpoch, vault))
+  vaultEpochInfo.rewardsPerShare = new BigDecimal(newRewardsPerShare)
 
+  const memberSchema = Member.load(issuer.toHexString())
+  memberSchema.bonus = memberSchema.bonus.plus(memberBonus)
+
+  const epochMemberSchema = EpochMemberInfo.load(generateId([os.toHexString(), currentEpoch, issuer.toHexString()]))
+  epochMemberSchema.bonus = epochMemberSchema.bonus.plus(memberBonus)
+
+  vaultEpochInfo.save()
+  memberSchema.save()
+  epochMemberSchema.save()
 }
 
 export function handleRewardsClaimed(event: RewardsClaimed): void {
