@@ -20,7 +20,7 @@ export function handleRewardsIssued(event: RewardsIssued): void {
   const { os, vault, issuer, currentEpoch, newRewardsPerShare, tokenBonus } = event.params
   const memberBonus = new BigDecimal(tokenBonus)
 
-  const vaultEpochInfo = new VaultEpochInfo(generateId(currentEpoch, vault))
+  const vaultEpochInfo = new VaultEpochInfo(generateId([currentEpoch, vault]))
   vaultEpochInfo.rewardsPerShare = new BigDecimal(newRewardsPerShare)
 
   const memberSchema = Member.load(issuer.toHexString())

@@ -4,7 +4,14 @@ import {
   Deposited,
   Withdrawn
 } from '../../generated/templates/Treasury/Treasury';
-import { Vault, VaultTransaction, Member } from '../../generated/schema'
+import { 
+  Vault, 
+  VaultTransaction, 
+  Member, 
+  VaultEpochInfo,
+  VaultMemberInfo,
+  VaultMemberEpochInfo
+} from '../../generated/schema'
 import {
   generateId,
   toDecimal
@@ -14,7 +21,7 @@ import {
   VAULTTYPE_DEPOSITED,
   VAULTTYPE_WITHDRAWN
 } from '../utils/constants'
-import { BigDecimal } from '@graphprotocol/graph-ts';
+import { BigDecimal, BigInt } from '@graphprotocol/graph-ts';
 
 export function handleVaultOpened(event: VaultOpened): void {
   const { os, vault, name, symbol, decimals, fee } = event.params
@@ -52,7 +59,6 @@ export function _handleVaultTransaction(event: Deposited | Withdrawn, type: stri
   const amountDec = toDecimal(amount)
 
   let vaultSchema = Vault.load(vault.toHexString())
-
   if (type === VAULTTYPE_DEPOSITED) {
     vaultSchema.amount = vaultSchema.amount.plus(amountDec);
   } else {
@@ -60,7 +66,6 @@ export function _handleVaultTransaction(event: Deposited | Withdrawn, type: stri
   }
 
   let vaultTransaction = new VaultTransaction(generateId([vault.toHexString(), epoch.toHexString()]))
-
   vaultTransaction.os = os.toHexString()
   vaultTransaction.epoch = epoch
   vaultTransaction.vault = vault.toHexString()
@@ -68,6 +73,66 @@ export function _handleVaultTransaction(event: Deposited | Withdrawn, type: stri
   vaultTransaction.amount = amountDec
   vaultTransaction.type = type
 
+  const vaultEpochInfoId = generateId([
+    epoch.toHexString(),
+    vault.toHexString()
+  ])
+  let vaultEpochInfo = VaultEpochInfo.load(vaultEpochInfoId)
+  if (VaultEpochInfo === null) {
+    vaultEpochInfo = new VaultEpochInfo(vaultEpochInfoId) 
+    vaultEpochInfo.os = os.toHexString()
+    vaultEpochInfo.epoch = epoch
+    vaultEpochInfo.vault = vault.toHexString()
+    vaultEpochInfo.amount = new BigDecimal(new BigInt(0))
+  }
+  if (type === VAULTTYPE_DEPOSITED) {
+    vaultEpochInfo.amount = vaultEpochInfo.amount.plus(amountDec);
+  } else {
+    vaultEpochInfo.amount = vaultEpochInfo.amount.minus(amountDec);
+  }
+
+  const vaultMemberInfoId = generateId([
+    member.toHexString(),
+    vault.toHexString()
+  ])
+  let vaultMemberInfo = VaultMemberInfo.load(vaultMemberInfoId)
+  if (VaultMemberInfo === null) {
+    vaultMemberInfo = new VaultMemberInfo(vaultMemberInfoId) 
+    vaultMemberInfo.os = os.toHexString()
+    vaultMemberInfo.epoch = epoch
+    vaultMemberInfo.member = member.toHexString()
+    vaultMemberInfo.vault = vault.toHexString()
+    vaultMemberInfo.amount = new BigDecimal(new BigInt(0))
+  }
+  if (type === VAULTTYPE_DEPOSITED) {
+    vaultMemberInfo.amount = vaultMemberInfo.amount.plus(amountDec);
+  } else {
+    vaultMemberInfo.amount = vaultMemberInfo.amount.minus(amountDec);
+  }
+
+  const vaultMemberEpochInfoId = generateId([
+    epoch.toHexString(),
+    member.toHexString(),
+    vault.toHexString()
+  ])
+  let vaultMemberEpochInfo = VaultMemberEpochInfo.load(vaultMemberEpochInfoId)
+  if (VaultMemberEpochInfo === null) {
+    vaultMemberEpochInfo = new VaultMemberEpochInfo(vaultMemberEpochInfoId) 
+    vaultMemberEpochInfo.os = os.toHexString()
+    vaultMemberEpochInfo.epoch = epoch
+    vaultMemberEpochInfo.member = member.toHexString()
+    vaultMemberEpochInfo.vault = vault.toHexString()
+    vaultMemberEpochInfo.amount = new BigDecimal(new BigInt(0))
+  }
+  if (type === VAULTTYPE_DEPOSITED) {
+    vaultMemberEpochInfo.amount = vaultMemberEpochInfo.amount.plus(amountDec);
+  } else {
+    vaultMemberEpochInfo.amount = vaultMemberEpochInfo.amount.minus(amountDec);
+  }
+
   vaultSchema.save()
+  vaultEpochInfo.save()
+  vaultMemberInfo.save()
+  vaultMemberEpochInfo.save()
   vaultTransaction.save()
 }
