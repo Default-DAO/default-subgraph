@@ -73,6 +73,12 @@
         "internalType": "uint8",
         "name": "allocPts",
         "type": "uint8"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint16",
+        "name": "currentEpoch",
+        "type": "uint16"
       }
     ],
     "name": "AllocationSet",

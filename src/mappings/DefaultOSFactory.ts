@@ -8,9 +8,9 @@ export function handleOSCreated(event: OSCreated): void {
   if (factory === null) {
     factory = new DefaultOSFactory(FACTORY_ADDRESS)    
     factory.id = FACTORY_ADDRESS
-    factory.count = 0
+    factory.osCount = 0
   }
-  factory.count += 1
+  factory.osCount += 1
   factory.save()
 
   const osAddress = event.params.os.toHexString()
