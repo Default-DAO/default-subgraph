@@ -97,6 +97,12 @@
       {
         "indexed": false,
         "internalType": "address",
+        "name": "vault",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
         "name": "issuer",
         "type": "address"
       },

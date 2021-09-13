@@ -12,6 +12,7 @@ import {
   Member,
   Stake,
   EndorsementMemberInfo,
+  Endorsement
 } from '../../generated/schema';
 
 import {
@@ -25,9 +26,57 @@ import {
 import {
   generateEventId,
   toDecimal,
-  getOrCreateEndorsement,
-  getOrCreateMember,
+  generateId  
 } from '../utils/helpers';
+
+export function getOrCreateMember(event: MemberRegistered): Member {
+  let id = event.params.member.toHexString();
+  let member = Member.load(id);
+  if ( member === null ) {
+    member = new Member(id);
+    member.alias = event.params.alias_.toHexString();
+    member.epoch = event.params.epoch;
+    member.stakedAmt = BIGDECIMAL_ZERO;
+  }
+  return member as Member;
+}
+
+function getOrCreateEndorsement(
+  toAddress: string,
+  fromAddress: string,
+  os: string,
+  epoch: number,
+): Endorsement {
+  let id = `${toAddress}-${fromAddress}-${epoch}`;
+  let endorsement = Endorsement.load(id);
+  if (endorsement === null) {
+    let toMember = getOrCreateEndorsementInfo(toAddress, epoch, os);
+    let fromMember = getOrCreateEndorsementInfo(fromAddress, epoch, os);
+    endorsement = new Endorsement(id);
+    endorsement.amount = BIGDECIMAL_ZERO;
+    endorsement.epoch = generateId([os,epoch]);
+    endorsement.to = toMember.id;
+    endorsement.from = fromMember.id;
+  }
+  return endorsement as Endorsement;
+}
+
+function getOrCreateEndorsementInfo(
+  address: string, 
+  epoch: number,
+  os: string
+): EndorsementMemberInfo {
+  let id = `${address}-${epoch}`;
+  let endorseInfo = EndorsementMemberInfo.load(id);
+  if (endorseInfo === null) {
+    endorseInfo = new EndorsementMemberInfo(id);
+    endorseInfo.epoch = generateId([os,epoch]);
+    endorseInfo.member = address;
+    endorseInfo.endorsementReceivedAmt = BIGDECIMAL_ZERO;
+    endorseInfo.endorsementGivenAmt = BIGDECIMAL_ZERO;
+  }
+  return endorseInfo as EndorsementMemberInfo;
+}
 
 // MEMBERS ENTITY
 export function handleMemberRegistered(event: MemberRegistered): void {

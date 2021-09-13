@@ -46,26 +46,6 @@ templates:
           handler: handleModuleInstalled
         - event: OwnershipTransferred(indexed address,indexed address)
           handler: handleOwnershipTransferred
-  - name: Token
-    kind: ethereum/contract
-    network: mainnet
-    source:
-      abi: Token
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.4
-      language: wasm/assemblyscript
-      file: ./src/mappings/Token.ts
-      entities:
-        - Token
-      abis:
-        - name: Token
-          file: ./abis/Token.json
-      eventHandlers:
-        - event: Transfer(indexed address,indexed address,uint256)
-          handler: handleTransfer
-        - event: Approval(indexed address,indexed address,uint256)
-          handler: handleApproval
   - name: Epoch
     kind: ethereum/contract
     network: mainnet
@@ -126,7 +106,7 @@ templates:
         - name: Treasury
           file: ./abis/Treasury.json
       eventHandlers:
-        - event: VaultOpened(address,address,address,string,string,uint8,uint8,uint16)
+        - event: VaultOpened(address,address,string,string,uint8,uint8,uint16)
           handler: handleVaultOpened
         - event: VaultFeeChanged(address,address,uint8,uint16)
           handler: handleVaultFeeChanged
@@ -152,7 +132,7 @@ templates:
       eventHandlers:
         - event: MemberRegistered(address,address,uint16,uint256)
           handler: handleMemberRegistered
-        - event: AllocationSet(address,address,address,uint8)
+        - event: AllocationSet(address,address,address,uint8,uint16)
           handler: handleAllocationSet
         - event: AllocationGiven(address,address,address,uint256,uint16)
           handler: handleAllocationGiven
@@ -174,7 +154,7 @@ templates:
         - name: Mining
           file: ./abis/Mining.json
       eventHandlers:
-        - event: RewardsIssued(address,address,uint16,uint256,uint256)
+        - event: RewardsIssued(address,address,address,uint16,uint256,uint256)
           handler: handleRewardsIssued
         - event: RewardsClaimed(address,uint16,address,uint256)
           handler: handleRewardsClaimed
