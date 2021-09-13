@@ -31,7 +31,12 @@ export function handleVaultOpened(event: VaultOpened): void {
 }
 
 export function handleVaultFeeChanged(event: VaultFeeChanged): void {
+  const { vault, newFee } = event.params
 
+  let vaultSchema = Vault.load(vault.toHexString())
+  vaultSchema.fee = new BigDecimal(newFee)
+
+  vaultSchema.save()
 }
 
 export function handleDeposited(event: Deposited): void {
@@ -44,15 +49,25 @@ export function handleWithdrawn(event: Withdrawn): void {
 
 export function _handleVaultTransaction(event: Deposited | Withdrawn, type: string) {
   const { os, vault, member, amount, epoch } = event.params
+  const amountDec = toDecimal(amount)
+
+  let vaultSchema = Vault.load(vault.toHexString())
+
+  if (type === VAULTTYPE_DEPOSITED) {
+    vaultSchema.amount = vaultSchema.amount.plus(amountDec);
+  } else {
+    vaultSchema.amount = vaultSchema.amount.minus(amountDec);
+  }
 
   let vaultTransaction = new VaultTransaction(generateId([vault.toHexString(), epoch.toHexString()]))
 
   vaultTransaction.os = os.toHexString()
-  vaultTransaction.epoch = epoch.toHexString()
+  vaultTransaction.epoch = epoch
   vaultTransaction.vault = vault.toHexString()
   vaultTransaction.member = Member.load(member.toHexString()).id;
-  vaultTransaction.amount = toDecimal(amount)
+  vaultTransaction.amount = amountDec
   vaultTransaction.type = type
 
+  vaultSchema.save()
   vaultTransaction.save()
 }
