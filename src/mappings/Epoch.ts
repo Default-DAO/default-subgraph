@@ -8,7 +8,7 @@ import { BigInt } from '@graphprotocol/graph-ts';
 export function handleEpochIncremented(event: EpochIncremented): void {  
   const {os, epoch, member} = event.params  
   
-  let epochSchema = new Epoch(generateId([os,epoch.toHexString()]))
+  let epochSchema = new Epoch(generateId([os,epoch]))
   epochSchema.os = os.toHexString()
   epochSchema.member = member.toHexString()
   epochSchema.epoch = epoch

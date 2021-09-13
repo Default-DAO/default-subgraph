@@ -18,6 +18,7 @@ import {
   VaultEpochInfo,
   TokenTransaction
 } from '../../generated/schema'
+import { v4 as uuidv4 } from 'uuid';
 
 function getOrCreateEpochMemberInfo(os: Address, epoch: BigInt, member: Address): EpochMemberInfo {
   const epochMemberInfoId = generateId([os, epoch, member])
@@ -43,7 +44,7 @@ export function handleRewardsIssued(event: RewardsIssued): void {
   const memberSchema = Member.load(issuer.toHexString())
   memberSchema.bonus = memberSchema.bonus.plus(memberBonus)
 
-  const tokenTransaction = new TokenTransaction(uuid4())
+  const tokenTransaction = new TokenTransaction(uuidv4())
   tokenTransaction.type = BONUS
   tokenTransaction.os = os.toHexString()
   tokenTransaction.epoch = currentEpoch
@@ -76,7 +77,7 @@ export function handleRewardsClaimed(event: RewardsClaimed): void {
 
   const reward = new BigDecimal(totalRewardsClaimed)
 
-  const tokenTransaction = new TokenTransaction(uuid4())
+  const tokenTransaction = new TokenTransaction(uuidv4())
   tokenTransaction.type = BONUS
   tokenTransaction.os = os.toHexString()
   tokenTransaction.epoch = epochClaimed

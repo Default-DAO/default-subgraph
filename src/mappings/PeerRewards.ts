@@ -25,9 +25,7 @@ export function handleMemberRegistered(event: MemberRegistered): void {
   let {os, member, epochRegisteredFor} = event.params
   
   let registration = new RewardsRegistration(generateId([
-    os.toHexString(),
-    epochRegisteredFor.toHexString(),
-    member.toHexString()
+    os, epochRegisteredFor, member
   ]))
   registration.os = os.toHexString()
   registration.epoch = epochRegisteredFor
@@ -39,10 +37,7 @@ export function handleAllocationSet(event: AllocationSet): void {
 
   // Allocation
   const allocId = generateId([
-    os.toHexString(),
-    currentEpoch.toHexString(),
-    fromMember.toHexString(),
-    toMember.toHexString()    
+    os, currentEpoch, fromMember, toMember    
   ])
   let allocation = Allocation.load(allocId)
   let netChange = 0
@@ -61,9 +56,7 @@ export function handleAllocationSet(event: AllocationSet): void {
 
   // Allocation FROM Aggregation
   const fromId = generateId([
-    os.toHexString(),
-    currentEpoch.toHexString(),
-    fromMember.toHexString(),
+    os, currentEpoch, fromMember
   ])
   let from = AllocationMemberInfo.load(fromId)
 
@@ -78,9 +71,7 @@ export function handleAllocationSet(event: AllocationSet): void {
 
   // Allocation TO Aggregation
   const toId = generateId([
-    os.toHexString(),
-    currentEpoch.toHexString(),
-    toMember.toHexString(),
+    os, currentEpoch, toMember,
   ])
   let to = AllocationMemberInfo.load(toId)
 
@@ -103,10 +94,7 @@ export function handleAllocationGiven(event: AllocationGiven): void {
 
   // Allocation
   const allocId = generateId([
-    os.toHexString(),
-    currentEpoch.toHexString(),
-    fromMember.toHexString(),
-    toMember.toHexString()    
+    os, currentEpoch, fromMember, toMember    
   ])
   let allocation = Allocation.load(allocId)
   allocation.committed = true
@@ -116,10 +104,7 @@ export function handleAllocationGiven(event: AllocationGiven): void {
 export function handleRewardsClaimed(event: RewardsClaimed): void {  
   const {os, epochClaimed, member, totalRewardsClaimed} = event.params
 
-  const transactionId = generateId([
-    os.toHexString(),
-    uuidv4()
-  ])
+  const transactionId = generateId([os, uuidv4()])
   let transaction = new TokenTransaction(transactionId)
   transaction.os = os.toHexString()
   transaction.epoch = epochClaimed
@@ -129,9 +114,7 @@ export function handleRewardsClaimed(event: RewardsClaimed): void {
   transaction.type = PEER_REWARD
 
   const epochMemberInfoId = generateId([
-    os.toHexString(),
-    epochClaimed.toHexString(),
-    member.toHexString()
+    os,epochClaimed,member
   ])
   let epochMemberInfo = new EpochMemberInfo(epochMemberInfoId)
   if (epochMemberInfo === null) {

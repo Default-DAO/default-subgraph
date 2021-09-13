@@ -65,7 +65,7 @@ export function _handleVaultTransaction(event: Deposited | Withdrawn, type: stri
     vaultSchema.amount = vaultSchema.amount.minus(amountDec);
   }
 
-  let vaultTransaction = new VaultTransaction(generateId([vault.toHexString(), epoch.toHexString()]))
+  let vaultTransaction = new VaultTransaction(generateId([vault, epoch]))
   vaultTransaction.os = os.toHexString()
   vaultTransaction.epoch = epoch
   vaultTransaction.vault = vault.toHexString()
@@ -73,10 +73,7 @@ export function _handleVaultTransaction(event: Deposited | Withdrawn, type: stri
   vaultTransaction.amount = amountDec
   vaultTransaction.type = type
 
-  const vaultEpochInfoId = generateId([
-    epoch.toHexString(),
-    vault.toHexString()
-  ])
+  const vaultEpochInfoId = generateId([epoch, vault])
   let vaultEpochInfo = VaultEpochInfo.load(vaultEpochInfoId)
   if (VaultEpochInfo === null) {
     vaultEpochInfo = new VaultEpochInfo(vaultEpochInfoId) 
@@ -91,10 +88,7 @@ export function _handleVaultTransaction(event: Deposited | Withdrawn, type: stri
     vaultEpochInfo.amount = vaultEpochInfo.amount.minus(amountDec);
   }
 
-  const vaultMemberInfoId = generateId([
-    member.toHexString(),
-    vault.toHexString()
-  ])
+  const vaultMemberInfoId = generateId([member,vault])
   let vaultMemberInfo = VaultMemberInfo.load(vaultMemberInfoId)
   if (VaultMemberInfo === null) {
     vaultMemberInfo = new VaultMemberInfo(vaultMemberInfoId) 
@@ -111,9 +105,7 @@ export function _handleVaultTransaction(event: Deposited | Withdrawn, type: stri
   }
 
   const vaultMemberEpochInfoId = generateId([
-    epoch.toHexString(),
-    member.toHexString(),
-    vault.toHexString()
+    epoch,member,vault
   ])
   let vaultMemberEpochInfo = VaultMemberEpochInfo.load(vaultMemberEpochInfoId)
   if (VaultMemberEpochInfo === null) {
