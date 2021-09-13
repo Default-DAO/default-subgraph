@@ -2,6 +2,7 @@ import { BigDecimal, BigInt } from '@graphprotocol/graph-ts';
 
 export let BIGINT_ZERO = BigInt.fromI32(0);
 export let BIGDECIMAL_ZERO = new BigDecimal(BIGINT_ZERO);
+export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 
 // TokenTransaction enum
 export const PEER_REWARD = 'PEER_REWARD'
@@ -20,7 +21,7 @@ export const STAKETYPE_UNSTAKE = 'UNSTAKE';
 export const STAKETYPE_STAKE = 'STAKE';
 
 // EndorsementType enum
-export let ENDORSEMENTTYPE_GIVEN = 'GIVEN';
+export const ENDORSEMENTTYPE_GIVEN = 'GIVEN';
 export const ENDORSEMENTTYPE_WITHDRAWN = 'WITHDRAWN';
 
 // VaultTransaction enum
