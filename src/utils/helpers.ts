@@ -1,7 +1,7 @@
 import { ethereum, BigDecimal, BigInt } from "@graphprotocol/graph-ts";
 
 import { MemberRegistered } from "../../generated/templates/Members/Members";
-import { EndorsementMemberInfo, Endorsement, Member, Epoch } from '../../generated/schema';
+import { EndorsementMemberInfo, Endorsement, Member } from '../../generated/schema';
 
 import { BIGDECIMAL_ZERO } from './constants';
 

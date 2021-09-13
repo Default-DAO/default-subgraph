@@ -15,7 +15,9 @@ type _Schema_
 
 type DefaultOSFactory @entity {
   id: ID! #address
-  count: Int!
+  osCount: Int!
+  # amoutn of transactions all time
+  # txCount: BigInt!
 }
 
 ##################################
@@ -48,10 +50,10 @@ type Member @entity {
   stakedAmt: BigDecimal!
 
   vault: [VaultMemberInfo!]! @derivedFrom(field: "member")
-  stake: BigDecimal!
-  miningReward: BigDecimal!
+  staked: BigDecimal!
+  miningRewards: BigDecimal!
   bonus: BigDecimal!
-  peerReward: BigDecimal!
+  peerRewards: BigDecimal!
 }
 
 enum StakeType {
@@ -77,6 +79,10 @@ type Epoch @entity {
   id: ID! #os-epoch
   os: DefaultOS!
   epoch: Int!
+  member: Member!
+
+  vault: [VaultEpochInfo!]! @derivedFrom(field: "epoch")
+  staked: BigDecimal!      
 }
 
 type EpochMemberInfo @entity {
@@ -87,10 +93,10 @@ type EpochMemberInfo @entity {
 
   # There can be many vaults
   vault: [VaultMemberEpochInfo!]! @derivedFrom(field: "member")
-  stake: BigDecimal!
-  miningReward: BigDecimal!
+  staked: BigDecimal!
+  miningRewards: BigDecimal!
   bonus: BigDecimal!
-  peerReward: BigDecimal!
+  peerRewards: BigDecimal!
 }
 
 ##################################
@@ -110,8 +116,7 @@ type Vault @entity {
   id: ID! #address
   os: DefaultOS!
   name: String!
-  symbol: String!
-  token: Token!
+  symbol: String!  
   decimals: Int!
   fee: BigDecimal!
   amount: BigDecimal!
@@ -120,7 +125,8 @@ type Vault @entity {
 type VaultEpochInfo @entity {
   id: ID! #epoch-vault
   os: DefaultOS!
-  vault: Vault!  
+  epoch: Epoch!
+  vault: Vault!
   rewardsPerShare: BigDecimal!
   amount: BigDecimal!
 }
@@ -180,7 +186,7 @@ type VaultTransaction @entity {
   os: DefaultOS!
   epoch: Epoch!
   vault: Vault!
-  member: Member!
+  member: String!
   amount: BigDecimal!
   type: VaultTransactionType!
 }
