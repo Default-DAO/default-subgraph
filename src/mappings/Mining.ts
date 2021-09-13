@@ -1,4 +1,4 @@
-import { BigDecimal } from '@graphprotocol/graph-ts';
+import { BigDecimal, BigInt, Address } from '@graphprotocol/graph-ts';
 
 import {
   RewardsIssued,
@@ -9,29 +9,66 @@ import {
   generateId,
 } from '../utils/helpers';
 import {
+  BONUS,
+} from '../utils/constants';
+import {
   MiningRegistration,
   Member,
   EpochMemberInfo,
-  VaultEpochInfo
+  VaultEpochInfo,
+  TokenTransaction
 } from '../../generated/schema'
+
+function getOrCreateEpochMemberInfo(os: Address, epoch: BigInt, member: Address): EpochMemberInfo {
+  const epochMemberInfoId = generateId([os, epoch, member])
+  let epochMemberInfo = EpochMemberInfo.load(epochMemberInfoId)
+  if (epochMemberInfo === null) {
+    epochMemberInfo = new EpochMemberInfo(epochMemberInfoId)
+    epochMemberInfo.os = os.toHexString()
+    epochMemberInfo.member = member.toHexString()
+    epochMemberInfo.epoch = epoch
+    epochMemberInfo.staked = new BigDecimal(new BigInt(0))
+    epochMemberInfo.miningRewards = new BigDecimal(new BigInt(0))
+    epochMemberInfo.bonus = new BigDecimal(new BigInt(0))
+    epochMemberInfo.peerRewards = new BigDecimal(new BigInt(0))
+  }
+  return epochMemberInfo
+}
 
 export function handleRewardsIssued(event: RewardsIssued): void {
   // TODO: add vault param to RewardsIssued event in Mining.sol contract!
   const { os, vault, issuer, currentEpoch, newRewardsPerShare, tokenBonus } = event.params
   const memberBonus = new BigDecimal(tokenBonus)
 
-  const vaultEpochInfo = new VaultEpochInfo(generateId([currentEpoch, vault]))
-  vaultEpochInfo.rewardsPerShare = new BigDecimal(newRewardsPerShare)
-
   const memberSchema = Member.load(issuer.toHexString())
   memberSchema.bonus = memberSchema.bonus.plus(memberBonus)
 
-  const epochMemberSchema = EpochMemberInfo.load(generateId([os.toHexString(), currentEpoch, issuer.toHexString()]))
-  epochMemberSchema.bonus = epochMemberSchema.bonus.plus(memberBonus)
+  const tokenTransaction = new TokenTransaction(uuid4())
+  tokenTransaction.type = BONUS
+  tokenTransaction.os = os.toHexString()
+  tokenTransaction.epoch = currentEpoch
+  tokenTransaction.from = os.toHexString()
+  tokenTransaction.to = issuer.toHexString()
+  tokenTransaction.amount = memberBonus
 
-  vaultEpochInfo.save()
+  const vaultEpochInfoId = generateId([currentEpoch, vault])
+  let vaultEpochInfo = VaultEpochInfo.load(vaultEpochInfoId)
+  if (vaultEpochInfo === null) {
+    vaultEpochInfo = new VaultEpochInfo(vaultEpochInfoId)    
+    vaultEpochInfo.epoch = currentEpoch    
+    vaultEpochInfo.vault = vault.toHexString()
+    vaultEpochInfo.amount = new BigDecimal(new BigInt(0))
+    vaultEpochInfo.rewardsPerShare = new BigDecimal(new BigInt(0))
+  }
+  vaultEpochInfo.rewardsPerShare = new BigDecimal(newRewardsPerShare)
+
+  const epochMemberInfo = getOrCreateEpochMemberInfo(os, currentEpoch, issuer)
+  epochMemberInfo.bonus = epochMemberInfo.bonus.plus(memberBonus)
+
+  tokenTransaction.save()
   memberSchema.save()
-  epochMemberSchema.save()
+  vaultEpochInfo.save()
+  epochMemberInfo.save()
 }
 
 export function handleRewardsClaimed(event: RewardsClaimed): void {
@@ -39,23 +76,32 @@ export function handleRewardsClaimed(event: RewardsClaimed): void {
 
   const reward = new BigDecimal(totalRewardsClaimed)
 
+  const tokenTransaction = new TokenTransaction(uuid4())
+  tokenTransaction.type = BONUS
+  tokenTransaction.os = os.toHexString()
+  tokenTransaction.epoch = epochClaimed
+  tokenTransaction.from = os.toHexString()
+  tokenTransaction.to = member.toHexString()
+  tokenTransaction.amount = reward
+
   const memberSchema = Member.load(member.toHexString())
   memberSchema.miningRewards = memberSchema.miningRewards.plus(reward)
 
-  const epochMemberSchema = EpochMemberInfo.load(generateId([os.toHexString(), epochClaimed, member.toHexString()]))
-  epochMemberSchema.miningRewards = epochMemberSchema.miningRewards.plus(reward)
+  const epochMemberInfo = getOrCreateEpochMemberInfo(os, epochClaimed, member)
+  epochMemberInfo.miningRewards = epochMemberInfo.miningRewards.plus(reward)
 
+  tokenTransaction.save()
   memberSchema.save()
-  epochMemberSchema.save()
+  epochMemberInfo.save()
 }
 
 export function handleMemberRegistered(event: MemberRegistered): void {
   const { os, currentEpoch, member } = event.params
 
-  const registration = new MiningRegistration(generateId([os.toHexString(), currentEpoch, member.toHexString()])) // should member be address or id?
+  const registration = new MiningRegistration(generateId([os, currentEpoch, member])) // should member be address or id?
 
   registration.epoch = currentEpoch
-  registration.member = Member.load(member.toHexString()).id
+  registration.member = member.toHexString()
   registration.os = os.toHexString()
 
   registration.save()
