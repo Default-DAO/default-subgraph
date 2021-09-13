@@ -11,3 +11,7 @@ export const STAKETYPE_STAKE = 'STAKE';
 // EndorsementType enum
 export let ENDORSEMENTTYPE_GIVEN = 'GIVEN';
 export const ENDORSEMENTTYPE_WITHDRAWN = 'WITHDRAWN';
+
+// VaultTransaction enum
+export const VAULTTYPE_DEPOSITED = 'DEPOSIT'
+export const VAULTTYPE_WITHDRAWN = 'WITHDRAW'
