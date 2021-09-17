@@ -1,13 +1,16 @@
-type _Schema_
-  @fulltext(
-    name: "search"
-    language: en
-    algorithm: rank
-    include: [
-      { entity: "DefaultOS", fields: [{ name: "name" }, { name: "alias" }] },
-      { entity: "Member", fields: [{ name: "alias" }] }
-    ]
-  )
+# Not able to deploy with fulltext search defined. Please debug and add back
+# if this feature is important.
+# Error: subgraph deployment error: Fulltext search not yet deterministic
+# type _Schema_
+#   @fulltext(
+#     name: "search"
+#     language: en
+#     algorithm: rank
+#     include: [
+#       { entity: "DefaultOS", fields: [{ name: "name" }] },
+#       { entity: "Member", fields: [{ name: "alias" }] }
+#     ]
+#   )
 
 ##################################
 ######## DefaultOSFactory ########
