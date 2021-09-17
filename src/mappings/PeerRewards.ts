@@ -73,11 +73,11 @@ export function handleAllocationSet(event: AllocationSet): void {
 
   // Allocation FROM Aggregation
   let from = getOrCreateAllocationMemberInfo(os, fromMember, currentEpoch)
-  from.allocationGivenAmt.plus(netChange )
+  from.allocationGivenAmt = from.allocationGivenAmt.plus(netChange )
 
   // Allocation TO Aggregation
   let to = getOrCreateAllocationMemberInfo(os, toMember, currentEpoch)
-  to.allocationReceivedAmt.plus(netChange)
+  to.allocationReceivedAmt = to.allocationReceivedAmt.plus(netChange)
 
   allocation.save()
   from.save()
