@@ -26,19 +26,19 @@
       {
         "indexed": false,
         "internalType": "address",
-        "name": "os",
+        "name": "factory",
         "type": "address"
       },
       {
         "indexed": false,
         "internalType": "address",
-        "name": "module",
+        "name": "os",
         "type": "address"
       },
       {
         "indexed": false,
         "internalType": "bytes3",
-        "name": "moduleKeycode",
+        "name": "moduleKeyCode",
         "type": "bytes3"
       }
     ],

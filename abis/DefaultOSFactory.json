@@ -13,12 +13,6 @@
         "internalType": "string",
         "name": "id",
         "type": "string"
-      },
-      {
-        "indexed": false,
-        "internalType": "string",
-        "name": "name",
-        "type": "string"
       }
     ],
     "name": "OSCreated",
@@ -46,31 +40,8 @@
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "os_",
-        "type": "address"
-      },
-      {
         "internalType": "string",
-        "name": "daoId_",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "name_",
-        "type": "string"
-      }
-    ],
-    "name": "createOS",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "string",
-        "name": "daoId_",
+        "name": "daoId",
         "type": "string"
       }
     ],
@@ -120,6 +91,24 @@
   {
     "inputs": [],
     "name": "renounceOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "daoId",
+        "type": "string"
+      },
+      {
+        "internalType": "address",
+        "name": "os",
+        "type": "address"
+      }
+    ],
+    "name": "setOS",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

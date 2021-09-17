@@ -8,7 +8,7 @@ dataSources:
     name: DefaultOSFactory
     network: mainnet
     source:
-      address: '0xcEFb39aE4e98947a092481c518b9185b3820Ff17'
+      address: '0xBe8E3757489598BE0d3B6CD9CDa8ea979dB1C53B'
       abi: DefaultOSFactory
     mapping:
       kind: ethereum/events
@@ -23,7 +23,7 @@ dataSources:
         - name: DefaultOSFactory
           file: ./abis/DefaultOSFactory.json      
       eventHandlers:
-        - event: OSCreated(address,string,string)
+        - event: OSCreated(address,string)
           handler: handleOSCreated
 templates:
   - name: DefaultOS
@@ -62,7 +62,7 @@ templates:
         - name: Epoch
           file: ./abis/Epoch.json
       eventHandlers:
-        - event: EpochIncremented(address,address,uint16,uint256,uint256)
+        - event: EpochIncremented(uint16,uint256)
           handler: handleEpochIncremented
   - name: Members
     kind: ethereum/contract

@@ -15,18 +15,6 @@
     "inputs": [
       {
         "indexed": false,
-        "internalType": "address",
-        "name": "os",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "member",
-        "type": "address"
-      },
-      {
-        "indexed": false,
         "internalType": "uint16",
         "name": "epoch",
         "type": "uint16"
@@ -35,12 +23,6 @@
         "indexed": false,
         "internalType": "uint256",
         "name": "epochTime",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "tokenBonus",
         "type": "uint256"
       }
     ],

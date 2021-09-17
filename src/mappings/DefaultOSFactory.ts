@@ -2,6 +2,7 @@ import { OSCreated } from '../../generated/DefaultOSFactory/DefaultOSFactory';
 import { FACTORY_ADDRESS } from '../utils/constants'
 import { DefaultOSFactory, DefaultOS } from '../../generated/schema'
 import { DefaultOS as DefaultOSTemplate } from '../../generated/templates';
+import { getOrCreateOs } from '../utils/entities'
 
 export function handleOSCreated(event: OSCreated): void {
   let factory = DefaultOSFactory.load(FACTORY_ADDRESS)
@@ -13,10 +14,10 @@ export function handleOSCreated(event: OSCreated): void {
   factory.osCount += 1
   factory.save()
 
-  const osAddress = event.params.os.toHexString()
-  let os = new DefaultOS(osAddress)
-  os.id = event.params.id
-  os.save()
+  let os = event.params.os
+  let id = event.params.id // id is the name of the OS
+  let defaultOs = getOrCreateOs(os, id)
+  defaultOs.save()
 
-  DefaultOSTemplate.create(event.params.os);
+  DefaultOSTemplate.create(os);
 }

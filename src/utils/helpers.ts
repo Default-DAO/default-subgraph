@@ -1,23 +1,15 @@
-import { ethereum, BigDecimal, BigInt } from "@graphprotocol/graph-ts";
-
-export const DEFAULT_DECIMALS = 3;
+import { ethereum, BigDecimal, BigInt, Bytes, Address } from "@graphprotocol/graph-ts";
+import { DEFAULT_DECIMALS } from './constants'
 
 export function toDecimal(
   value: BigInt,
   decimals: number = DEFAULT_DECIMALS,
 ): BigDecimal {
   let precision = BigInt.fromI32(10)
-    .pow(<number>decimals)
+    .pow(<u8>decimals)
     .toBigDecimal();
 
   return value.divDecimal(precision);
-}
-
-export function generateId(fields: any): string {
-  for (var i = 0; i < fields.length; i ++) {
-    fields[i] = fields[i].toHexString()
-  }
-  return fields.join("-")
 }
 
 export function generateEventId(event: ethereum.Event): string {
