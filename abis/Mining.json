@@ -14,6 +14,31 @@
     "anonymous": false,
     "inputs": [
       {
+        "indexed": false,
+        "internalType": "address",
+        "name": "os",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint16",
+        "name": "currentEpoch",
+        "type": "uint16"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "member",
+        "type": "address"
+      }
+    ],
+    "name": "MemberRegistered",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
         "indexed": true,
         "internalType": "address",
         "name": "previousOwner",
@@ -34,23 +59,10 @@
     "inputs": [
       {
         "indexed": false,
-        "internalType": "uint16",
-        "name": "currentEpoch",
-        "type": "uint16"
-      },
-      {
-        "indexed": false,
         "internalType": "address",
-        "name": "member",
+        "name": "os",
         "type": "address"
-      }
-    ],
-    "name": "Registered",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
+      },
       {
         "indexed": false,
         "internalType": "uint16",
@@ -78,6 +90,24 @@
     "inputs": [
       {
         "indexed": false,
+        "internalType": "address",
+        "name": "os",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "vault",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "issuer",
+        "type": "address"
+      },
+      {
+        "indexed": false,
         "internalType": "uint16",
         "name": "currentEpoch",
         "type": "uint16"
@@ -86,6 +116,12 @@
         "indexed": false,
         "internalType": "uint256",
         "name": "newRewardsPerShare",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "tokenBonus",
         "type": "uint256"
       }
     ],

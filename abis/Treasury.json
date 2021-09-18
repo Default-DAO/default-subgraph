@@ -15,6 +15,12 @@
     "inputs": [
       {
         "indexed": false,
+        "internalType": "address",
+        "name": "os",
+        "type": "address"
+      },
+      {
+        "indexed": false,
         "internalType": "contract Vault",
         "name": "vault",
         "type": "address"
@@ -65,6 +71,12 @@
     "inputs": [
       {
         "indexed": false,
+        "internalType": "address",
+        "name": "os",
+        "type": "address"
+      },
+      {
+        "indexed": false,
         "internalType": "contract Vault",
         "name": "vault",
         "type": "address"
@@ -90,9 +102,39 @@
     "inputs": [
       {
         "indexed": false,
+        "internalType": "address",
+        "name": "os",
+        "type": "address"
+      },
+      {
+        "indexed": false,
         "internalType": "contract Vault",
         "name": "vault",
         "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "symbol",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint8",
+        "name": "decimals",
+        "type": "uint8"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint8",
+        "name": "fee",
+        "type": "uint8"
       },
       {
         "indexed": false,
@@ -107,6 +149,12 @@
   {
     "anonymous": false,
     "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "os",
+        "type": "address"
+      },
       {
         "indexed": false,
         "internalType": "contract Vault",

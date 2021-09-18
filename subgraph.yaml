@@ -8,23 +8,22 @@ dataSources:
     name: DefaultOSFactory
     network: mainnet
     source:
-      address: '0xcEFb39aE4e98947a092481c518b9185b3820Ff17'
+      address: '0x5FbDB2315678afecb367f032d93F642f64180aa3'
       abi: DefaultOSFactory
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
       language: wasm/assemblyscript
-      file: ./src/mappings/DefaultOSFactory.ts
       entities:
-        - Member
-        - Stake
-        - Endorsement
+        - DefaultOSFactory
+        - DefaultOS
       abis:
         - name: DefaultOSFactory
-          file: ./abis/DefaultOSFactory.json      
+          file: ./abis/DefaultOSFactory.json
       eventHandlers:
-        - event: DaoCreated(address,string)
-          handler: handleDaoCreated
+        - event: OSCreated(address,bytes32)
+          handler: handleOSCreated
+      file: ./src/mappings/DefaultOSFactory.ts
 templates:
   - name: DefaultOS
     kind: ethereum/contract
@@ -38,34 +37,15 @@ templates:
       file: ./src/mappings/DefaultOS.ts
       entities:
         - DefaultOS
+        - Token
       abis:
         - name: DefaultOS
           file: ./abis/DefaultOS.json
       eventHandlers:
-        - event: ModuleInstalled(bytes3,address,address)
+        - event: ModuleInstalled(address,address,bytes3)
           handler: handleModuleInstalled
         - event: OwnershipTransferred(indexed address,indexed address)
           handler: handleOwnershipTransferred
-  - name: Token
-    kind: ethereum/contract
-    network: mainnet
-    source:
-      abi: Token
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.4
-      language: wasm/assemblyscript
-      file: ./src/mappings/Token.ts
-      entities:
-        - Token
-      abis:
-        - name: Token
-          file: ./abis/Token.json
-      eventHandlers:
-        - event: Transfer(indexed address,indexed address,uint256)
-          handler: handleTransfer
-        - event: Approval(indexed address,indexed address,uint256)
-          handler: handleApproval
   - name: Epoch
     kind: ethereum/contract
     network: mainnet
@@ -95,20 +75,24 @@ templates:
       language: wasm/assemblyscript
       file: ./src/mappings/Members.ts
       entities:
-        - Members
+        - Member
+        - Stake
+        - Endorsement
+        - EndorsementMemberInfo
+        - DefaultOS
       abis:
         - name: Members
           file: ./abis/Members.json
       eventHandlers:
-        - event: MemberRegistered(address,bytes32,uint16)
+        - event: MemberRegistered(address,address,bytes32,uint16)
           handler: handleMemberRegistered
-        - event: TokensStaked(address,uint256,uint16,uint16)
+        - event: TokensStaked(address,address,uint256,uint16,uint16)
           handler: handleTokensStaked
-        - event: TokensUnstaked(address,uint256,uint16,uint16)
+        - event: TokensUnstaked(address,address,uint256,uint16,uint16)
           handler: handleTokensUnstaked
-        - event: EndorsementGiven(address,address,uint256,uint16)
+        - event: EndorsementGiven(address,address,address,uint256,uint16)
           handler: handleEndorsementGiven
-        - event: EndorsementWithdrawn(address,address,uint256,uint16)
+        - event: EndorsementWithdrawn(address,address,address,uint256,uint16)
           handler: handleEndorsementWithdrawn
   - name: Treasury
     kind: ethereum/contract
@@ -121,18 +105,25 @@ templates:
       language: wasm/assemblyscript
       file: ./src/mappings/Treasury.ts
       entities:
-        - Treasury
+        - VaultTransaction
+        - VaultEpochInfo
+        - VaultMemberInfo
+        - VaultMemberEpochInfo
+        - DefaultOS
+        - Vault
+        - Member
+        - Epoch
       abis:
         - name: Treasury
           file: ./abis/Treasury.json
       eventHandlers:
-        - event: VaultOpened(address,uint16)
+        - event: VaultOpened(address,address,string,string,uint8,uint8,uint16)
           handler: handleVaultOpened
-        - event: VaultFeeChanged(address,uint8,uint16)
+        - event: VaultFeeChanged(address,address,uint8,uint16)
           handler: handleVaultFeeChanged
-        - event: Deposited(address,address,uint256,uint16)
+        - event: Deposited(address,address,address,uint256,uint16)
           handler: handleDeposited
-        - event: Withdrawn(address,address,uint256,uint16)
+        - event: Withdrawn(address,address,address,uint256,uint16)
           handler: handleWithdrawn    
   - name: PeerRewards
     kind: ethereum/contract
@@ -145,18 +136,24 @@ templates:
       language: wasm/assemblyscript
       file: ./src/mappings/PeerRewards.ts
       entities:
-        - PeerRewards
+        - RewardsRegistration
+        - Allocation
+        - TokenTransaction
+        - EpochMemberInfo
+        - DefaultOS
+        - Member
+        - AllocationMemberInfo
       abis:
         - name: PeerRewards
           file: ./abis/PeerRewards.json
       eventHandlers:
-        - event: MemberRegistered(address,uint16,uint256)
+        - event: MemberRegistered(address,address,uint16,uint256)
           handler: handleMemberRegistered
-        - event: AllocationSet(address,address,uint8)
+        - event: AllocationSet(address,address,address,uint8,uint16)
           handler: handleAllocationSet
-        - event: AllocationGiven(address,address,uint256,uint16)
+        - event: AllocationGiven(address,address,address,uint256,uint16)
           handler: handleAllocationGiven
-        - event: RewardsClaimed(address,uint256,uint16)
+        - event: RewardsClaimed(address,address,uint256,uint16)
           handler: handleRewardsClaimed
   - name: Mining
     kind: ethereum/contract
@@ -169,14 +166,20 @@ templates:
       language: wasm/assemblyscript
       file: ./src/mappings/Mining.ts
       entities:
-        - Mining
+        - Epoch
+        - EpochMemberInfo
+        - Member
+        - DefaultOS
+        - MiningRegistration
+        - VaultEpochInfo
+        - TokenTransaction
       abis:
         - name: Mining
           file: ./abis/Mining.json
       eventHandlers:
-        - event: RewardsIssued(uint16,uint256)
-          handler: handleRewardsInssued
-        - event: RewardsClaimed(uint16,address,uint256)
+        - event: RewardsIssued(address,address,address,uint16,uint256,uint256)
+          handler: handleRewardsIssued
+        - event: RewardsClaimed(address,uint16,address,uint256)
           handler: handleRewardsClaimed
-        - event: Registered(uint16,address)
-          handler: handleRegistered
+        - event: MemberRegistered(address,uint16,address)
+          handler: handleMemberRegistered

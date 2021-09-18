@@ -1,10 +1,24 @@
+# Not able to deploy with fulltext search defined. Please debug and add back
+# if this feature is important.
+# Error: subgraph deployment error: Fulltext search not yet deterministic
+# type _Schema_
+#   @fulltext(
+#     name: "search"
+#     language: en
+#     algorithm: rank
+#     include: [
+#       { entity: "DefaultOS", fields: [{ name: "name" }] },
+#       { entity: "Member", fields: [{ name: "alias" }] }
+#     ]
+#   )
+
 ##################################
 ######## DefaultOSFactory ########
 ##################################
 
 type DefaultOSFactory @entity {
-  id: ID! #address  
-  osCount: Int!  
+  id: ID! #address
+  osCount: Int!
 }
 
 ##################################
@@ -13,7 +27,47 @@ type DefaultOSFactory @entity {
 
 type DefaultOS @entity {
   id: ID! #address
-  address: String!  
+  name: String!
+}
+
+type Module @entity {
+  id: ID! #address
+  os: DefaultOS!
+  keycode: String!
+  epoch: Epoch!
+}
+
+##################################
+############# MEMBER #############
+##################################
+
+type Member @entity {
+  id: ID!  # os-address
+  address: String!
+  os: DefaultOS!
+  epoch: Epoch!
+  alias: String!
+  stakedAmt: BigDecimal!
+
+  vault: [VaultMemberInfo!]! @derivedFrom(field: "member")
+  miningRewards: BigDecimal!
+  bonus: BigDecimal!
+  peerRewards: BigDecimal!
+}
+
+enum StakeType {
+  STAKE
+  UNSTAKE
+}
+
+type Stake @entity {
+  id: ID!  #unique event id
+  os: DefaultOS!
+  epoch: Int!
+  type: StakeType!
+  amount: BigDecimal!
+  lockDuration: Int!
+  member: Member!
 }
 
 ##################################
@@ -21,72 +75,182 @@ type DefaultOS @entity {
 ##################################
 
 type Epoch @entity {
-  id: ID! #epoch
+  id: ID! #os-epoch
   os: DefaultOS!
   epoch: Int!
-  incrementedBy: Member!
+
+  vault: [VaultEpochInfo!]! @derivedFrom(field: "epoch")
+  staked: BigDecimal!      
+}
+
+type EpochMemberInfo @entity {
+  id: ID! #os-epoch-member
+  os: DefaultOS!
+  member: Member!
+  epoch: Int!
+
+  # There can be many vaults
+  vault: [VaultMemberEpochInfo!]! @derivedFrom(field: "member")
+  staked: BigDecimal!
+  miningRewards: BigDecimal!
+  bonus: BigDecimal!
+  peerRewards: BigDecimal!
 }
 
 ##################################
 ############# TOKEN ##############
 ##################################
 
+type Token @entity {
+  id: ID! #address
+  os: DefaultOS!  
+}
 
 ##################################
 ########### TREASURY #############
 ##################################
 
+type Vault @entity {
+  id: ID! #os-address
+  os: DefaultOS!
+  name: String!
+  symbol: String!  
+  decimals: Int!
+  fee: Int!
+  amount: BigDecimal!
+}
+
+type VaultEpochInfo @entity {
+  id: ID! #epoch-vault
+  os: DefaultOS!
+  epoch: Epoch!
+  vault: Vault!
+  rewardsPerShare: BigDecimal
+  amount: BigDecimal!
+}
+
+type VaultMemberInfo @entity {
+  id: ID! #member-vault
+  os: DefaultOS!
+  epoch: Int!
+  member: Member!
+  vault: Vault!  
+  amount: BigDecimal!  
+}
+
+type VaultMemberEpochInfo @entity {
+  id: ID! #epoch-member-vault
+  os: DefaultOS!
+  epoch: Int!
+  member: EpochMemberInfo!
+  vault: Vault!  
+  amount: BigDecimal!  
+}
+
+##################################
+########## TRANSACTIONS ##########
+##################################
+
+# Ignore Transfer event when sender address is 0 address (mint)
+# Listen to RewardsClaimed, RewardsIssued, EpochIncremented events for some types instead
+enum TokenTransactionType {
+  PEER_REWARD
+  MINING_REWARD
+  BONUS
+  TRANSFER
+  BURN
+}
+
+# What happens when def token sent to a non-member? 
+# Putting address for to/from instead of member for this reason
+type TokenTransaction @entity {
+  id: ID! #os-uid
+  os: DefaultOS!
+  epoch: Int
+  from: String!
+  to: String!
+  amount: BigDecimal!
+  type: TokenTransactionType!
+}
+
+enum VaultTransactionType {
+  DEPOSIT
+  WITHDRAW
+}
+
+type VaultTransaction @entity {
+  id: ID! #vault-uid
+  os: DefaultOS!
+  epoch: Int!
+  vault: Vault!
+  member: String!
+  amount: BigDecimal!
+  type: VaultTransactionType!
+}
 
 ##################################
 ############ MINING ##############
 ##################################
 
-
-##################################
-########## PEER REWARDS ##########
-##################################
-
-
-##################################
-############# MEMBER #############
-##################################
-
-type Member @entity {
-  id: ID!  # address
-  alias: String!
+type MiningRegistration @entity {
+  id: ID! #os-epoch-member
   epoch: Int!
-  stakedAmt: BigDecimal!
+  member: Member!
+  os: DefaultOS!
 }
 
-type Stake @entity {
-  id: ID!  # unique event id
-  type: StakeType!
+##################################
+############ REWARDS #############
+##################################
+
+type RewardsRegistration @entity {
+  id: ID! #os-epoch-member
+  os: DefaultOS!
   epoch: Int!
-  amount: BigDecimal!
-  lockDuration: Int!
-  
   member: Member!
 }
 
-type Endorsement @entity {
-  id: ID!  "toMember-fromMember-epoch"
+type Allocation @entity {
+  id: ID! #os-epoch-from-to
+  os: DefaultOS!
   epoch: Int!
   amount: BigDecimal!
-  fromMember: MemberEndorsementInfo!
-  toMember: MemberEndorsementInfo!
+  committed: Boolean!
+  from: AllocationMemberInfo!
+  to: AllocationMemberInfo!
 }
 
-type MemberEndorsementInfo @entity {
-  id: ID!  # member-epoch
+type AllocationMemberInfo @entity {
+  id: ID!  # os-epoch-member
+  os: DefaultOS!
+  epoch: Int!
+  member: Member!
+  allocationGivenAmt: BigDecimal!
+  allocationReceivedAmt: BigDecimal!
+  allocationsGiven: [Allocation!]! @derivedFrom(field: "from")
+  allocationsReceived: [Allocation!]! @derivedFrom(field: "to")
+}
+
+##################################
+########### ENDORSEMENT ##########
+##################################
+
+type Endorsement @entity {
+  id: ID!  "os-epoch-from-to"
+  os: DefaultOS!
+  epoch: Int!
+  amount: BigDecimal!
+  from: EndorsementMemberInfo!
+  to: EndorsementMemberInfo!
+}
+
+type EndorsementMemberInfo @entity {
+  id: ID!  # os-epoch-member
+  os: DefaultOS!
   epoch: Int!
   member: Member!
   endorsementGivenAmt: BigDecimal!
   endorsementReceivedAmt: BigDecimal!
-  endorsementsGiven: [Endorsement!]! @derivedFrom(field: "fromMember")
-  endorsementsReceived: [Endorsement!]! @derivedFrom(field: "toMember")
-}
-
-enum StakeType {
-  STAKE
-  UNSTAKE
+  endorsementsGiven: [Endorsement!]! @derivedFrom(field: "from")
+  endorsementsReceived: [Endorsement!]! @derivedFrom(field: "to")
 }

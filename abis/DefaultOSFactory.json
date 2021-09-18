@@ -10,12 +10,12 @@
       },
       {
         "indexed": false,
-        "internalType": "string",
+        "internalType": "bytes32",
         "name": "id",
-        "type": "string"
+        "type": "bytes32"
       }
     ],
-    "name": "DaoCreated",
+    "name": "OSCreated",
     "type": "event"
   },
   {
@@ -40,31 +40,12 @@
   {
     "inputs": [
       {
-        "internalType": "string",
+        "internalType": "bytes32",
         "name": "",
-        "type": "string"
+        "type": "bytes32"
       }
     ],
-    "name": "daoMap",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "string",
-        "name": "daoId",
-        "type": "string"
-      }
-    ],
-    "name": "getDao",
+    "name": "osMap",
     "outputs": [
       {
         "internalType": "address",
@@ -98,17 +79,12 @@
   {
     "inputs": [
       {
-        "internalType": "string",
-        "name": "daoId",
-        "type": "string"
-      },
-      {
-        "internalType": "address",
-        "name": "os",
-        "type": "address"
+        "internalType": "bytes32",
+        "name": "name_",
+        "type": "bytes32"
       }
     ],
-    "name": "setDao",
+    "name": "setOS",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
