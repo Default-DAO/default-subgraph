@@ -1,20 +1,53 @@
-Quick dirty steps to get it running locally. 
+# Running this project locally
 
-This subgraph was created using this guide with some minor tweaks https://thegraph.com/docs/developer/quick-start
-
-Here's the high level steps to get it deployed locally:
-- deploy Default contracts to a local ganache network
-- clone this project: https://github.com/graphprotocol/graph-node
-  - I had to make a minor adjustment to the docker-compose.yml file to get it running. I added the file to the graph-node-docker-file directory. so copy this file and overwrite graph-node/docker/docker-compose.yml.
-  - then after you copy over the docker-compose.yml file enter the ```graph-node/docker``` project directory and run:
+- start a local hardhat network (hostname must be 0.0.0.0):
+  ```
+  npx hardhat node --hostname 0.0.0.0
+  ```
+- deploy Default contracts to local network 
+  ```
+  npx hardhat run scripts/init.js --network dev
+  ```
+  - once the contracts have been deployed copy the DefaultOSFactory address and overwrite the DefaultOSFactory address in default-subgraph/subgraph.yml. Unfortunately, this needs to be done on every contract deployment or anytime you reset the local network.
+- start up a local graph node
+  - clone this project: https://github.com/graphprotocol/graph-node
+    - I had to make a minor adjustment to the docker-compose.yml file to get it running. I added the file to the graph-node-docker-file directory. so copy this file and overwrite graph-node/docker/docker-compose.yml.
+  - enter the ```graph-node/docker``` project directory and run:
     ```
-    docker-compose up
+    docker-compose up --force-recreate
     ```
   - your local graph node should be running now
-- finally run this in the default-subgraph project directory to create graphql generated code and deploy to your local graph node:
+- run this in the default-subgraph project directory to create graphql generated code and deploy to your local graph node:
 ```
 yarn && yarn codegen
 yarn create-local
 yarn deploy-local
 ```
-This should deploy the subgraph to your local graph node which is listening to your local ganache network.
+This should deploy the subgraph to your local graph node which is listening to your local network.
+
+# Generating contract data 
+At the moment there is no seed data script. You can generate data by interacting with the contracts through node shell. 
+
+Here's an example script you can run which will generate a new OS:
+```
+let factoryAddress = '0x5FbDB2315678afecb367f032d93F642f64180aa3' 
+let myAddress = '0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266'
+let Web3 = require('web3');
+let { ethers } = require("hardhat");
+
+let factoryAbi = require('./artifacts/contracts/os/DefaultOSFactory.sol/DefaultOSFactory.json').abi;
+let osAbi = require('./artifacts/contracts/os/DefaultOS.sol/DefaultOS.json').abi;
+let web3 = new Web3('http://localhost:8545');
+let accounts = await web3.eth.getAccounts();
+accounts
+let factory = new web3.eth.Contract(factoryAbi, factoryAddress);
+await factory.methods.setOS(ethers.utils.formatBytes32String('testOS')).send({from: myAddress});
+```
+
+
+
+Node shell command
+```
+node --experimental-repl-await
+```
+
