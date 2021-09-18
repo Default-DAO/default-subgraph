@@ -46,7 +46,7 @@ await factory.methods.setOS(ethers.utils.formatBytes32String('testOS')).send({fr
 
 
 
-Node shell command
+Make sure you run node shell with experimental-repl-await flag to use async code
 ```
 node --experimental-repl-await
 ```
