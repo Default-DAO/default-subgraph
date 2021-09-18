@@ -10,14 +10,12 @@
   ```
   - once the contracts have been deployed copy the DefaultOSFactory address and overwrite the DefaultOSFactory address in default-subgraph/subgraph.yml. Unfortunately, this needs to be done on every contract deployment or anytime you reset the local network.
 - start up a local graph node
-  - clone this project: https://github.com/graphprotocol/graph-node
-    - I had to make a minor adjustment to the docker-compose.yml file to get it running. I added the file to the graph-node-docker-file directory of this project. so copy this file and overwrite graph-node/docker/docker-compose.yml.
-  - enter the ```graph-node/docker``` project directory and run:
+  - enter the graph-node-docker-file project directory and run:
     ```
-    docker-compose up --force-recreate
+    sh start.sh
     ```
   - your local graph node should be running now
-- run this in the default-subgraph project directory to create graphql generated code and deploy to your local graph node:
+- fianlly run this in the default-subgraph project directory to create graphql generated code and deploy to your local graph node:
 ```
 yarn && yarn codegen
 yarn create-local
