@@ -2,8 +2,6 @@ Quick dirty steps to get it running locally.
 
 This subgraph was created using this guide with some minor tweaks https://thegraph.com/docs/developer/quick-start
 
-This subgraph only includes the Member contract right now due to time. I or someone else can add the other contracts.
-
 Here's the high level steps to get it deployed locally:
 - deploy Default contracts to a local ganache network
 - clone this project: https://github.com/graphprotocol/graph-node
