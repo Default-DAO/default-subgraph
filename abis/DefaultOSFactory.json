@@ -10,15 +10,9 @@
       },
       {
         "indexed": false,
-        "internalType": "string",
+        "internalType": "bytes32",
         "name": "id",
-        "type": "string"
-      },
-      {
-        "indexed": false,
-        "internalType": "string",
-        "name": "name",
-        "type": "string"
+        "type": "bytes32"
       }
     ],
     "name": "OSCreated",
@@ -46,51 +40,9 @@
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "os_",
-        "type": "address"
-      },
-      {
-        "internalType": "string",
-        "name": "daoId_",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "name_",
-        "type": "string"
-      }
-    ],
-    "name": "createOS",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "string",
-        "name": "daoId_",
-        "type": "string"
-      }
-    ],
-    "name": "getOS",
-    "outputs": [
-      {
-        "internalType": "address",
+        "internalType": "bytes32",
         "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "string",
-        "name": "",
-        "type": "string"
+        "type": "bytes32"
       }
     ],
     "name": "osMap",
@@ -120,6 +72,19 @@
   {
     "inputs": [],
     "name": "renounceOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "name_",
+        "type": "bytes32"
+      }
+    ],
+    "name": "setOS",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

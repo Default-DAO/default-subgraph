@@ -5,43 +5,41 @@ import {
   Withdrawn
 } from '../../generated/templates/Treasury/Treasury';
 import { 
-  Vault, 
   VaultTransaction, 
-  Member, 
   VaultEpochInfo,
   VaultMemberInfo,
   VaultMemberEpochInfo
 } from '../../generated/schema'
 import {
-  generateId,
   toDecimal
 } from '../utils/helpers';
+import { 
+  getOrCreateOs, 
+  getOrCreateVault, 
+  getOrCreateMember,
+  getOrCreateEpoch,
+ } from '../utils/entities'
 import {
   BIGDECIMAL_ZERO,
   VAULTTYPE_DEPOSITED,
   VAULTTYPE_WITHDRAWN
 } from '../utils/constants'
-import { BigDecimal, BigInt } from '@graphprotocol/graph-ts';
 
 export function handleVaultOpened(event: VaultOpened): void {
-  const { os, vault, name, symbol, decimals, fee } = event.params
-
-  let vaultSchema = new Vault(vault.toHexString())
-  vaultSchema.os = os.toHexString()
-  vaultSchema.name = name
-  vaultSchema.symbol = symbol
-  vaultSchema.decimals = decimals
-  vaultSchema.fee = fee
-  vaultSchema.amount = BIGDECIMAL_ZERO
-
+  let vaultSchema = getOrCreateVault(
+    event.params.os, 
+    event.params.vault, 
+    event.params.name, 
+    event.params.symbol, 
+    event.params.decimals, 
+    event.params.fee
+  )
   vaultSchema.save()
 }
 
 export function handleVaultFeeChanged(event: VaultFeeChanged): void {
-  const { vault, newFee } = event.params
-
-  let vaultSchema = Vault.load(vault.toHexString())
-  vaultSchema.fee = new BigDecimal(newFee)
+  let vaultSchema = getOrCreateVault(event.params.os, event.params.vault)
+  vaultSchema.fee = event.params.newFee
 
   vaultSchema.save()
 }
@@ -54,33 +52,42 @@ export function handleWithdrawn(event: Withdrawn): void {
   _handleVaultTransaction(event, VAULTTYPE_WITHDRAWN)
 }
 
-export function _handleVaultTransaction(event: Deposited | Withdrawn, type: string) {
-  const { os, vault, member, amount, epoch } = event.params
-  const amountDec = toDecimal(amount)
+export function _handleVaultTransaction<T>(event: T, type: string): void {
+  let os = event.params.os
+  let vault = event.params.vault
+  let member = event.params.member
+  let epoch = event.params.epoch
+  let epochObj = getOrCreateEpoch(os, epoch)
 
-  let vaultSchema = Vault.load(vault.toHexString())
+  let amountDec = toDecimal(event.params.amount)
+
+  let vaultSchema = getOrCreateVault(os, vault)
   if (type === VAULTTYPE_DEPOSITED) {
     vaultSchema.amount = vaultSchema.amount.plus(amountDec);
   } else {
     vaultSchema.amount = vaultSchema.amount.minus(amountDec);
   }
+  let osId = getOrCreateOs(os).id
+  let memberId = getOrCreateMember(os, event.params.member).id
+  let vaultId = vaultSchema.id
 
-  let vaultTransaction = new VaultTransaction(generateId([vault, epoch]))
-  vaultTransaction.os = os.toHexString()
+  let vaultTransactionId = `${os.toHexString()}-${vault.toHexString()}-${epoch}`
+  let vaultTransaction = new VaultTransaction(vaultTransactionId)
+  vaultTransaction.os = osId
+  vaultTransaction.vault = vaultId
+  vaultTransaction.member = memberId
   vaultTransaction.epoch = epoch
-  vaultTransaction.vault = vault.toHexString()
-  vaultTransaction.member = Member.load(member.toHexString()).id;
   vaultTransaction.amount = amountDec
   vaultTransaction.type = type
 
-  const vaultEpochInfoId = generateId([epoch, vault])
+  const vaultEpochInfoId = `${os.toHexString()}-${vault.toHexString()}-${epoch}`
   let vaultEpochInfo = VaultEpochInfo.load(vaultEpochInfoId)
-  if (VaultEpochInfo === null) {
+  if (vaultEpochInfo === null) {
     vaultEpochInfo = new VaultEpochInfo(vaultEpochInfoId) 
-    vaultEpochInfo.os = os.toHexString()
-    vaultEpochInfo.epoch = epoch
-    vaultEpochInfo.vault = vault.toHexString()
-    vaultEpochInfo.amount = new BigDecimal(new BigInt(0))
+    vaultEpochInfo.os = osId
+    vaultEpochInfo.vault = vaultId
+    vaultEpochInfo.epoch = epochObj.id
+    vaultEpochInfo.amount = BIGDECIMAL_ZERO
   }
   if (type === VAULTTYPE_DEPOSITED) {
     vaultEpochInfo.amount = vaultEpochInfo.amount.plus(amountDec);
@@ -88,15 +95,15 @@ export function _handleVaultTransaction(event: Deposited | Withdrawn, type: stri
     vaultEpochInfo.amount = vaultEpochInfo.amount.minus(amountDec);
   }
 
-  const vaultMemberInfoId = generateId([member,vault])
+  const vaultMemberInfoId = `${os.toHexString()}-${vault.toHexString()}-${member.toHexString}`
   let vaultMemberInfo = VaultMemberInfo.load(vaultMemberInfoId)
-  if (VaultMemberInfo === null) {
+  if (vaultMemberInfo === null) {
     vaultMemberInfo = new VaultMemberInfo(vaultMemberInfoId) 
-    vaultMemberInfo.os = os.toHexString()
+    vaultMemberInfo.os = osId
+    vaultMemberInfo.member = memberId
+    vaultMemberInfo.vault = vaultId
     vaultMemberInfo.epoch = epoch
-    vaultMemberInfo.member = member.toHexString()
-    vaultMemberInfo.vault = vault.toHexString()
-    vaultMemberInfo.amount = new BigDecimal(new BigInt(0))
+    vaultMemberInfo.amount = BIGDECIMAL_ZERO
   }
   if (type === VAULTTYPE_DEPOSITED) {
     vaultMemberInfo.amount = vaultMemberInfo.amount.plus(amountDec);
@@ -104,17 +111,15 @@ export function _handleVaultTransaction(event: Deposited | Withdrawn, type: stri
     vaultMemberInfo.amount = vaultMemberInfo.amount.minus(amountDec);
   }
 
-  const vaultMemberEpochInfoId = generateId([
-    epoch,member,vault
-  ])
+  const vaultMemberEpochInfoId = `${os.toHexString()}-${vault.toHexString()}-${member.toHexString()}`
   let vaultMemberEpochInfo = VaultMemberEpochInfo.load(vaultMemberEpochInfoId)
-  if (VaultMemberEpochInfo === null) {
+  if (vaultMemberEpochInfo === null) {
     vaultMemberEpochInfo = new VaultMemberEpochInfo(vaultMemberEpochInfoId) 
-    vaultMemberEpochInfo.os = os.toHexString()
+    vaultMemberEpochInfo.os = osId
+    vaultMemberEpochInfo.vault = vaultId
+    vaultMemberEpochInfo.member = memberId
     vaultMemberEpochInfo.epoch = epoch
-    vaultMemberEpochInfo.member = member.toHexString()
-    vaultMemberEpochInfo.vault = vault.toHexString()
-    vaultMemberEpochInfo.amount = new BigDecimal(new BigInt(0))
+    vaultMemberEpochInfo.amount = BIGDECIMAL_ZERO
   }
   if (type === VAULTTYPE_DEPOSITED) {
     vaultMemberEpochInfo.amount = vaultMemberEpochInfo.amount.plus(amountDec);

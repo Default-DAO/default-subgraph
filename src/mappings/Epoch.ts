@@ -1,18 +1,14 @@
-import { EpochIncremented } from '../../generated/templates/Epoch/Epoch';
-import { Epoch } from '../../generated/schema'
-import {
-  generateId,
-} from '../utils/helpers';
-import { BigInt } from '@graphprotocol/graph-ts';
+import { EpochIncremented } from '../../generated/templates/Epoch/Epoch'
+import { getOrCreateEpoch } from '../utils/entities'
 
-export function handleEpochIncremented(event: EpochIncremented): void {  
-  const {os, epoch, member} = event.params  
-  
-  let epochSchema = new Epoch(generateId([os,epoch]))
-  epochSchema.os = os.toHexString()
-  epochSchema.member = member.toHexString()
-  epochSchema.epoch = epoch
-  epochSchema.staked = BigInt.fromI32(0).toBigDecimal()
-  
-  epochSchema.save()
+export function handleEpochIncremented(event: EpochIncremented): void {
+  // os address of the contract that generated the event
+  let osAddress = event.address
+  let epochNumber = event.params.epoch
+
+  // update epoch number
+  let epoch = getOrCreateEpoch(osAddress, epochNumber)
+  epoch.epoch = epochNumber
+
+  epoch.save()
 }

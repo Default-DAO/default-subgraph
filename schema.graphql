@@ -1,13 +1,16 @@
-type _Schema_
-  @fulltext(
-    name: "search"
-    language: en
-    algorithm: rank
-    include: [
-      { entity: "DefaultOS", fields: [{ name: "name" }, { name: "alias" }] },
-      { entity: "Member", fields: [{ name: "alias" }] }
-    ]
-  )
+# Not able to deploy with fulltext search defined. Please debug and add back
+# if this feature is important.
+# Error: subgraph deployment error: Fulltext search not yet deterministic
+# type _Schema_
+#   @fulltext(
+#     name: "search"
+#     language: en
+#     algorithm: rank
+#     include: [
+#       { entity: "DefaultOS", fields: [{ name: "name" }] },
+#       { entity: "Member", fields: [{ name: "alias" }] }
+#     ]
+#   )
 
 ##################################
 ######## DefaultOSFactory ########
@@ -16,8 +19,6 @@ type _Schema_
 type DefaultOSFactory @entity {
   id: ID! #address
   osCount: Int!
-  # amoutn of transactions all time
-  # txCount: BigInt!
 }
 
 ##################################
@@ -27,14 +28,13 @@ type DefaultOSFactory @entity {
 type DefaultOS @entity {
   id: ID! #address
   name: String!
-  alias: String!
 }
 
 type Module @entity {
   id: ID! #address
   os: DefaultOS!
   keycode: String!
-  createdAt: Epoch!
+  epoch: Epoch!
 }
 
 ##################################
@@ -42,15 +42,14 @@ type Module @entity {
 ##################################
 
 type Member @entity {
-  id: ID!  # os-member
+  id: ID!  # os-address
+  address: String!
   os: DefaultOS!
   epoch: Epoch!
   alias: String!
-  createdAt: Epoch!
   stakedAmt: BigDecimal!
 
   vault: [VaultMemberInfo!]! @derivedFrom(field: "member")
-  staked: BigDecimal!
   miningRewards: BigDecimal!
   bonus: BigDecimal!
   peerRewards: BigDecimal!
@@ -79,7 +78,6 @@ type Epoch @entity {
   id: ID! #os-epoch
   os: DefaultOS!
   epoch: Int!
-  member: Member!
 
   vault: [VaultEpochInfo!]! @derivedFrom(field: "epoch")
   staked: BigDecimal!      
@@ -113,12 +111,12 @@ type Token @entity {
 ##################################
 
 type Vault @entity {
-  id: ID! #address
+  id: ID! #os-address
   os: DefaultOS!
   name: String!
   symbol: String!  
   decimals: Int!
-  fee: BigDecimal!
+  fee: Int!
   amount: BigDecimal!
 }
 
@@ -216,7 +214,7 @@ type Allocation @entity {
   id: ID! #os-epoch-from-to
   os: DefaultOS!
   epoch: Int!
-  amount: Int!
+  amount: BigDecimal!
   committed: Boolean!
   from: AllocationMemberInfo!
   to: AllocationMemberInfo!
@@ -227,8 +225,8 @@ type AllocationMemberInfo @entity {
   os: DefaultOS!
   epoch: Int!
   member: Member!
-  allocationGivenAmt: Int!
-  allocationReceivedAmt: Int!
+  allocationGivenAmt: BigDecimal!
+  allocationReceivedAmt: BigDecimal!
   allocationsGiven: [Allocation!]! @derivedFrom(field: "from")
   allocationsReceived: [Allocation!]! @derivedFrom(field: "to")
 }

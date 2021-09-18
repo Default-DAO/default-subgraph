@@ -2,19 +2,9 @@
   {
     "inputs": [
       {
-        "internalType": "string",
+        "internalType": "bytes32",
         "name": "organizationName_",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "organizationId_",
-        "type": "string"
-      },
-      {
-        "internalType": "contract DefaultOSFactory",
-        "name": "factory_",
-        "type": "address"
+        "type": "bytes32"
       }
     ],
     "stateMutability": "nonpayable",
@@ -26,19 +16,19 @@
       {
         "indexed": false,
         "internalType": "address",
-        "name": "os",
+        "name": "factory",
         "type": "address"
       },
       {
         "indexed": false,
         "internalType": "address",
-        "name": "module",
+        "name": "os",
         "type": "address"
       },
       {
         "indexed": false,
         "internalType": "bytes3",
-        "name": "moduleKeycode",
+        "name": "moduleKeyCode",
         "type": "bytes3"
       }
     ],
@@ -120,9 +110,9 @@
     "name": "organizationName",
     "outputs": [
       {
-        "internalType": "string",
+        "internalType": "bytes32",
         "name": "",
-        "type": "string"
+        "type": "bytes32"
       }
     ],
     "stateMutability": "view",

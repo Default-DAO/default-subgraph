@@ -7,40 +7,57 @@ import {
 import { 
   RewardsRegistration,
   Allocation,
-  AllocationMemberInfo,
   TokenTransaction,
   EpochMemberInfo
 } from '../../generated/schema'
 import {
-  generateId
-} from '../utils/helpers';
+  getOrCreateOs,
+  getOrCreateMember,
+  getOrCreateAllocationMemberInfo,
+} from '../utils/entities';
+import { generateId } from '../utils/helpers'
 import {
+  BIGDECIMAL_ZERO,
   PEER_REWARD
 } from '../utils/constants';
-import { v4 as uuidv4 } from 'uuid';
-import { BigInt } from '@graphprotocol/graph-ts';
+import { Address, BigDecimal, BigInt } from '@graphprotocol/graph-ts';
+import { generateEventId } from '../utils/helpers';
 
 
 export function handleMemberRegistered(event: MemberRegistered): void {
-  let {os, member, epochRegisteredFor} = event.params
+  let os = event.params.os
+  let member = event.params.member
+  let epochRegisteredFor = event.params.epochRegisteredFor
+  let id = generateId([os.toHexString(), member.toHexString(), epochRegisteredFor as string])
+  let registeredOs = getOrCreateOs(os)
+  let registeredMember = getOrCreateMember(os, member)
   
-  let registration = new RewardsRegistration(generateId([
-    os, epochRegisteredFor, member
-  ]))
-  registration.os = os.toHexString()
+  let registration = new RewardsRegistration(id)
+  registration.os = registeredOs.id
+  registration.member = registeredMember.id
   registration.epoch = epochRegisteredFor
-  registration.member = member.toHexString()
+}
+
+function generateAllocationId(
+  os: Address, 
+  currentEpoch: number, 
+  fromMember: Address, 
+  toMember: Address
+): string {
+  return generateId([os.toHexString(), currentEpoch.toString(), fromMember.toHexString(), toMember.toHexString()])
 }
 
 export function handleAllocationSet(event: AllocationSet): void {  
-  let {os, toMember, fromMember, allocPts, currentEpoch} = event.params
+ let os = event.params.os
+ let toMember = event.params.toMember
+ let fromMember = event.params.fromMember
+ let allocPts = new BigDecimal(BigInt.fromI32(event.params.allocPts))
+ let currentEpoch = event.params.currentEpoch
 
   // Allocation
-  const allocId = generateId([
-    os, currentEpoch, fromMember, toMember    
-  ])
+  let allocId = generateAllocationId(os, currentEpoch, fromMember, toMember)
   let allocation = Allocation.load(allocId)
-  let netChange = 0
+  let netChange = BIGDECIMAL_ZERO
   if (allocation == null) {
     allocation = new Allocation(allocId)
     netChange = allocPts
@@ -50,39 +67,17 @@ export function handleAllocationSet(event: AllocationSet): void {
     allocation.from = fromMember.toHexString()
     allocation.to = toMember.toHexString()
   } else {
-    netChange = allocPts - allocation.amount
+    netChange = allocPts.minus(allocation.amount)
   }
   allocation.amount = allocPts
 
   // Allocation FROM Aggregation
-  const fromId = generateId([
-    os, currentEpoch, fromMember
-  ])
-  let from = AllocationMemberInfo.load(fromId)
-
-  if (from === null) {
-    from = new AllocationMemberInfo(fromId)
-    from.epoch = currentEpoch
-    from.os = os.toHexString()
-    from.member = fromMember.toHexString()
-    from.allocationReceivedAmt = 0  
-  }
-  from.allocationGivenAmt += netChange  
+  let from = getOrCreateAllocationMemberInfo(os, fromMember, currentEpoch)
+  from.allocationGivenAmt = from.allocationGivenAmt.plus(netChange )
 
   // Allocation TO Aggregation
-  const toId = generateId([
-    os, currentEpoch, toMember,
-  ])
-  let to = AllocationMemberInfo.load(toId)
-
-  if (to === null) {
-    to = new AllocationMemberInfo(toId)
-    to.epoch = currentEpoch
-    to.os = os.toHexString()
-    to.member = toMember.toHexString()
-    to.allocationGivenAmt = 0
-  }
-  to.allocationReceivedAmt += netChange
+  let to = getOrCreateAllocationMemberInfo(os, toMember, currentEpoch)
+  to.allocationReceivedAmt = to.allocationReceivedAmt.plus(netChange)
 
   allocation.save()
   from.save()
@@ -90,41 +85,45 @@ export function handleAllocationSet(event: AllocationSet): void {
 }
 
 export function handleAllocationGiven(event: AllocationGiven): void {  
-  let {os, toMember, fromMember, currentEpoch} = event.params
 
   // Allocation
-  const allocId = generateId([
-    os, currentEpoch, fromMember, toMember    
-  ])
+  let allocId = generateAllocationId(
+    event.params.os, 
+    event.params.currentEpoch, 
+    event.params.fromMember, 
+    event.params.toMember,
+  )
   let allocation = Allocation.load(allocId)
   allocation.committed = true
   allocation.save()
 }
 
 export function handleRewardsClaimed(event: RewardsClaimed): void {  
-  const {os, epochClaimed, member, totalRewardsClaimed} = event.params
+  let osObj = getOrCreateOs(event.params.os)
+  let member = getOrCreateMember(event.params.os, event.params.member)
+  let epoch = event.params.epochClaimed
+  let totalRewardsClaimed = event.params.totalRewardsClaimed
+  
 
-  const transactionId = generateId([os, uuidv4()])
+  let transactionId = generateEventId(event)
   let transaction = new TokenTransaction(transactionId)
-  transaction.os = os.toHexString()
-  transaction.epoch = epochClaimed
-  transaction.from = os.toHexString()
-  transaction.to = member.toHexString()
+  transaction.os = osObj.id
+  transaction.epoch = epoch
+  transaction.from = osObj.id
+  transaction.to = member.address // this field is a string so use actual address
   transaction.amount = totalRewardsClaimed.toBigDecimal()
   transaction.type = PEER_REWARD
 
-  const epochMemberInfoId = generateId([
-    os,epochClaimed,member
-  ])
+  let epochMemberInfoId = generateId([osObj.id, epoch as string, member.address])
   let epochMemberInfo = new EpochMemberInfo(epochMemberInfoId)
   if (epochMemberInfo === null) {
-    epochMemberInfo.os = os.toHexString()
-    epochMemberInfo.member = member.toHexString()
-    epochMemberInfo.epoch = epochClaimed
-    epochMemberInfo.staked = BigInt.fromI32(0).toBigDecimal()
-    epochMemberInfo.miningRewards = BigInt.fromI32(0).toBigDecimal()
-    epochMemberInfo.bonus = BigInt.fromI32(0).toBigDecimal()
-    epochMemberInfo.peerRewards = BigInt.fromI32(0).toBigDecimal()
+    epochMemberInfo.os = osObj.id
+    epochMemberInfo.member = member.id
+    epochMemberInfo.epoch = epoch
+    epochMemberInfo.staked = BIGDECIMAL_ZERO
+    epochMemberInfo.miningRewards = BIGDECIMAL_ZERO
+    epochMemberInfo.bonus = BIGDECIMAL_ZERO
+    epochMemberInfo.peerRewards = BIGDECIMAL_ZERO
   }
   epochMemberInfo.peerRewards = totalRewardsClaimed.toBigDecimal().plus(
     epochMemberInfo.peerRewards
