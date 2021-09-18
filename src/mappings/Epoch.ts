@@ -1,16 +1,14 @@
 import { EpochIncremented } from '../../generated/templates/Epoch/Epoch'
-import { Epoch } from '../../generated/schema'
-import { getOrCreateOs, getOrCreateEpoch } from '../utils/entities'
-import { BIGDECIMAL_ZERO } from '../utils/constants'
+import { getOrCreateEpoch } from '../utils/entities'
 
-export function handleEpochIncremented(event: EpochIncremented): void {  
+export function handleEpochIncremented(event: EpochIncremented): void {
   // os address of the contract that generated the event
   let osAddress = event.address
   let epochNumber = event.params.epoch
-  let id = `${osAddress}-${epochNumber}`
 
-  // create new epoch
+  // update epoch number
   let epoch = getOrCreateEpoch(osAddress, epochNumber)
+  epoch.epoch = epochNumber
 
   epoch.save()
 }

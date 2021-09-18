@@ -5,7 +5,7 @@ export let BIGDECIMAL_ZERO = new BigDecimal(BIGINT_ZERO);
 
 export const DEFAULT_DECIMALS = 3;
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
-export const FACTORY_ADDRESS = ''
+export const FACTORY_ADDRESS = 'default-os-factory'
 
 // TokenTransaction enum
 export const PEER_REWARD = 'PEER_REWARD'

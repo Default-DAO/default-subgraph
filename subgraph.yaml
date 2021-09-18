@@ -8,23 +8,22 @@ dataSources:
     name: DefaultOSFactory
     network: mainnet
     source:
-      address: '0xBe8E3757489598BE0d3B6CD9CDa8ea979dB1C53B'
+      address: '0x5FbDB2315678afecb367f032d93F642f64180aa3'
       abi: DefaultOSFactory
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
       language: wasm/assemblyscript
-      file: ./src/mappings/DefaultOSFactory.ts
       entities:
-        - Member
-        - Stake
-        - Endorsement
+        - DefaultOSFactory
+        - DefaultOS
       abis:
         - name: DefaultOSFactory
-          file: ./abis/DefaultOSFactory.json      
+          file: ./abis/DefaultOSFactory.json
       eventHandlers:
-        - event: OSCreated(address,string)
+        - event: OSCreated(address,bytes32)
           handler: handleOSCreated
+      file: ./src/mappings/DefaultOSFactory.ts
 templates:
   - name: DefaultOS
     kind: ethereum/contract
@@ -38,6 +37,7 @@ templates:
       file: ./src/mappings/DefaultOS.ts
       entities:
         - DefaultOS
+        - Token
       abis:
         - name: DefaultOS
           file: ./abis/DefaultOS.json
@@ -75,7 +75,11 @@ templates:
       language: wasm/assemblyscript
       file: ./src/mappings/Members.ts
       entities:
-        - Members
+        - Member
+        - Stake
+        - Endorsement
+        - EndorsementMemberInfo
+        - DefaultOS
       abis:
         - name: Members
           file: ./abis/Members.json
@@ -101,7 +105,14 @@ templates:
       language: wasm/assemblyscript
       file: ./src/mappings/Treasury.ts
       entities:
-        - Treasury
+        - VaultTransaction
+        - VaultEpochInfo
+        - VaultMemberInfo
+        - VaultMemberEpochInfo
+        - DefaultOS
+        - Vault
+        - Member
+        - Epoch
       abis:
         - name: Treasury
           file: ./abis/Treasury.json
@@ -125,7 +136,13 @@ templates:
       language: wasm/assemblyscript
       file: ./src/mappings/PeerRewards.ts
       entities:
-        - PeerRewards
+        - RewardsRegistration
+        - Allocation
+        - TokenTransaction
+        - EpochMemberInfo
+        - DefaultOS
+        - Member
+        - AllocationMemberInfo
       abis:
         - name: PeerRewards
           file: ./abis/PeerRewards.json
@@ -149,7 +166,13 @@ templates:
       language: wasm/assemblyscript
       file: ./src/mappings/Mining.ts
       entities:
-        - Mining
+        - Epoch
+        - EpochMemberInfo
+        - Member
+        - DefaultOS
+        - MiningRegistration
+        - VaultEpochInfo
+        - TokenTransaction
       abis:
         - name: Mining
           file: ./abis/Mining.json

@@ -24,7 +24,6 @@ import {
   VAULTTYPE_DEPOSITED,
   VAULTTYPE_WITHDRAWN
 } from '../utils/constants'
-import { BigDecimal, BigInt } from '@graphprotocol/graph-ts';
 
 export function handleVaultOpened(event: VaultOpened): void {
   let vaultSchema = getOrCreateVault(

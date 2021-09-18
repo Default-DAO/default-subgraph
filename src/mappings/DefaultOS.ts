@@ -1,9 +1,10 @@
-import { ModuleInstalled } from '../../generated/templates/DefaultOS/DefaultOS';
+import { ModuleInstalled, OwnershipTransferred } from '../../generated/templates/DefaultOS/DefaultOS';
 import { Epoch as EpochTemplate } from '../../generated/templates';
 import { Members as MembersTemplate } from '../../generated/templates';
 import { Mining as MiningTemplate } from '../../generated/templates';
 import { PeerRewards as PeerRewardsTemplate } from '../../generated/templates';
 import { Treasury as TreasuryTemplate } from '../../generated/templates';
+import { getOrCreateOs } from '../utils/entities'
 import { Token } from '../../generated/schema'
 
 export function handleModuleInstalled(event: ModuleInstalled): void {
@@ -21,4 +22,12 @@ export function handleModuleInstalled(event: ModuleInstalled): void {
     token.save();
   }
 
+}
+
+export function handleOwnershipTransferred(event: OwnershipTransferred): void {
+  // this may not be a viable way to handle this event.
+  // we should optimize contracts to set owner in constructor if possible
+  let os = getOrCreateOs(event.params.previousOwner)
+  os.id = event.params.newOwner.toHexString()
+  os.save()
 }

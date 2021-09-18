@@ -30,6 +30,7 @@ import {
   toDecimal,
 } from '../utils/helpers';
 
+
 // MEMBERS ENTITY
 export function handleMemberRegistered(event: MemberRegistered): void {
   let member = getOrCreateMember(

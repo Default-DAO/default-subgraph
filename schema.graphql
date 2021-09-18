@@ -18,7 +18,6 @@
 
 type DefaultOSFactory @entity {
   id: ID! #address
-  name: String!
   osCount: Int!
 }
 

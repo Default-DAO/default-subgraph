@@ -10,9 +10,9 @@
       },
       {
         "indexed": false,
-        "internalType": "string",
+        "internalType": "bytes32",
         "name": "id",
-        "type": "string"
+        "type": "bytes32"
       }
     ],
     "name": "OSCreated",
@@ -40,28 +40,9 @@
   {
     "inputs": [
       {
-        "internalType": "string",
-        "name": "daoId",
-        "type": "string"
-      }
-    ],
-    "name": "getOS",
-    "outputs": [
-      {
-        "internalType": "address",
+        "internalType": "bytes32",
         "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "string",
-        "name": "",
-        "type": "string"
+        "type": "bytes32"
       }
     ],
     "name": "osMap",
@@ -98,14 +79,9 @@
   {
     "inputs": [
       {
-        "internalType": "string",
-        "name": "daoId",
-        "type": "string"
-      },
-      {
-        "internalType": "address",
-        "name": "os",
-        "type": "address"
+        "internalType": "bytes32",
+        "name": "name_",
+        "type": "bytes32"
       }
     ],
     "name": "setOS",

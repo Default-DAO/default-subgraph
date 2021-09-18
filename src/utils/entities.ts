@@ -1,5 +1,4 @@
-import { Address, BigDecimal, BigInt, Bytes } from '@graphprotocol/graph-ts'
-import { MemberRegistered } from '../../generated/templates/Members/Members';
+import { Address, Bytes } from '@graphprotocol/graph-ts'
 
 import { 
   Member, 
@@ -12,7 +11,8 @@ import {
   Vault,
 } from '../../generated/schema';
 
-import { BIGDECIMAL_ZERO, DEFAULT_DECIMALS } from '../utils/constants';
+import { BIGDECIMAL_ZERO, DEFAULT_DECIMALS } from './constants';
+import { generateId } from './helpers'
 
 /*
   If this file becomes bloated we may need separate files
@@ -21,7 +21,7 @@ import { BIGDECIMAL_ZERO, DEFAULT_DECIMALS } from '../utils/constants';
 */
 
 export function getOrCreateOs(address: Address, name: string = null): DefaultOS {
-  let id = `${address.toHexString()}`
+  let id = address.toHexString()
   let os = DefaultOS.load(id)
   if (os === null) {
     os = new DefaultOS(id);
@@ -31,7 +31,7 @@ export function getOrCreateOs(address: Address, name: string = null): DefaultOS 
 }
 
 export function getOrCreateEpoch(os: Address, epochNumber: i32): Epoch {
-  let id = `${os.toHexString()}-${epochNumber}`
+  let id = generateId([os.toHexString(), epochNumber as string])
   let epoch = Epoch.load(id)
   if (epoch === null) {
     epoch.os = getOrCreateOs(os).id
@@ -46,7 +46,7 @@ export function getOrCreateMember(
   alias: Bytes = null,
   epoch: i32 = null,
 ): Member {
-  const id = `${osAddress.toHexString()}-${address.toHexString()}`
+  let id = generateId([osAddress.toHexString(), address.toHexString()])
   let member = Member.load(id)
   if (member === null) {
     member = new Member(id);
@@ -67,7 +67,7 @@ export function getOrCreateEndorsementMemInfo(
   address: Address, 
   epoch: i32,
 ): EndorsementMemberInfo {
-  let id = `${osAddress.toHexString()}-${address.toHexString()}-${epoch}`;
+  let id = generateId([osAddress.toHexString(), address.toHexString(), epoch as string])
   let endorseInfo = EndorsementMemberInfo.load(id);
   if (endorseInfo === null) {
     endorseInfo = new EndorsementMemberInfo(id);
@@ -85,7 +85,7 @@ export function getOrCreateEndorsement(
   fromAddress: Address,
   epoch: i32,
 ): Endorsement {
-  let id = `${toAddress}-${fromAddress}-${epoch}`
+  let id = generateId([toAddress.toHexString(), fromAddress.toHexString(), epoch as string])
   let endorsement = Endorsement.load(id)
   if (endorsement === null) {
     let toMember = getOrCreateEndorsementMemInfo(os, toAddress, epoch)
@@ -104,7 +104,7 @@ export function getOrCreateEpochMemberInfo(
   member: Address,
   epoch: i32,
 ): EpochMemberInfo {
-  const epochMemberInfoId = `${os.toHexString()}-${member.toHexString()}-${epoch}`
+  let epochMemberInfoId = generateId([os.toHexString(), member.toHexString(), epoch as string])
   let epochMemberInfo = EpochMemberInfo.load(epochMemberInfoId)
   if (epochMemberInfo === null) {
     epochMemberInfo = new EpochMemberInfo(epochMemberInfoId)
@@ -124,7 +124,7 @@ export function getOrCreateAllocationMemberInfo(
   address: Address, 
   currentEpoch: i32
 ): AllocationMemberInfo {
-  let id = `${osAddress.toHexString()}-${currentEpoch}-${address.toHexString()}`
+  let id = generateId([osAddress.toHexString(), currentEpoch as string, address.toHexString()])
   let info = AllocationMemberInfo.load(id)
   if (info === null) {
     info = new AllocationMemberInfo(id)
@@ -145,7 +145,7 @@ export function getOrCreateVault(
   decimals: i32 = null,
   fee: i32 = null
 ): Vault {
-  let id = `${osAddress.toHexString()}-${vaultAddress.toHexString()}`
+  let id = generateId([osAddress.toHexString(), vaultAddress.toHexString()])
   let vault = Vault.load(id)
   if (vault === null) {
     vault.os = getOrCreateOs(osAddress).id

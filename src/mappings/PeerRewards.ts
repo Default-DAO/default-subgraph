@@ -15,6 +15,7 @@ import {
   getOrCreateMember,
   getOrCreateAllocationMemberInfo,
 } from '../utils/entities';
+import { generateId } from '../utils/helpers'
 import {
   BIGDECIMAL_ZERO,
   PEER_REWARD
@@ -27,7 +28,7 @@ export function handleMemberRegistered(event: MemberRegistered): void {
   let os = event.params.os
   let member = event.params.member
   let epochRegisteredFor = event.params.epochRegisteredFor
-  let id = `${os.toHexString()}-${member.toHexString()}-${epochRegisteredFor}`
+  let id = generateId([os.toHexString(), member.toHexString(), epochRegisteredFor as string])
   let registeredOs = getOrCreateOs(os)
   let registeredMember = getOrCreateMember(os, member)
   
@@ -43,8 +44,7 @@ function generateAllocationId(
   fromMember: Address, 
   toMember: Address
 ): string {
-  return `${os.toHexString()}-${currentEpoch}-\
-  ${fromMember.toHexString()}-${toMember.toHexString()}`
+  return generateId([os.toHexString(), currentEpoch.toString(), fromMember.toHexString(), toMember.toHexString()])
 }
 
 export function handleAllocationSet(event: AllocationSet): void {  
@@ -114,7 +114,7 @@ export function handleRewardsClaimed(event: RewardsClaimed): void {
   transaction.amount = totalRewardsClaimed.toBigDecimal()
   transaction.type = PEER_REWARD
 
-  const epochMemberInfoId = `${osObj.id}-${epoch}-${member.address}`
+  let epochMemberInfoId = generateId([osObj.id, epoch as string, member.address])
   let epochMemberInfo = new EpochMemberInfo(epochMemberInfoId)
   if (epochMemberInfo === null) {
     epochMemberInfo.os = osObj.id

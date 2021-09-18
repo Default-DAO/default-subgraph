@@ -1,4 +1,4 @@
-import { BigDecimal, BigInt, Address } from '@graphprotocol/graph-ts';
+import { BigDecimal } from '@graphprotocol/graph-ts';
 
 import {
   RewardsIssued,
@@ -7,6 +7,7 @@ import {
 } from '../../generated/templates/Mining/Mining';
 import {
   generateEventId,
+  generateId,
 } from '../utils/helpers';
 import {
   BONUS,
@@ -46,7 +47,7 @@ export function handleRewardsIssued(event: RewardsIssued): void {
   tokenTransaction.to = issuer.toHexString()
   tokenTransaction.amount = memberBonus
 
-  let vaultEpochInfoId = `${os.toHexString()} - ${vault.toHexString()}-${currentEpoch}`
+  let vaultEpochInfoId = generateId([os.toHexString(), vault.toHexString(), currentEpoch as string])
   let vaultEpochInfo = VaultEpochInfo.load(vaultEpochInfoId)
   if (vaultEpochInfo === null) {
     vaultEpochInfo = new VaultEpochInfo(vaultEpochInfoId)    
@@ -97,7 +98,7 @@ export function handleMemberRegistered(event: MemberRegistered): void {
   let os = event.params.os
   let currentEpoch = event.params.currentEpoch
   let member = event.params.member
-  const id = `${os.toHexString()}-${currentEpoch}-${member.toHexString()}`
+  let id = generateId([os.toHexString(), currentEpoch as string, member.toHexString()])
 
   let registrationOs = getOrCreateOs(os)
   let registrationMember = getOrCreateMember(os, member)

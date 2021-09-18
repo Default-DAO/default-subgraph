@@ -12,6 +12,10 @@ export function toDecimal(
   return value.divDecimal(precision);
 }
 
+export function generateId(fields: Array<string>): string {
+  return fields.join('-')
+}
+
 export function generateEventId(event: ethereum.Event): string {
-  return `${event.transaction.hash.toHex()}-${event.logIndex.toString()}`;
+  return generateId([event.transaction.hash.toHex(), event.logIndex.toString()])
 }
