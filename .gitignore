@@ -65,3 +65,6 @@ typings/
 
 # codegen
 build
+
+# docker graph node
+graph-node-docker-file/data
