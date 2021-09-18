@@ -4,7 +4,7 @@
   ```
   npx hardhat node --hostname 0.0.0.0
   ```
-- deploy Default contracts to local network 
+- deploy Default contracts to local network from the default-core project
   ```
   npx hardhat run scripts/init.js --network dev
   ```
@@ -42,7 +42,7 @@ await factory.methods.setOS(ethers.utils.formatBytes32String('testOS')).send({fr
 
 
 
-Make sure you run node shell with experimental-repl-await flag to use async code
+Make sure you run node shell within the default-core project and with the experimental-repl-await flag to use async code. 
 ```
 node --experimental-repl-await
 ```
