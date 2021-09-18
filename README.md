@@ -9,12 +9,10 @@
   npx hardhat run scripts/init.js --network dev
   ```
   - once the contracts have been deployed copy the DefaultOSFactory address and overwrite the DefaultOSFactory address in default-subgraph/subgraph.yml. Unfortunately, this needs to be done on every contract deployment or anytime you reset the local network.
-- start up a local graph node
-  - enter the graph-node-docker-file project directory and run:
+- start up a local graph node by entering the graph-node-docker-file project directory and running:
     ```
     sh start.sh
     ```
-  - your local graph node should be running now
 - fianlly run this in the default-subgraph project directory to create graphql generated code and deploy to your local graph node:
 ```
 yarn && yarn codegen
