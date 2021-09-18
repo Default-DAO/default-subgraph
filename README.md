@@ -1,4 +1,4 @@
-# Running this project locally
+## Running this project locally
 
 - start a local hardhat network (hostname must be 0.0.0.0):
   ```
@@ -25,7 +25,7 @@ yarn deploy-local
 ```
 This should deploy the subgraph to your local graph node which is listening to your local network.
 
-# Generating contract data 
+### Generating contract data 
 At the moment there is no seed data script. You can generate data by interacting with the contracts through node shell. 
 
 Here's an example script you can run which will generate a new OS:
