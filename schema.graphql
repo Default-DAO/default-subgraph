@@ -17,7 +17,7 @@
 ##################################
 
 type DefaultOSFactory @entity {
-  id: ID! #address
+  id: ID! # factory-address
   osCount: Int!
 }
 
@@ -26,15 +26,14 @@ type DefaultOSFactory @entity {
 ##################################
 
 type DefaultOS @entity {
-  id: ID! #address
+  id: ID! # address
   name: String!
 }
 
 type Module @entity {
-  id: ID! #address
+  id: ID! # os-keycode
   os: DefaultOS!
   keycode: String!
-  epoch: Epoch!
 }
 
 ##################################
@@ -48,8 +47,6 @@ type Member @entity {
   epoch: Epoch!
   alias: String!
   stakedAmt: BigDecimal!
-
-  vault: [VaultMemberInfo!]! @derivedFrom(field: "member")
   miningRewards: BigDecimal!
   bonus: BigDecimal!
   peerRewards: BigDecimal!
@@ -61,9 +58,9 @@ enum StakeType {
 }
 
 type Stake @entity {
-  id: ID!  #unique event id
+  id: ID!  # os-uniqueEventId
   os: DefaultOS!
-  epoch: Int!
+  epochNumber: Int!
   type: StakeType!
   amount: BigDecimal!
   lockDuration: Int!
@@ -75,26 +72,11 @@ type Stake @entity {
 ##################################
 
 type Epoch @entity {
-  id: ID! #os-epoch
+  id: ID!  # os-number
   os: DefaultOS!
-  epoch: Int!
+  number: Int!
 
-  vault: [VaultEpochInfo!]! @derivedFrom(field: "epoch")
   staked: BigDecimal!      
-}
-
-type EpochMemberInfo @entity {
-  id: ID! #os-epoch-member
-  os: DefaultOS!
-  member: Member!
-  epoch: Int!
-
-  # There can be many vaults
-  vault: [VaultMemberEpochInfo!]! @derivedFrom(field: "member")
-  staked: BigDecimal!
-  miningRewards: BigDecimal!
-  bonus: BigDecimal!
-  peerRewards: BigDecimal!
 }
 
 ##################################
@@ -102,7 +84,7 @@ type EpochMemberInfo @entity {
 ##################################
 
 type Token @entity {
-  id: ID! #address
+  id: ID! # os-address
   os: DefaultOS!  
 }
 
@@ -111,40 +93,13 @@ type Token @entity {
 ##################################
 
 type Vault @entity {
-  id: ID! #os-address
+  id: ID! # os-address
   os: DefaultOS!
   name: String!
   symbol: String!  
   decimals: Int!
   fee: Int!
   amount: BigDecimal!
-}
-
-type VaultEpochInfo @entity {
-  id: ID! #epoch-vault
-  os: DefaultOS!
-  epoch: Epoch!
-  vault: Vault!
-  rewardsPerShare: BigDecimal
-  amount: BigDecimal!
-}
-
-type VaultMemberInfo @entity {
-  id: ID! #member-vault
-  os: DefaultOS!
-  epoch: Int!
-  member: Member!
-  vault: Vault!  
-  amount: BigDecimal!  
-}
-
-type VaultMemberEpochInfo @entity {
-  id: ID! #epoch-member-vault
-  os: DefaultOS!
-  epoch: Int!
-  member: EpochMemberInfo!
-  vault: Vault!  
-  amount: BigDecimal!  
 }
 
 ##################################
@@ -164,9 +119,9 @@ enum TokenTransactionType {
 # What happens when def token sent to a non-member? 
 # Putting address for to/from instead of member for this reason
 type TokenTransaction @entity {
-  id: ID! #os-uid
+  id: ID! # os-uniqueEventId
   os: DefaultOS!
-  epoch: Int
+  epochNumber: Int
   from: String!
   to: String!
   amount: BigDecimal!
@@ -179,9 +134,9 @@ enum VaultTransactionType {
 }
 
 type VaultTransaction @entity {
-  id: ID! #vault-uid
+  id: ID!  # os-vault-uniqueEventId
   os: DefaultOS!
-  epoch: Int!
+  epochNumber: Int!
   vault: Vault!
   member: String!
   amount: BigDecimal!
@@ -193,8 +148,8 @@ type VaultTransaction @entity {
 ##################################
 
 type MiningRegistration @entity {
-  id: ID! #os-epoch-member
-  epoch: Int!
+  id: ID!  # os-epoch-member
+  epochNumber: Int!
   member: Member!
   os: DefaultOS!
 }
@@ -204,31 +159,20 @@ type MiningRegistration @entity {
 ##################################
 
 type RewardsRegistration @entity {
-  id: ID! #os-epoch-member
+  id: ID!  # os-epoch-member
   os: DefaultOS!
-  epoch: Int!
+  epochNumber: Int!
   member: Member!
 }
 
 type Allocation @entity {
-  id: ID! #os-epoch-from-to
+  id: ID!  # os-epoch-from-to
   os: DefaultOS!
-  epoch: Int!
+  epochNumber: Int!
   amount: BigDecimal!
   committed: Boolean!
-  from: AllocationMemberInfo!
-  to: AllocationMemberInfo!
-}
-
-type AllocationMemberInfo @entity {
-  id: ID!  # os-epoch-member
-  os: DefaultOS!
-  epoch: Int!
-  member: Member!
-  allocationGivenAmt: BigDecimal!
-  allocationReceivedAmt: BigDecimal!
-  allocationsGiven: [Allocation!]! @derivedFrom(field: "from")
-  allocationsReceived: [Allocation!]! @derivedFrom(field: "to")
+  from: Member!
+  to: Member!
 }
 
 ##################################
@@ -236,21 +180,10 @@ type AllocationMemberInfo @entity {
 ##################################
 
 type Endorsement @entity {
-  id: ID!  "os-epoch-from-to"
+  id: ID!  # os-epoch-from-to
   os: DefaultOS!
-  epoch: Int!
+  epochNumber: Int!
   amount: BigDecimal!
-  from: EndorsementMemberInfo!
-  to: EndorsementMemberInfo!
-}
-
-type EndorsementMemberInfo @entity {
-  id: ID!  # os-epoch-member
-  os: DefaultOS!
-  epoch: Int!
-  member: Member!
-  endorsementGivenAmt: BigDecimal!
-  endorsementReceivedAmt: BigDecimal!
-  endorsementsGiven: [Endorsement!]! @derivedFrom(field: "from")
-  endorsementsReceived: [Endorsement!]! @derivedFrom(field: "to")
+  from: Member!
+  to: Member!
 }

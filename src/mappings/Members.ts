@@ -13,7 +13,6 @@ import { Stake } from '../../generated/schema';
 import {
   getOrCreateMember,
   getOrCreateEndorsement,
-  getOrCreateEndorsementMemInfo,
   getOrCreateOs,
 } from '../utils/entities';
 
@@ -61,7 +60,7 @@ export function handleStakeEvent<T>(event: T, type: string): void {
   let stake = new Stake(id)
   stake.os = getOrCreateOs(os).id
   stake.member = member.id
-  stake.epoch = event.params.epoch
+  stake.epochNumber = event.params.epoch
   stake.lockDuration = event.params.lockDuration
   stake.amount = amount
   stake.type = type
@@ -110,23 +109,13 @@ export function handleEndorsementEvent<T>(
     fromAddress, 
     epoch
   );
-  
-  let toMemberInfo = getOrCreateEndorsementMemInfo(os, toAddress, epoch);
-  let fromMemberInfo = getOrCreateEndorsementMemInfo(os,fromAddress, epoch);
   if (type === ENDORSEMENTTYPE_GIVEN) {
     endorsement.amount = endorsement.amount.plus(amount);
-    toMemberInfo.endorsementReceivedAmt = toMemberInfo.endorsementReceivedAmt.plus(amount);
-    fromMemberInfo.endorsementGivenAmt = fromMemberInfo.endorsementGivenAmt.plus(amount);
-
   } else {
     endorsement.amount = endorsement.amount.minus(amount);
-    toMemberInfo.endorsementReceivedAmt = toMemberInfo.endorsementReceivedAmt.minus(amount);
-    fromMemberInfo.endorsementGivenAmt = fromMemberInfo.endorsementGivenAmt.minus(amount);
   }
 
   endorsement.save();
-  toMemberInfo.save();
-  fromMemberInfo.save();
 
 
   // if the endorsement amount is 0 then delete the endorsement row

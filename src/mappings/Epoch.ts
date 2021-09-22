@@ -8,7 +8,7 @@ export function handleEpochIncremented(event: EpochIncremented): void {
 
   // update epoch number
   let epoch = getOrCreateEpoch(osAddress, epochNumber)
-  epoch.epoch = epochNumber
+  epoch.number = epochNumber
 
   epoch.save()
 }

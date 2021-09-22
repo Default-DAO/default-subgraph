@@ -4,7 +4,7 @@ import { Members as MembersTemplate } from '../../generated/templates';
 import { Mining as MiningTemplate } from '../../generated/templates';
 import { PeerRewards as PeerRewardsTemplate } from '../../generated/templates';
 import { Treasury as TreasuryTemplate } from '../../generated/templates';
-import { getOrCreateOs } from '../utils/entities'
+import { getOrCreateOs, getOrCreateModule } from '../utils/entities'
 import { Token } from '../../generated/schema'
 
 export function handleModuleInstalled(event: ModuleInstalled): void {
@@ -21,6 +21,9 @@ export function handleModuleInstalled(event: ModuleInstalled): void {
     let token = new Token(event.params.os.toHexString())
     token.save();
   }
+
+  let mod = getOrCreateModule(event.params.os, moduleKeyCode)
+  mod.save()
 
 }
 

@@ -9,32 +9,23 @@ import {
   generateEventId,
   generateId,
 } from '../utils/helpers';
-import {
-  BONUS,
-  BIGDECIMAL_ZERO,
-} from '../utils/constants';
+import { BONUS } from '../utils/constants';
 import { 
-  getOrCreateEpoch,
-  getOrCreateEpochMemberInfo, 
   getOrCreateMember,
   getOrCreateOs,
 } from '../utils/entities'
 import {
   MiningRegistration,
-  VaultEpochInfo,
   TokenTransaction
 } from '../../generated/schema'
 
 export function handleRewardsIssued(event: RewardsIssued): void {
   // TODO: add vault param to RewardsIssued event in Mining.sol contract!
   let os = event.params.os
-  let vault = event.params.vault
   let issuer = event.params.issuer
   let currentEpoch = event.params.currentEpoch
-  let newRewardsPerShare = event.params.newRewardsPerShare
   let tokenBonus = event.params.tokenBonus
   let memberBonus = new BigDecimal(tokenBonus)
-  let epochObj = getOrCreateEpoch(os, currentEpoch)
 
   let issuerMember = getOrCreateMember(os, issuer)
   issuerMember.bonus = issuerMember.bonus.plus(memberBonus)
@@ -42,29 +33,13 @@ export function handleRewardsIssued(event: RewardsIssued): void {
   let tokenTransaction = new TokenTransaction(generateEventId(event))
   tokenTransaction.type = BONUS
   tokenTransaction.os = os.toHexString()
-  tokenTransaction.epoch = currentEpoch
+  tokenTransaction.epochNumber = currentEpoch
   tokenTransaction.from = os.toHexString()
   tokenTransaction.to = issuer.toHexString()
   tokenTransaction.amount = memberBonus
 
-  let vaultEpochInfoId = generateId([os.toHexString(), vault.toHexString(), currentEpoch as string])
-  let vaultEpochInfo = VaultEpochInfo.load(vaultEpochInfoId)
-  if (vaultEpochInfo === null) {
-    vaultEpochInfo = new VaultEpochInfo(vaultEpochInfoId)    
-    vaultEpochInfo.epoch = epochObj.id    
-    vaultEpochInfo.vault = vault.toHexString()
-    vaultEpochInfo.amount = BIGDECIMAL_ZERO
-    vaultEpochInfo.rewardsPerShare = BIGDECIMAL_ZERO
-  }
-  vaultEpochInfo.rewardsPerShare = new BigDecimal(newRewardsPerShare)
-
-  let epochMemberInfo = getOrCreateEpochMemberInfo(os, issuer, currentEpoch)
-  epochMemberInfo.bonus = epochMemberInfo.bonus.plus(memberBonus)
-
   tokenTransaction.save()
   issuerMember.save()
-  vaultEpochInfo.save()
-  epochMemberInfo.save()
 }
 
 export function handleRewardsClaimed(event: RewardsClaimed): void {
@@ -78,7 +53,7 @@ export function handleRewardsClaimed(event: RewardsClaimed): void {
   let tokenTransaction = new TokenTransaction(generateEventId(event))
   tokenTransaction.type = BONUS
   tokenTransaction.os = os.toHexString()
-  tokenTransaction.epoch = epochClaimed
+  tokenTransaction.epochNumber = epochClaimed
   tokenTransaction.from = os.toHexString()
   tokenTransaction.to = member.toHexString()
   tokenTransaction.amount = reward
@@ -86,12 +61,8 @@ export function handleRewardsClaimed(event: RewardsClaimed): void {
   let claimingMember = getOrCreateMember(os, member)
   claimingMember.miningRewards = claimingMember.miningRewards.plus(reward)
 
-  let epochMemberInfo = getOrCreateEpochMemberInfo(os, member, epochClaimed)
-  epochMemberInfo.miningRewards = epochMemberInfo.miningRewards.plus(reward)
-
   tokenTransaction.save()
   claimingMember.save()
-  epochMemberInfo.save()
 }
 
 export function handleMemberRegistered(event: MemberRegistered): void {
@@ -106,7 +77,7 @@ export function handleMemberRegistered(event: MemberRegistered): void {
 
   registration.os = registrationOs.id
   registration.member = registrationMember.id
-  registration.epoch = currentEpoch
+  registration.epochNumber = currentEpoch
 
   registration.save()
 }
