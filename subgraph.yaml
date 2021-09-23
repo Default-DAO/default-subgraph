@@ -78,7 +78,6 @@ templates:
         - Member
         - Stake
         - Endorsement
-        - EndorsementMemberInfo
         - DefaultOS
       abis:
         - name: Members
@@ -106,9 +105,6 @@ templates:
       file: ./src/mappings/Treasury.ts
       entities:
         - VaultTransaction
-        - VaultEpochInfo
-        - VaultMemberInfo
-        - VaultMemberEpochInfo
         - DefaultOS
         - Vault
         - Member
@@ -139,10 +135,8 @@ templates:
         - RewardsRegistration
         - Allocation
         - TokenTransaction
-        - EpochMemberInfo
         - DefaultOS
         - Member
-        - AllocationMemberInfo
       abis:
         - name: PeerRewards
           file: ./abis/PeerRewards.json
@@ -167,11 +161,9 @@ templates:
       file: ./src/mappings/Mining.ts
       entities:
         - Epoch
-        - EpochMemberInfo
         - Member
         - DefaultOS
         - MiningRegistration
-        - VaultEpochInfo
         - TokenTransaction
       abis:
         - name: Mining
