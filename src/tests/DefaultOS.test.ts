@@ -6,6 +6,7 @@ import { handleModuleInstalled, handleOwnershipTransferred } from "../mappings/D
 
 export function runTests(): void {
   test("Should save token module", () => {
+    
     success("")
   });
 }

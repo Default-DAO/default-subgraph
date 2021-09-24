@@ -7,7 +7,7 @@ import { Treasury as TreasuryTemplate } from '../../generated/templates';
 import { getOrCreateOs, getOrCreateModule } from '../utils/entities'
 import { Token } from '../../generated/schema'
 
-export { runTests } from '../tests/DefaultOS.test'
+// export { runTests } from '../tests/DefaultOS.test'
 
 export function handleModuleInstalled(event: ModuleInstalled): void {
   let moduleKeyCode = event.params.moduleKeyCode.toString()

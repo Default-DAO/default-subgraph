@@ -1,5 +1,8 @@
 ## Running this project locally
 
+- graph-node needs to be version 0.24.1
+- graph-cli needs to be version 0.22.1
+
 - start a local hardhat network (hostname must be 0.0.0.0):
   ```
   npx hardhat node --hostname 0.0.0.0

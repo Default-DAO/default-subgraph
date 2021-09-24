@@ -12,12 +12,12 @@ import {
 import {
   getOrCreateOs,
   getOrCreateMember,
+  getOrCreateAllocation,
 } from '../utils/entities';
 import { generateId } from '../utils/helpers'
 import { PEER_REWARD } from '../utils/constants';
-import { Address, BigDecimal, BigInt } from '@graphprotocol/graph-ts';
+import { BigDecimal, BigInt } from '@graphprotocol/graph-ts';
 import { generateEventId } from '../utils/helpers';
-
 
 export function handleMemberRegistered(event: MemberRegistered): void {
   let os = event.params.os
@@ -33,48 +33,24 @@ export function handleMemberRegistered(event: MemberRegistered): void {
   registration.epochNumber = epochRegisteredFor
 }
 
-function generateAllocationId(
-  os: Address, 
-  currentEpoch: number, 
-  fromMember: Address, 
-  toMember: Address
-): string {
-  return generateId([os.toHexString(), currentEpoch.toString(), fromMember.toHexString(), toMember.toHexString()])
-}
-
 export function handleAllocationSet(event: AllocationSet): void {  
- let os = event.params.os
- let toMember = event.params.toMember
- let fromMember = event.params.fromMember
- let allocPts = new BigDecimal(BigInt.fromI32(event.params.allocPts))
- let currentEpoch = event.params.currentEpoch
-
-  // Allocation
-  let allocId = generateAllocationId(os, currentEpoch, fromMember, toMember)
-  let allocation = Allocation.load(allocId)
-  if (allocation == null) {
-    allocation = new Allocation(allocId)
-    allocation.committed = false
-    allocation.epochNumber = currentEpoch
-    allocation.os = os.toHexString()
-    allocation.from = fromMember.toHexString()
-    allocation.to = toMember.toHexString()
-  } 
-  allocation.amount = allocPts
-
+  const allocation = getOrCreateAllocation(
+    event.params.os,     
+    event.params.fromMember, 
+    event.params.toMember,    
+    event.params.currentEpoch,
+    new BigDecimal(new BigInt(event.params.allocPts)),
+  )
   allocation.save()
 }
 
 export function handleAllocationGiven(event: AllocationGiven): void {  
-  // Allocation
-  let allocId = generateAllocationId(
-    event.params.os, 
-    event.params.currentEpoch, 
+  let allocation = getOrCreateAllocation(
+    event.params.os,     
     event.params.fromMember, 
-    event.params.toMember,
+    event.params.toMember,    
+    event.params.currentEpoch
   )
-  let allocation = Allocation.load(allocId)
-  if (allocation == null) return  
   allocation.committed = true
   allocation.save()  
 }
@@ -85,7 +61,6 @@ export function handleRewardsClaimed(event: RewardsClaimed): void {
   let epoch = event.params.epochClaimed
   let totalRewardsClaimed = event.params.totalRewardsClaimed
   
-
   let transactionId = generateEventId(event)
   let transaction = new TokenTransaction(transactionId)
   transaction.os = osObj.id

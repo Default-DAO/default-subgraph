@@ -1,4 +1,4 @@
-import { Address, Bytes } from '@graphprotocol/graph-ts'
+import { Address, BigDecimal, Bytes } from '@graphprotocol/graph-ts'
 
 import { 
   Member, 
@@ -7,6 +7,7 @@ import {
   Epoch,
   Vault,
   Module,
+  Allocation
 } from '../../generated/schema';
 
 import { BIGDECIMAL_ZERO, DEFAULT_DECIMALS } from './constants';
@@ -100,6 +101,28 @@ export function getOrCreateVault(
     vault.amount = BIGDECIMAL_ZERO
   }
   return vault as Vault
+}
+
+export function getOrCreateAllocation(
+  os: Address,
+  toMember: Address,
+  fromMember: Address,  
+  epochNumber: i32,    
+  amount: BigDecimal = BIGDECIMAL_ZERO
+): Allocation {
+  let id = generateId([os.toHexString(), epochNumber.toString(), fromMember.toHexString(), toMember.toHexString()])
+  let allocation = Allocation.load(id)
+  if (allocation == null) {
+    allocation = new Allocation(id)
+    allocation.committed = false 
+    allocation.epochNumber = epochNumber
+    allocation.os = os.toHexString()
+    allocation.from = fromMember.toHexString()
+    allocation.to = toMember.toHexString()
+    allocation.amount = amount
+  } 
+
+  return allocation as Allocation
 }
 
 export function getOrCreateModule(os: Address, moduleKeyCode: string): Module {
