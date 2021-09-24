@@ -68,3 +68,6 @@ build
 
 # docker graph node
 graph-node-docker-file/data
+
+# matchstick binary
+matchstick

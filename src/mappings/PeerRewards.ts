@@ -23,7 +23,7 @@ export function handleMemberRegistered(event: MemberRegistered): void {
   let os = event.params.os
   let member = event.params.member
   let epochRegisteredFor = event.params.epochRegisteredFor
-  let id = generateId([os.toHexString(), member.toHexString(), epochRegisteredFor as string])
+  let id = generateId([os.toHexString(), member.toHexString(), epochRegisteredFor.toString()])
   let registeredOs = getOrCreateOs(os)
   let registeredMember = getOrCreateMember(os, member)
   
@@ -66,7 +66,6 @@ export function handleAllocationSet(event: AllocationSet): void {
 }
 
 export function handleAllocationGiven(event: AllocationGiven): void {  
-
   // Allocation
   let allocId = generateAllocationId(
     event.params.os, 
@@ -75,8 +74,9 @@ export function handleAllocationGiven(event: AllocationGiven): void {
     event.params.toMember,
   )
   let allocation = Allocation.load(allocId)
+  if (allocation == null) return  
   allocation.committed = true
-  allocation.save()
+  allocation.save()  
 }
 
 export function handleRewardsClaimed(event: RewardsClaimed): void {  
