@@ -12,7 +12,7 @@ dataSources:
       abi: DefaultOSFactory
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.4
+      apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
         - DefaultOSFactory
@@ -32,7 +32,7 @@ templates:
       abi: DefaultOS
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.4
+      apiVersion: 0.0.5
       language: wasm/assemblyscript
       file: ./src/mappings/DefaultOS.ts
       entities:
@@ -53,7 +53,7 @@ templates:
       abi: Epoch
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.4
+      apiVersion: 0.0.5
       language: wasm/assemblyscript
       file: ./src/mappings/Epoch.ts
       entities:
@@ -71,7 +71,7 @@ templates:
       abi: Members
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.4
+      apiVersion: 0.0.5
       language: wasm/assemblyscript
       file: ./src/mappings/Members.ts
       entities:
@@ -100,7 +100,7 @@ templates:
       abi: Treasury
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.4
+      apiVersion: 0.0.5
       language: wasm/assemblyscript
       file: ./src/mappings/Treasury.ts
       entities:
@@ -128,7 +128,7 @@ templates:
       abi: PeerRewards
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.4
+      apiVersion: 0.0.5
       language: wasm/assemblyscript
       file: ./src/mappings/PeerRewards.ts
       entities:
@@ -156,7 +156,7 @@ templates:
       abi: Mining
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.4
+      apiVersion: 0.0.5
       language: wasm/assemblyscript
       file: ./src/mappings/Mining.ts
       entities:

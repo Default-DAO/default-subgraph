@@ -1,4 +1,4 @@
-import { Address, Bytes } from '@graphprotocol/graph-ts'
+import { Address, BigDecimal, Bytes } from '@graphprotocol/graph-ts'
 
 import { 
   Member, 
@@ -7,6 +7,7 @@ import {
   Epoch,
   Vault,
   Module,
+  Allocation
 } from '../../generated/schema';
 
 import { BIGDECIMAL_ZERO, DEFAULT_DECIMALS } from './constants';
@@ -18,18 +19,18 @@ import { generateId } from './helpers'
 
 */
 
-export function getOrCreateOs(address: Address, name: string = null): DefaultOS {
+export function getOrCreateOs(address: Address, name: string = address.toHexString()): DefaultOS {
   let id = address.toHexString()
   let os = DefaultOS.load(id)
   if (os === null) {
     os = new DefaultOS(id);
-    os.name = name !== null ? name : id // default to address if no name
+    os.name = name // default to address if no name
   }
   return os as DefaultOS
 }
 
 export function getOrCreateEpoch(os: Address, epochNumber: i32): Epoch {
-  let id = generateId([os.toHexString(), epochNumber as string])
+  let id = generateId([os.toHexString(), epochNumber.toString()])
   let epoch = Epoch.load(id)
   if (epoch === null) {
     epoch = new Epoch(id)
@@ -43,8 +44,8 @@ export function getOrCreateEpoch(os: Address, epochNumber: i32): Epoch {
 export function getOrCreateMember(
   osAddress: Address, 
   address: Address, 
-  alias: Bytes = null,
-  epoch: i32 = null,
+  alias: Bytes = address,
+  epoch: i32 = 0,
 ): Member {
   let id = generateId([osAddress.toHexString(), address.toHexString()])
   let member = Member.load(id)
@@ -53,7 +54,7 @@ export function getOrCreateMember(
     member.address = address.toHexString();
     member.os = getOrCreateOs(osAddress).id
     member.epoch = getOrCreateEpoch(osAddress, epoch).id;
-    member.alias = alias ? alias.toHexString() : address.toHexString() // default to address if no alias
+    member.alias = alias.toHexString() // default to address if no alias
     member.stakedAmt = BIGDECIMAL_ZERO;
     member.miningRewards = BIGDECIMAL_ZERO;
     member.bonus = BIGDECIMAL_ZERO;
@@ -68,7 +69,7 @@ export function getOrCreateEndorsement(
   fromAddress: Address,
   epoch: i32,
 ): Endorsement {
-  let id = generateId([toAddress.toHexString(), fromAddress.toHexString(), epoch as string])
+  let id = generateId([toAddress.toHexString(), fromAddress.toHexString(), epoch.toString()])
   let endorsement = Endorsement.load(id)
   if (endorsement === null) {
     endorsement = new Endorsement(id)
@@ -83,23 +84,45 @@ export function getOrCreateEndorsement(
 export function getOrCreateVault(
   osAddress: Address, 
   vaultAddress: Address,
-  name: string = null,
-  symbol: string = null,
-  decimals: i32 = null,
-  fee: i32 = null
+  name: string = vaultAddress.toHexString(),
+  symbol: string = '?',
+  decimals: i32 = DEFAULT_DECIMALS,
+  fee: i32 = 0
 ): Vault {
   let id = generateId([osAddress.toHexString(), vaultAddress.toHexString()])
   let vault = Vault.load(id)
   if (vault === null) {
     vault = new Vault(id)
     vault.os = getOrCreateOs(osAddress).id
-    vault.name = name ? name : vaultAddress.toHexString();
-    vault.symbol = symbol ? symbol : '?'
-    vault.decimals = decimals ? decimals : DEFAULT_DECIMALS
-    vault.fee = fee !== null ? fee : 0
+    vault.name = name
+    vault.symbol = symbol
+    vault.decimals = decimals
+    vault.fee = fee
     vault.amount = BIGDECIMAL_ZERO
   }
   return vault as Vault
+}
+
+export function getOrCreateAllocation(
+  os: Address,
+  toMember: Address,
+  fromMember: Address,  
+  epochNumber: i32,    
+  amount: BigDecimal = BIGDECIMAL_ZERO
+): Allocation {
+  let id = generateId([os.toHexString(), epochNumber.toString(), fromMember.toHexString(), toMember.toHexString()])
+  let allocation = Allocation.load(id)
+  if (allocation == null) {
+    allocation = new Allocation(id)
+    allocation.committed = false 
+    allocation.epochNumber = epochNumber
+    allocation.os = os.toHexString()
+    allocation.from = fromMember.toHexString()
+    allocation.to = toMember.toHexString()
+    allocation.amount = amount
+  } 
+
+  return allocation as Allocation
 }
 
 export function getOrCreateModule(os: Address, moduleKeyCode: string): Module {

@@ -69,7 +69,7 @@ export function handleMemberRegistered(event: MemberRegistered): void {
   let os = event.params.os
   let currentEpoch = event.params.currentEpoch
   let member = event.params.member
-  let id = generateId([os.toHexString(), currentEpoch as string, member.toHexString()])
+  let id = generateId([os.toHexString(), currentEpoch.toString(), member.toHexString()])
 
   let registrationOs = getOrCreateOs(os)
   let registrationMember = getOrCreateMember(os, member)

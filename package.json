@@ -5,13 +5,15 @@
     "create": "graph create zaqk/default-subgraph --node https://api.thegraph.com/deploy/",
     "create-local": "graph create zaqk/default-subgraph --node http://127.0.0.1:8020",
     "codegen": "graph codegen",
-    "build": "graph build",
+    "build": "graph build",    
     "deploy": "graph deploy zaqk/default-subgraph --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/",
     "deploy-local": "graph deploy zaqk/default-subgraph --ipfs http://localhost:5001 --node http://127.0.0.1:8020"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@graphprotocol/graph-cli": "^0.22.0",
+    "matchstick-as": "^0.1.3"
+  },
   "dependencies": {
-    "@graphprotocol/graph-cli": "^0.20.1",
-    "@graphprotocol/graph-ts": "^0.20.0"
+    "@graphprotocol/graph-ts": "^0.22.1"
   }
 }
