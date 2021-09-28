@@ -3,8 +3,8 @@ import { handleOSCreated } from "../mappings/DefaultOSFactory";
 import { DefaultOSFactory } from "../../generated/schema";
 import { createOSCreatedEvent } from './utils/events';
 import { ADDRESSES, FACTORY_ENTITY, OS_ENTITY } from './utils/constants';
-import { debug } from "matchstick-as/assembly/log";
 import { FACTORY_ADDRESS } from '../utils/constants';
+import { debug } from "matchstick-as/assembly/log";
 
 export function runTests(): void {
   test("Should create OS", () => {    

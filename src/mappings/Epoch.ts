@@ -5,7 +5,7 @@ import { getOrCreateEpoch } from '../utils/entities'
 
 export function handleEpochIncremented(event: EpochIncremented): void {
   // os address of the contract that generated the event
-  let osAddress = event.address
+  let osAddress = event.params.os
   let epochNumber = event.params.epoch
 
   // update epoch number

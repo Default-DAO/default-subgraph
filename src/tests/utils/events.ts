@@ -1,7 +1,8 @@
 import { newMockEvent } from 'matchstick-as/assembly/index'
 import { OSCreated } from "../../../generated/DefaultOSFactory/DefaultOSFactory";
 import { ModuleInstalled, OwnershipTransferred } from "../../../generated/templates/DefaultOS/DefaultOS";
-import { Address, Bytes, ethereum } from "@graphprotocol/graph-ts";
+import { Address, BigInt, Bytes, ethereum } from "@graphprotocol/graph-ts";
+import { EpochIncremented } from '../../../generated/templates/Epoch/Epoch';
 import { debug } from "matchstick-as/assembly/log";
 
 // ##################################
@@ -13,16 +14,16 @@ export function createOSCreatedEvent(os: string, id: string): OSCreated {
   let osCreatedEvent = new OSCreated(mockEvent.address, mockEvent.logIndex, mockEvent.transactionLogIndex,
     mockEvent.logType, mockEvent.block, mockEvent.transaction, mockEvent.parameters)
 
-  let osParam = new ethereum.EventParam("os", ethereum.Value.fromAddress(Address.fromString(os)));  
+  let osParam = new ethereum.EventParam("os", ethereum.Value.fromAddress(Address.fromString(os)));
   let idParam = new ethereum.EventParam(
-    "name", 
+    "name",
     //Not sure why just converting to Bytes straight from UTF8 fails
     ethereum.Value.fromBytes(Bytes.fromHexString(Bytes.fromUTF8(id).toHexString()) as Bytes)
   );
 
   osCreatedEvent.parameters = new Array();
   osCreatedEvent.parameters.push(osParam);
-  osCreatedEvent.parameters.push(idParam);  
+  osCreatedEvent.parameters.push(idParam);
 
   return osCreatedEvent
 }
@@ -38,7 +39,7 @@ export function createModuleInstalledEvent(os: string, module: string, moduleKey
 
   let osParam = new ethereum.EventParam("os", ethereum.Value.fromAddress(Address.fromString(os)));
   let moduleParam = new ethereum.EventParam("module", ethereum.Value.fromAddress(Address.fromString(module)));
-  
+
   let moduleKeyCodeParam = new ethereum.EventParam(
     "moduleKeyCode", ethereum.Value.fromBytes(Bytes.fromHexString(moduleKeyCode) as Bytes)
   );
@@ -46,7 +47,7 @@ export function createModuleInstalledEvent(os: string, module: string, moduleKey
   moduleInstalledEvent.parameters = new Array();
   moduleInstalledEvent.parameters.push(osParam);
   moduleInstalledEvent.parameters.push(moduleParam);
-  moduleInstalledEvent.parameters.push(moduleKeyCodeParam);    
+  moduleInstalledEvent.parameters.push(moduleKeyCodeParam);
 
   return moduleInstalledEvent
 }
@@ -61,7 +62,26 @@ export function createOwnershipTransferredEvent(previousOwner: string, newOwner:
 
   ownershipTransferredEvent.parameters = new Array();
   ownershipTransferredEvent.parameters.push(previousOwnerParam);
-  ownershipTransferredEvent.parameters.push(newOwnerParam);  
+  ownershipTransferredEvent.parameters.push(newOwnerParam);
 
   return ownershipTransferredEvent
+}
+
+// ##################################
+// ############ Epoch ###############
+// ##################################
+
+export function createEpochIncrementedEvent(os: string, epoch: i32): EpochIncremented {
+  let mockEvent = newMockEvent()
+  let epochIncrementedEvent = new EpochIncremented(mockEvent.address, mockEvent.logIndex, mockEvent.transactionLogIndex,
+    mockEvent.logType, mockEvent.block, mockEvent.transaction, mockEvent.parameters)
+
+  let osParam = new ethereum.EventParam("os", ethereum.Value.fromAddress(Address.fromString(os)));
+  let epochParam = new ethereum.EventParam("epoch", ethereum.Value.fromI32(epoch));
+
+  epochIncrementedEvent.parameters = new Array();
+  epochIncrementedEvent.parameters.push(osParam);
+  epochIncrementedEvent.parameters.push(epochParam);
+
+  return epochIncrementedEvent
 }

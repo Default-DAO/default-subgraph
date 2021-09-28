@@ -1,4 +1,4 @@
-import { Address, BigDecimal, Bytes } from '@graphprotocol/graph-ts'
+import { Address, BigDecimal, BigInt, Bytes } from '@graphprotocol/graph-ts'
 
 import { 
   Member, 
