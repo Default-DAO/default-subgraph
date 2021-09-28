@@ -125,12 +125,13 @@ export function getOrCreateAllocation(
   return allocation as Allocation
 }
 
-export function getOrCreateModule(os: Address, moduleKeyCode: string): Module {
+export function getOrCreateModule(os: Address, module: Address, moduleKeyCode: string): Module {
   let id = generateId([os.toHexString(), moduleKeyCode])
   let mod = Module.load(id)
   if (mod === null) {
     mod = new Module(id)
     mod.os = getOrCreateOs(os).id
+    mod.address = module.toHexString()
     mod.keycode = moduleKeyCode
   }
   return mod as Module

@@ -16,13 +16,13 @@
       {
         "indexed": false,
         "internalType": "address",
-        "name": "factory",
+        "name": "os",
         "type": "address"
       },
       {
         "indexed": false,
         "internalType": "address",
-        "name": "os",
+        "name": "module",
         "type": "address"
       },
       {
