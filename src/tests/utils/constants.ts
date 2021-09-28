@@ -6,6 +6,7 @@ export const ADDRESSES = [
   '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
 ]
 
+export const FACTORY_ENTITY = 'DefaultOSFactory'
+export const OS_ENTITY = 'DefaultOS'
 export const TOKEN_ENTITY = 'Token'
 export const MODULE_ENTITY = 'Module'
-export const OS_ENTITY = 'DefaultOS'

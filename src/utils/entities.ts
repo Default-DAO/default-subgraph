@@ -7,7 +7,8 @@ import {
   Epoch,
   Vault,
   Module,
-  Allocation
+  Allocation,
+  DefaultOSFactory
 } from '../../generated/schema';
 
 import { BIGDECIMAL_ZERO, DEFAULT_DECIMALS } from './constants';
@@ -18,6 +19,15 @@ import { generateId } from './helpers'
   for each entity. We can define that as src/entities/Members.ts etc.
 
 */
+
+export function getOrCreateFactory(id: string): DefaultOSFactory {  
+  let factory = DefaultOSFactory.load(id)
+  if (factory === null) {
+    factory = new DefaultOSFactory(id)
+    factory.osCount = 0
+  }
+  return factory
+}
 
 export function getOrCreateOs(address: Address, name: string = address.toHexString()): DefaultOS {
   let id = address.toHexString()

@@ -1,6 +1,8 @@
 import { EpochIncremented } from '../../generated/templates/Epoch/Epoch'
 import { getOrCreateEpoch } from '../utils/entities'
 
+// export { runTests } from '../tests/DefaultOSFactory.test'
+
 export function handleEpochIncremented(event: EpochIncremented): void {
   // os address of the contract that generated the event
   let osAddress = event.address

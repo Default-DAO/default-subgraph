@@ -1,22 +1,19 @@
 import { OSCreated } from '../../generated/DefaultOSFactory/DefaultOSFactory';
 import { FACTORY_ADDRESS } from '../utils/constants'
-import { DefaultOSFactory } from '../../generated/schema'
 import { DefaultOS as DefaultOSTemplate } from '../../generated/templates';
-import { getOrCreateOs } from '../utils/entities'
+import { getOrCreateFactory, getOrCreateOs } from '../utils/entities'
+
+// export { runTests } from '../tests/DefaultOSFactory.test'
 
 export function handleOSCreated(event: OSCreated): void {
-  let factory = DefaultOSFactory.load(FACTORY_ADDRESS)
-  if (factory === null) {
-    factory = new DefaultOSFactory(FACTORY_ADDRESS)
-    factory.osCount = 0
-  }
+  let factory = getOrCreateFactory(FACTORY_ADDRESS)
   factory.osCount += 1
   factory.save()
 
-  let os = event.params.os
-  let id = event.params.id // id is the name of the OS
-  let defaultOs = getOrCreateOs(os, id.toString())
+  let id = event.params.os
+  let name = event.params.id // id is the name of the OS
+  let defaultOs = getOrCreateOs(id, name.toString())
   defaultOs.save()
 
-  DefaultOSTemplate.create(os);
+  DefaultOSTemplate.create(id);
 }

@@ -1,7 +1,35 @@
 import { newMockEvent } from 'matchstick-as/assembly/index'
+import { OSCreated } from "../../../generated/DefaultOSFactory/DefaultOSFactory";
 import { ModuleInstalled, OwnershipTransferred } from "../../../generated/templates/DefaultOS/DefaultOS";
 import { Address, Bytes, ethereum } from "@graphprotocol/graph-ts";
 import { debug } from "matchstick-as/assembly/log";
+
+// ##################################
+// ######## DefaultOSFactory ########
+// ##################################
+
+export function createOSCreatedEvent(os: string, id: string): OSCreated {
+  let mockEvent = newMockEvent()
+  let osCreatedEvent = new OSCreated(mockEvent.address, mockEvent.logIndex, mockEvent.transactionLogIndex,
+    mockEvent.logType, mockEvent.block, mockEvent.transaction, mockEvent.parameters)
+
+  let osParam = new ethereum.EventParam("os", ethereum.Value.fromAddress(Address.fromString(os)));  
+  let idParam = new ethereum.EventParam(
+    "name", 
+    //Not sure why just converting to Bytes straight from UTF8 fails
+    ethereum.Value.fromBytes(Bytes.fromHexString(Bytes.fromUTF8(id).toHexString()) as Bytes)
+  );
+
+  osCreatedEvent.parameters = new Array();
+  osCreatedEvent.parameters.push(osParam);
+  osCreatedEvent.parameters.push(idParam);  
+
+  return osCreatedEvent
+}
+
+// ##################################
+// ########### DefaultOS ############
+// ##################################
 
 export function createModuleInstalledEvent(os: string, module: string, moduleKeyCode: string): ModuleInstalled {
   let mockEvent = newMockEvent()
