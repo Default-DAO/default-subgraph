@@ -1,4 +1,4 @@
-import { Address, BigDecimal, Bytes } from '@graphprotocol/graph-ts'
+import { Address, BigDecimal, BigInt, Bytes } from '@graphprotocol/graph-ts'
 
 import { 
   Member, 
@@ -7,7 +7,8 @@ import {
   Epoch,
   Vault,
   Module,
-  Allocation
+  Allocation,
+  DefaultOSFactory
 } from '../../generated/schema';
 
 import { BIGDECIMAL_ZERO, DEFAULT_DECIMALS } from './constants';
@@ -18,6 +19,15 @@ import { generateId } from './helpers'
   for each entity. We can define that as src/entities/Members.ts etc.
 
 */
+
+export function getOrCreateFactory(id: string): DefaultOSFactory {  
+  let factory = DefaultOSFactory.load(id)
+  if (factory === null) {
+    factory = new DefaultOSFactory(id)
+    factory.osCount = 0
+  }
+  return factory
+}
 
 export function getOrCreateOs(address: Address, name: string = address.toHexString()): DefaultOS {
   let id = address.toHexString()
@@ -125,12 +135,13 @@ export function getOrCreateAllocation(
   return allocation as Allocation
 }
 
-export function getOrCreateModule(os: Address, moduleKeyCode: string): Module {
+export function getOrCreateModule(os: Address, module: Address, moduleKeyCode: string): Module {
   let id = generateId([os.toHexString(), moduleKeyCode])
   let mod = Module.load(id)
   if (mod === null) {
     mod = new Module(id)
     mod.os = getOrCreateOs(os).id
+    mod.address = module.toHexString()
     mod.keycode = moduleKeyCode
   }
   return mod as Module

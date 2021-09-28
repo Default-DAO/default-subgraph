@@ -62,7 +62,7 @@ templates:
         - name: Epoch
           file: ./abis/Epoch.json
       eventHandlers:
-        - event: EpochIncremented(uint16,uint256)
+        - event: EpochIncremented(address,uint16,uint256)
           handler: handleEpochIncremented
   - name: Members
     kind: ethereum/contract

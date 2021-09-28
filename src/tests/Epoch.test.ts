@@ -1,0 +1,21 @@
+import { test, assert, clearStore } from 'matchstick-as/assembly/index'
+import { createEpochIncrementedEvent } from './utils/events';
+import { ADDRESSES, EPOCH_ENTITY } from './utils/constants';
+import { handleEpochIncremented } from '../mappings/Epoch';
+import { generateId } from '../utils/helpers';
+import { debug } from "matchstick-as/assembly/log";
+
+export function runTests(): void {
+  test("Should create new epoch", () => {    
+    const epochIncrementedEvent = createEpochIncrementedEvent(ADDRESSES[0], 1)
+
+    handleEpochIncremented(epochIncrementedEvent)
+    
+    const epochId = generateId([ADDRESSES[0], "1"])
+    assert.fieldEquals(EPOCH_ENTITY, epochId, "os", ADDRESSES[0])
+    assert.fieldEquals(EPOCH_ENTITY, epochId, "number", "1")
+    assert.fieldEquals(EPOCH_ENTITY, epochId, "staked", "0")
+
+    clearStore()
+  });
+}

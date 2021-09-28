@@ -33,6 +33,7 @@ type DefaultOS @entity {
 type Module @entity {
   id: ID! # os-keycode
   os: DefaultOS!
+  address: String!
   keycode: String!
 }
 
@@ -75,6 +76,7 @@ type Epoch @entity {
   id: ID!  # os-number
   os: DefaultOS!
   number: Int!
+  time: BigInt!
 
   staked: BigDecimal!      
 }
