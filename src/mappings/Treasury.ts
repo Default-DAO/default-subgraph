@@ -21,51 +21,56 @@ export function handleVaultOpened(event: VaultOpened): void {
     event.params.symbol, 
     event.params.decimals, 
     event.params.fee
-  )
-  vaultSchema.save()
+  );
+
+  vaultSchema.save();
 }
 
 export function handleVaultFeeChanged(event: VaultFeeChanged): void {
-  let vaultSchema = getOrCreateVault(event.params.os, event.params.vault)
-  vaultSchema.fee = event.params.newFee
+  let vaultSchema = getOrCreateVault(event.params.os, event.params.vault);
+  vaultSchema.fee = event.params.newFee;
 
-  vaultSchema.save()
+  vaultSchema.save();
 }
 
 export function handleDeposited(event: Deposited): void {
-  _handleVaultTransaction(event, VAULTTYPE_DEPOSITED)
+  _handleVaultTransaction(event, VAULTTYPE_DEPOSITED);
 }
 
 export function handleWithdrawn(event: Withdrawn): void {
-  _handleVaultTransaction(event, VAULTTYPE_WITHDRAWN)
+  _handleVaultTransaction(event, VAULTTYPE_WITHDRAWN);
 }
 
 export function _handleVaultTransaction<T>(event: T, type: string): void {
-  let os = event.params.os
-  let vault = event.params.vault
-  let epoch = event.params.epoch
+  let os = event.params.os;
+  let vault = event.params.vault;
+  let epoch = event.params.epoch;
 
-  let amountDec = toDecimal(event.params.amount)
+  let amountDec = toDecimal(event.params.amount);
 
-  let vaultSchema = getOrCreateVault(os, vault)
+  // update the total amount in the vault
+  let vaultSchema = getOrCreateVault(os, vault);
   if (type === VAULTTYPE_DEPOSITED) {
     vaultSchema.amount = vaultSchema.amount.plus(amountDec);
   } else {
     vaultSchema.amount = vaultSchema.amount.minus(amountDec);
   }
-  let osId = getOrCreateOs(os).id
-  let memberId = getOrCreateMember(os, event.params.member).id
-  let vaultId = vaultSchema.id
+  
+  let osId = getOrCreateOs(os).id;
+  let memberId = getOrCreateMember(os, event.params.member).id;
+  let vaultId = vaultSchema.id;
 
-  let vaultTransactionId = `${os.toHexString()}-${vault.toHexString()}-${epoch}`
-  let vaultTransaction = new VaultTransaction(vaultTransactionId)
-  vaultTransaction.os = osId
-  vaultTransaction.vault = vaultId
-  vaultTransaction.member = memberId
-  vaultTransaction.epochNumber = epoch
-  vaultTransaction.amount = amountDec
-  vaultTransaction.type = type
+  vaultSchema.save();
 
-  vaultSchema.save()
-  vaultTransaction.save()
+  // save the actual transaction data (deposit / withdraw)
+  let vaultTransactionId = `${os.toHexString()}-${vault.toHexString()}-${epoch}`;
+  let vaultTransaction = new VaultTransaction(vaultTransactionId);
+  vaultTransaction.os = osId;
+  vaultTransaction.vault = vaultId;
+  vaultTransaction.member = memberId;
+  vaultTransaction.epochNumber = epoch;
+  vaultTransaction.amount = amountDec;
+  vaultTransaction.type = type;
+
+  vaultTransaction.save();
 }

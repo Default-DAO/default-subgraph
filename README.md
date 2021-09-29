@@ -54,7 +54,9 @@ node --experimental-repl-await
 
 - Helpful docs:
 https://github.com/LimeChain/matchstick
+
 https://github.com/LimeChain/demo-subgraph
+
 https://limechain.tech/blog/matchstick-what-it-is-and-how-to-use-it/
 
 - Must export the test functions in the mappings file when running the tests. These exports must be commented out during production

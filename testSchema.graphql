@@ -1,0 +1,48 @@
+##################################
+######## DefaultOSFactory ########
+##################################
+
+type DefaultOSFactory @entity {
+  id: ID! #address  
+  osCount: Int!  
+}
+
+Member 
+
+Endorsement {
+  Available
+  Total
+}
+
+Stakes {
+  Total tokens staked
+  Average staking time
+
+  Stake [{
+    Tokens
+    Epoch
+    Duration
+  }] 
+}
+
+DAO
+
+Endorsements {
+  Total endorsements minted
+  Total endorsements assigned
+  Number of contributors receiving > 0 endorsements
+}
+
+Stakes {
+  Total tokens locked
+  Average staking time
+}
+
+MemberReputation {
+  Alias
+  address
+  endorsements received:
+    memberEndorsement
+}
+
+

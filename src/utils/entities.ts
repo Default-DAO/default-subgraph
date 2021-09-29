@@ -21,34 +21,37 @@ import { generateId } from './helpers'
 */
 
 export function getOrCreateFactory(id: string): DefaultOSFactory {  
-  let factory = DefaultOSFactory.load(id)
+  let factory = DefaultOSFactory.load(id);
   if (factory === null) {
-    factory = new DefaultOSFactory(id)
-    factory.osCount = 0
-  }
-  return factory
+    factory = new DefaultOSFactory(id);
+    factory.osCount = 0;
+  };
+
+  return factory;
 }
 
 export function getOrCreateOs(address: Address, name: string = address.toHexString()): DefaultOS {
-  let id = address.toHexString()
-  let os = DefaultOS.load(id)
+  let id = address.toHexString();
+  let os = DefaultOS.load(id);
   if (os === null) {
     os = new DefaultOS(id);
-    os.name = name // default to address if no name
-  }
-  return os as DefaultOS
+    os.name = name; // default to address if no name
+  };
+
+  return os as DefaultOS;
 }
 
 export function getOrCreateEpoch(os: Address, epochNumber: i32): Epoch {
-  let id = generateId([os.toHexString(), epochNumber.toString()])
-  let epoch = Epoch.load(id)
+  let id = generateId([os.toHexString(), epochNumber.toString()]);
+  let epoch = Epoch.load(id);
   if (epoch === null) {
-    epoch = new Epoch(id)
-    epoch.os = getOrCreateOs(os).id
-    epoch.staked = BIGDECIMAL_ZERO
-    epoch.number = epochNumber
-  }
-  return epoch as Epoch
+    epoch = new Epoch(id);
+    epoch.os = getOrCreateOs(os).id;
+    epoch.staked = BIGDECIMAL_ZERO;
+    epoch.number = epochNumber;
+  };
+
+  return epoch as Epoch;
 }
 
 export function getOrCreateMember(
@@ -57,20 +60,21 @@ export function getOrCreateMember(
   alias: Bytes = address,
   epoch: i32 = 0,
 ): Member {
-  let id = generateId([osAddress.toHexString(), address.toHexString()])
-  let member = Member.load(id)
+  let id = generateId([osAddress.toHexString(), address.toHexString()]);
+  let member = Member.load(id);
   if (member === null) {
     member = new Member(id);
     member.address = address.toHexString();
-    member.os = getOrCreateOs(osAddress).id
+    member.os = getOrCreateOs(osAddress).id;
     member.epoch = getOrCreateEpoch(osAddress, epoch).id;
-    member.alias = alias.toHexString() // default to address if no alias
+    member.alias = alias.toHexString(); // default to address if no alias
     member.stakedAmt = BIGDECIMAL_ZERO;
     member.miningRewards = BIGDECIMAL_ZERO;
     member.bonus = BIGDECIMAL_ZERO;
     member.peerRewards = BIGDECIMAL_ZERO;
   }
-  return member as Member
+
+  return member as Member;
 }
 
 export function getOrCreateEndorsement(
@@ -79,15 +83,16 @@ export function getOrCreateEndorsement(
   fromAddress: Address,
   epoch: i32,
 ): Endorsement {
-  let id = generateId([toAddress.toHexString(), fromAddress.toHexString(), epoch.toString()])
-  let endorsement = Endorsement.load(id)
+  let id = generateId([toAddress.toHexString(), fromAddress.toHexString(), epoch.toString()]);
+  let endorsement = Endorsement.load(id);
   if (endorsement === null) {
-    endorsement = new Endorsement(id)
-    endorsement.amount = BIGDECIMAL_ZERO
-    endorsement.epochNumber = epoch
-    endorsement.to = getOrCreateMember(os, toAddress).id
-    endorsement.from = getOrCreateMember(os, fromAddress).id
+    endorsement = new Endorsement(id);
+    endorsement.amount = BIGDECIMAL_ZERO;
+    endorsement.epochNumber = epoch;
+    endorsement.to = getOrCreateMember(os, toAddress).id;
+    endorsement.from = getOrCreateMember(os, fromAddress).id;
   }
+
   return endorsement as Endorsement;
 }
 
@@ -99,18 +104,19 @@ export function getOrCreateVault(
   decimals: i32 = DEFAULT_DECIMALS,
   fee: i32 = 0
 ): Vault {
-  let id = generateId([osAddress.toHexString(), vaultAddress.toHexString()])
-  let vault = Vault.load(id)
+  let id = generateId([osAddress.toHexString(), vaultAddress.toHexString()]);
+  let vault = Vault.load(id);
   if (vault === null) {
-    vault = new Vault(id)
-    vault.os = getOrCreateOs(osAddress).id
-    vault.name = name
-    vault.symbol = symbol
-    vault.decimals = decimals
-    vault.fee = fee
-    vault.amount = BIGDECIMAL_ZERO
+    vault = new Vault(id);
+    vault.os = getOrCreateOs(osAddress).id;
+    vault.name = name;
+    vault.symbol = symbol;
+    vault.decimals = decimals;
+    vault.fee = fee;
+    vault.amount = BIGDECIMAL_ZERO;
   }
-  return vault as Vault
+
+  return vault as Vault;
 }
 
 export function getOrCreateAllocation(
@@ -120,29 +126,30 @@ export function getOrCreateAllocation(
   epochNumber: i32,    
   amount: BigDecimal = BIGDECIMAL_ZERO
 ): Allocation {
-  let id = generateId([os.toHexString(), epochNumber.toString(), fromMember.toHexString(), toMember.toHexString()])
-  let allocation = Allocation.load(id)
+  let id = generateId([os.toHexString(), epochNumber.toString(), fromMember.toHexString(), toMember.toHexString()]);
+  let allocation = Allocation.load(id);
   if (allocation == null) {
-    allocation = new Allocation(id)
-    allocation.committed = false 
-    allocation.epochNumber = epochNumber
-    allocation.os = os.toHexString()
-    allocation.from = fromMember.toHexString()
-    allocation.to = toMember.toHexString()
-    allocation.amount = amount
+    allocation = new Allocation(id);
+    allocation.committed = false;
+    allocation.epochNumber = epochNumber;
+    allocation.os = os.toHexString();
+    allocation.from = fromMember.toHexString();
+    allocation.to = toMember.toHexString();
+    allocation.amount = amount;
   } 
 
-  return allocation as Allocation
+  return allocation as Allocation;
 }
 
 export function getOrCreateModule(os: Address, module: Address, moduleKeyCode: string): Module {
-  let id = generateId([os.toHexString(), moduleKeyCode])
-  let mod = Module.load(id)
+  let id = generateId([os.toHexString(), moduleKeyCode]);
+  let mod = Module.load(id);
   if (mod === null) {
-    mod = new Module(id)
-    mod.os = getOrCreateOs(os).id
-    mod.address = module.toHexString()
-    mod.keycode = moduleKeyCode
+    mod = new Module(id);
+    mod.os = getOrCreateOs(os).id;
+    mod.address = module.toHexString();
+    mod.keycode = moduleKeyCode;
   }
-  return mod as Module
+
+  return mod as Module;
 }
