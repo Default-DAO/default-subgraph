@@ -2,42 +2,45 @@ import { test, assert, clearStore } from 'matchstick-as/assembly/index'
 import { Bytes } from "@graphprotocol/graph-ts";
 import { handleModuleInstalled, handleOwnershipTransferred } from "../mappings/DefaultOS";
 import { DefaultOS } from "../../generated/schema";
-import { createModuleInstalledEvent, createOwnershipTransferredEvent } from './utils/events';
+import { createModuleInstalledMockEvent, createOwnershipTransferredMockEvent } from './utils/events';
 import { generateId } from '../utils/helpers';
 import { ADDRESSES, TOKEN_ENTITY, MODULE_ENTITY, OS_ENTITY } from './utils/constants';
 import { debug } from "matchstick-as/assembly/log";
 
 export function runTests(): void {
   test("Should save token entity", () => {    
-    const moduleInstalledEvent = createModuleInstalledEvent(
+    
+    /// simulate a module installation for the token
+    const moduleInstalledEvent = createModuleInstalledMockEvent(
       ADDRESSES[0], ADDRESSES[1], Bytes.fromUTF8("TKN").toHexString()
-    )
+    );
 
     handleModuleInstalled(moduleInstalledEvent);
 
-    const tokenId = generateId([ADDRESSES[0], ADDRESSES[1]])
-    assert.fieldEquals(TOKEN_ENTITY, tokenId, "os", ADDRESSES[0])
+    const tokenId = generateId([ADDRESSES[0], ADDRESSES[1]]);
+    assert.fieldEquals(TOKEN_ENTITY, tokenId, "os", ADDRESSES[0]);
 
-    clearStore()
+    clearStore();
   });
 
-  test("Should save module", () => {    
-    const moduleKeyCode = "TKN"
-    const moduleInstalledEvent = createModuleInstalledEvent(
+  test("Should save the correct module", () => {    
+
+    const moduleKeyCode = "TKN";
+    const moduleInstalledEvent = createModuleInstalledMockEvent(
       ADDRESSES[0], ADDRESSES[1], Bytes.fromUTF8(moduleKeyCode).toHexString()
-    )
+    );
 
     handleModuleInstalled(moduleInstalledEvent);
 
-    const moduleId = generateId([ADDRESSES[0], moduleKeyCode])
-    assert.fieldEquals(MODULE_ENTITY, moduleId, "os", ADDRESSES[0])
-    assert.fieldEquals(MODULE_ENTITY, moduleId, "address", ADDRESSES[1])
-    assert.fieldEquals(MODULE_ENTITY, moduleId, "keycode", moduleKeyCode)
+    const moduleId = generateId([ADDRESSES[0], moduleKeyCode]);
+    assert.fieldEquals(MODULE_ENTITY, moduleId, "os", ADDRESSES[0]);
+    assert.fieldEquals(MODULE_ENTITY, moduleId, "address", ADDRESSES[1]);
+    assert.fieldEquals(MODULE_ENTITY, moduleId, "keycode", moduleKeyCode);
 
-    const moduleKeyCode2 = "EPC"
-    const moduleInstalledEvent2 = createModuleInstalledEvent(
+    const moduleKeyCode2 = "EPC";
+    const moduleInstalledEvent2 = createModuleInstalledMockEvent(
       ADDRESSES[2], ADDRESSES[3], Bytes.fromUTF8(moduleKeyCode2).toHexString()
-    )
+    );
 
     handleModuleInstalled(moduleInstalledEvent2);
 
@@ -46,44 +49,44 @@ export function runTests(): void {
     assert.fieldEquals(MODULE_ENTITY, moduleId2, "address", ADDRESSES[3])
     assert.fieldEquals(MODULE_ENTITY, moduleId2, "keycode", moduleKeyCode2)
 
-    clearStore()
+    clearStore();
   });
 
-  test("Should replace module", () => {    
-    const moduleKeyCode = "TKN"
-    const moduleInstalledEvent = createModuleInstalledEvent(
+  test("Should replace an existing module instance when re-installing", () => {    
+    const moduleKeyCode = "TKN";
+    const moduleInstalledEvent = createModuleInstalledMockEvent(
       ADDRESSES[0], ADDRESSES[1], Bytes.fromUTF8(moduleKeyCode).toHexString()
-    )
+    );
 
     handleModuleInstalled(moduleInstalledEvent);
 
-    const moduleInstalledEvent2 = createModuleInstalledEvent(
-      //OS address stays the same, module address is different
+    const moduleInstalledEvent2 = createModuleInstalledMockEvent(
+      // OS address stays the same, module address is different
       ADDRESSES[0], ADDRESSES[2], Bytes.fromUTF8(moduleKeyCode).toHexString()
-    )
+    );
 
     handleModuleInstalled(moduleInstalledEvent2);
 
-    const moduleId2 = generateId([ADDRESSES[0], moduleKeyCode])
-    assert.fieldEquals(MODULE_ENTITY, moduleId2, "os", ADDRESSES[0])
-    assert.fieldEquals(MODULE_ENTITY, moduleId2, "address", ADDRESSES[2])
-    assert.fieldEquals(MODULE_ENTITY, moduleId2, "keycode", moduleKeyCode)
+    const moduleId2 = generateId([ADDRESSES[0], moduleKeyCode]);
+    assert.fieldEquals(MODULE_ENTITY, moduleId2, "os", ADDRESSES[0]);
+    assert.fieldEquals(MODULE_ENTITY, moduleId2, "address", ADDRESSES[2]);
+    assert.fieldEquals(MODULE_ENTITY, moduleId2, "keycode", moduleKeyCode);
 
-    clearStore()
+    clearStore();
   });
 
-  test("Should transfer ownership", () => {    
+  test("Should transfer ownership successfully", () => {    
     let defaultOs = new DefaultOS(ADDRESSES[1]);
     defaultOs.save();
 
-    const ownershipTransferredEvent = createOwnershipTransferredEvent(
+    const ownershipTransferredEvent = createOwnershipTransferredMockEvent(
       ADDRESSES[1], ADDRESSES[0]
-    )
+    );
 
     handleOwnershipTransferred(ownershipTransferredEvent);
     
-    assert.fieldEquals(OS_ENTITY, ADDRESSES[0], "id", ADDRESSES[0])    
+    assert.fieldEquals(OS_ENTITY, ADDRESSES[0], "id", ADDRESSES[0]);
 
-    clearStore()
+    clearStore();
   });
 }

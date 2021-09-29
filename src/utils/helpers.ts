@@ -12,10 +12,11 @@ export function toDecimal(
   return value.divDecimal(precision);
 }
 
+// create a composite ID by joining multiple IDs with a hyphen. e.g. Epoch-Member
 export function generateId(fields: Array<string>): string {
-  return fields.join('-')
+  return fields.join('-');
 }
 
 export function generateEventId(event: ethereum.Event): string {
-  return generateId([event.transaction.hash.toHex(), event.logIndex.toString()])
+  return generateId([event.transaction.hash.toHex(), event.logIndex.toString()]);
 }
