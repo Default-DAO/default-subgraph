@@ -95,7 +95,7 @@ export function createEpochIncrementedMockEvent(os: string, epoch: i32): EpochIn
 // ########### Members ##############
 // ##################################
 
-export function createMemberRegisteredEvent(os: string, member: string, alias_: string, epoch: i32): MemberRegistered {
+export function createMemberRegisteredMockEvent(os: string, member: string, alias_: string, epoch: i32): MemberRegistered {
   let mockEvent = newMockEvent()
   let memberRegisteredEvent = new MemberRegistered(mockEvent.address, mockEvent.logIndex, mockEvent.transactionLogIndex,
     mockEvent.logType, mockEvent.block, mockEvent.transaction, mockEvent.parameters)
@@ -114,7 +114,7 @@ export function createMemberRegisteredEvent(os: string, member: string, alias_: 
   return memberRegisteredEvent
 }
 
-export function createTokensStakedEvent(os: string, member: string, amount: i32, lockDuration: i32, epoch: i32): TokensStaked {
+export function createTokensStakedMockEvent(os: string, member: string, amount: i32, lockDuration: i32, epoch: i32): TokensStaked {
   let mockEvent = newMockEvent()
   let tokensStakedEvent = new TokensStaked(mockEvent.address, mockEvent.logIndex, mockEvent.transactionLogIndex,
     mockEvent.logType, mockEvent.block, mockEvent.transaction, mockEvent.parameters)
@@ -135,7 +135,7 @@ export function createTokensStakedEvent(os: string, member: string, amount: i32,
   return tokensStakedEvent
 }
 
-export function createTokensUnstakedEvent(os: string, member: string, amount: i32, lockDuration: i32, epoch: i32): TokensUnstaked {
+export function createTokensUnstakedMockEvent(os: string, member: string, amount: i32, lockDuration: i32, epoch: i32): TokensUnstaked {
   let mockEvent = newMockEvent()
   let tokensUnstakedEvent = new TokensUnstaked(mockEvent.address, mockEvent.logIndex, mockEvent.transactionLogIndex,
     mockEvent.logType, mockEvent.block, mockEvent.transaction, mockEvent.parameters)
@@ -156,7 +156,7 @@ export function createTokensUnstakedEvent(os: string, member: string, amount: i3
   return tokensUnstakedEvent
 }
 
-export function createEndorsementGivenEvent(os: string, fromMember: string, toMember: string, endorsementsGiven: i32, epoch: i32): EndorsementGiven {
+export function createEndorsementGivenMockEvent(os: string, fromMember: string, toMember: string, endorsementsGiven: i32, epoch: i32): EndorsementGiven {
   let mockEvent = newMockEvent()
   let endorsementGivenEvent = new EndorsementGiven(mockEvent.address, mockEvent.logIndex, mockEvent.transactionLogIndex,
     mockEvent.logType, mockEvent.block, mockEvent.transaction, mockEvent.parameters)
@@ -177,7 +177,7 @@ export function createEndorsementGivenEvent(os: string, fromMember: string, toMe
   return endorsementGivenEvent
 }
 
-export function createEndorsementWithdrawnEvent(os: string, fromMember: string, toMember: string, endorsementsWithdrawn: i32, epoch: i32): EndorsementWithdrawn {
+export function createEndorsementWithdrawnMockEvent(os: string, fromMember: string, toMember: string, endorsementsWithdrawn: i32, epoch: i32): EndorsementWithdrawn {
   let mockEvent = newMockEvent()
   let endorsementWithdrawnEvent = new EndorsementWithdrawn(mockEvent.address, mockEvent.logIndex, mockEvent.transactionLogIndex,
     mockEvent.logType, mockEvent.block, mockEvent.transaction, mockEvent.parameters)
