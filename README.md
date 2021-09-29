@@ -65,5 +65,5 @@ https://limechain.tech/blog/matchstick-what-it-is-and-how-to-use-it/
 To run tests, use the following command:
 
 ```
-graph test path_to_file //optional to include
+graph test path_to_file
 ```
