@@ -6,7 +6,6 @@ import {
 } from '../../generated/templates/PeerRewards/PeerRewards';
 import { 
   RewardsRegistration,
-  Allocation,
   TokenTransaction,
 } from '../../generated/schema'
 import {
@@ -33,6 +32,8 @@ export function handleMemberRegistered(event: MemberRegistered): void {
   registration.os = registeredOs.id;
   registration.member = registeredMember.id;
   registration.epochNumber = epochRegisteredFor;
+
+  registration.save();
 }
 
 // Record when a contributor changes their allocation settings

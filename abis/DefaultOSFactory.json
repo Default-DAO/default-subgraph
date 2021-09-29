@@ -11,7 +11,13 @@
       {
         "indexed": false,
         "internalType": "bytes32",
-        "name": "id",
+        "name": "alias_",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes32",
+        "name": "name",
         "type": "bytes32"
       }
     ],

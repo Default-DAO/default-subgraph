@@ -14,21 +14,27 @@ function stringToBytes(str: string): Bytes {
 // ######## DefaultOSFactory ########
 // ##################################
 
-export function createOSCreatedMockEvent(os: string, id: string): OSCreated {
+export function createOSCreatedMockEvent(os: string, alias: string, name: string): OSCreated {
   let mockEvent = newMockEvent();
   let osCreatedEvent = new OSCreated(mockEvent.address, mockEvent.logIndex, mockEvent.transactionLogIndex,
     mockEvent.logType, mockEvent.block, mockEvent.transaction, mockEvent.parameters);
 
   let osParam = new ethereum.EventParam("os", ethereum.Value.fromAddress(Address.fromString(os)));
-  let idParam = new ethereum.EventParam(
+  let aliasParam = new ethereum.EventParam(
+    "alias",
+    //Not sure why just converting to Bytes straight from UTF8 fails
+    ethereum.Value.fromBytes(stringToBytes(alias))
+  );
+  let nameParam = new ethereum.EventParam(
     "name",
     //Not sure why just converting to Bytes straight from UTF8 fails
-    ethereum.Value.fromBytes(stringToBytes(id))
+    ethereum.Value.fromBytes(stringToBytes(name))
   );
 
   osCreatedEvent.parameters = new Array();
   osCreatedEvent.parameters.push(osParam);
-  osCreatedEvent.parameters.push(idParam);
+  osCreatedEvent.parameters.push(aliasParam);
+  osCreatedEvent.parameters.push(nameParam);
 
   return osCreatedEvent
 }

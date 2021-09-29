@@ -30,11 +30,12 @@ export function getOrCreateFactory(id: string): DefaultOSFactory {
   return factory;
 }
 
-export function getOrCreateOs(address: Address, name: string = address.toHexString()): DefaultOS {
+export function getOrCreateOs(address: Address, alias: string = address.toHexString(), name: string = address.toHexString()): DefaultOS {
   let id = address.toHexString();
   let os = DefaultOS.load(id);
   if (os === null) {
     os = new DefaultOS(id);
+    os.alias = alias;
     os.name = name; // default to address if no name
   };
 

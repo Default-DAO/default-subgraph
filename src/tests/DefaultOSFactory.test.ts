@@ -10,12 +10,13 @@ export function runTests(): void {
   
   test("Should create and save a new OS successfully", () => {    
     const osCreatedEvent = createOSCreatedMockEvent(
-      ADDRESSES[0], "default"
+      ADDRESSES[0], "default", "Default"
     );
 
     handleOSCreated(osCreatedEvent);
     
-    assert.fieldEquals(OS_ENTITY, ADDRESSES[0], "name", "default");
+    assert.fieldEquals(OS_ENTITY, ADDRESSES[0], "alias", "default");
+    assert.fieldEquals(OS_ENTITY, ADDRESSES[0], "name", "Default");
 
     clearStore();
   });
@@ -28,7 +29,7 @@ export function runTests(): void {
     // simulate first OS creation
 
     const osCreatedEvent = createOSCreatedMockEvent(
-      ADDRESSES[1], "default"
+      ADDRESSES[1], "default", "Default"
     );
     handleOSCreated(osCreatedEvent);
 
@@ -37,7 +38,7 @@ export function runTests(): void {
     // simulate second OS creation
 
     const osCreatedEvent2 = createOSCreatedMockEvent(
-      ADDRESSES[2], "station"
+      ADDRESSES[2], "station", "Station"
     );
     handleOSCreated(osCreatedEvent2);
 
