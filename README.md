@@ -61,8 +61,9 @@ https://limechain.tech/blog/matchstick-what-it-is-and-how-to-use-it/
 
 - Must export the test functions in the mappings file when running the tests. These exports must be commented out during production.
 
-To run tests, use the following command
+
+To run tests, use the following command:
 
 ```
-graph test path_to_file //optional to include:
+graph test path_to_file //optional to include
 ```
