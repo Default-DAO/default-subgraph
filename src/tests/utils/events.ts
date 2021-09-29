@@ -14,10 +14,10 @@ function stringToBytes(str: string): Bytes {
 // ######## DefaultOSFactory ########
 // ##################################
 
-export function createOSCreatedEvent(os: string, id: string): OSCreated {
-  let mockEvent = newMockEvent()
+export function createOSCreatedMockEvent(os: string, id: string): OSCreated {
+  let mockEvent = newMockEvent();
   let osCreatedEvent = new OSCreated(mockEvent.address, mockEvent.logIndex, mockEvent.transactionLogIndex,
-    mockEvent.logType, mockEvent.block, mockEvent.transaction, mockEvent.parameters)
+    mockEvent.logType, mockEvent.block, mockEvent.transaction, mockEvent.parameters);
 
   let osParam = new ethereum.EventParam("os", ethereum.Value.fromAddress(Address.fromString(os)));
   let idParam = new ethereum.EventParam(
@@ -37,10 +37,10 @@ export function createOSCreatedEvent(os: string, id: string): OSCreated {
 // ########### DefaultOS ############
 // ##################################
 
-export function createModuleInstalledEvent(os: string, module: string, moduleKeyCode: string): ModuleInstalled {
-  let mockEvent = newMockEvent()
+export function createModuleInstalledMockEvent(os: string, module: string, moduleKeyCode: string): ModuleInstalled {
+  let mockEvent = newMockEvent();
   let moduleInstalledEvent = new ModuleInstalled(mockEvent.address, mockEvent.logIndex, mockEvent.transactionLogIndex,
-    mockEvent.logType, mockEvent.block, mockEvent.transaction, mockEvent.parameters)
+    mockEvent.logType, mockEvent.block, mockEvent.transaction, mockEvent.parameters);
 
   let osParam = new ethereum.EventParam("os", ethereum.Value.fromAddress(Address.fromString(os)));
   let moduleParam = new ethereum.EventParam("module", ethereum.Value.fromAddress(Address.fromString(module)));
@@ -54,13 +54,13 @@ export function createModuleInstalledEvent(os: string, module: string, moduleKey
   moduleInstalledEvent.parameters.push(moduleParam);
   moduleInstalledEvent.parameters.push(moduleKeyCodeParam);
 
-  return moduleInstalledEvent
+  return moduleInstalledEvent;
 }
 
-export function createOwnershipTransferredEvent(previousOwner: string, newOwner: string): OwnershipTransferred {
-  let mockEvent = newMockEvent()
+export function createOwnershipTransferredMockEvent(previousOwner: string, newOwner: string): OwnershipTransferred {
+  let mockEvent = newMockEvent();
   let ownershipTransferredEvent = new OwnershipTransferred(mockEvent.address, mockEvent.logIndex, mockEvent.transactionLogIndex,
-    mockEvent.logType, mockEvent.block, mockEvent.transaction, mockEvent.parameters)
+    mockEvent.logType, mockEvent.block, mockEvent.transaction, mockEvent.parameters);
 
   let previousOwnerParam = new ethereum.EventParam("previousOwner", ethereum.Value.fromAddress(Address.fromString(previousOwner)));
   let newOwnerParam = new ethereum.EventParam("newOwner", ethereum.Value.fromAddress(Address.fromString(newOwner)));
@@ -69,17 +69,17 @@ export function createOwnershipTransferredEvent(previousOwner: string, newOwner:
   ownershipTransferredEvent.parameters.push(previousOwnerParam);
   ownershipTransferredEvent.parameters.push(newOwnerParam);
 
-  return ownershipTransferredEvent
+  return ownershipTransferredEvent;
 }
 
 // ##################################
 // ############ Epoch ###############
 // ##################################
 
-export function createEpochIncrementedEvent(os: string, epoch: i32): EpochIncremented {
-  let mockEvent = newMockEvent()
+export function createEpochIncrementedMockEvent(os: string, epoch: i32): EpochIncremented {
+  let mockEvent = newMockEvent();
   let epochIncrementedEvent = new EpochIncremented(mockEvent.address, mockEvent.logIndex, mockEvent.transactionLogIndex,
-    mockEvent.logType, mockEvent.block, mockEvent.transaction, mockEvent.parameters)
+    mockEvent.logType, mockEvent.block, mockEvent.transaction, mockEvent.parameters);
 
   let osParam = new ethereum.EventParam("os", ethereum.Value.fromAddress(Address.fromString(os)));
   let epochParam = new ethereum.EventParam("epoch", ethereum.Value.fromI32(epoch));

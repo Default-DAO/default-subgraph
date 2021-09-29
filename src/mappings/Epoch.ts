@@ -4,13 +4,13 @@ import { getOrCreateEpoch } from '../utils/entities'
 // export { runTests } from '../tests/Epoch.test'
 
 export function handleEpochIncremented(event: EpochIncremented): void {
-  // os address of the contract that generated the event
-  let osAddress = event.params.os
-  let epochNumber = event.params.epoch
+  // address of the os contract that generated the event
+  let osAddress = event.params.os;
+  let epochNumber = event.params.epoch;
 
   // update epoch number
-  let epoch = getOrCreateEpoch(osAddress, epochNumber)
-  epoch.number = epochNumber
+  let epoch = getOrCreateEpoch(osAddress, epochNumber);
+  epoch.number = epochNumber;
 
-  epoch.save()
+  epoch.save();
 }

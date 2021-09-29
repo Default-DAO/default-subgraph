@@ -1,43 +1,48 @@
 import { test, assert, clearStore } from 'matchstick-as/assembly/index'
 import { handleOSCreated } from "../mappings/DefaultOSFactory";
 import { DefaultOSFactory } from "../../generated/schema";
-import { createOSCreatedEvent } from './utils/events';
+import { createOSCreatedMockEvent } from './utils/events';
 import { ADDRESSES, FACTORY_ENTITY, OS_ENTITY } from './utils/constants';
 import { FACTORY_ADDRESS } from '../utils/constants';
 import { debug } from "matchstick-as/assembly/log";
 
 export function runTests(): void {
-  test("Should create OS", () => {    
-    const osCreatedEvent = createOSCreatedEvent(
+  
+  test("Should create and save a new OS successfully", () => {    
+    const osCreatedEvent = createOSCreatedMockEvent(
       ADDRESSES[0], "default"
-    )
+    );
 
-    handleOSCreated(osCreatedEvent)
+    handleOSCreated(osCreatedEvent);
     
-    assert.fieldEquals(OS_ENTITY, ADDRESSES[0], "name", "default")
+    assert.fieldEquals(OS_ENTITY, ADDRESSES[0], "name", "default");
 
-    clearStore()
+    clearStore();
   });
 
   test("Should update factory's os count", () => {    
-    const factory = new DefaultOSFactory(FACTORY_ADDRESS)
-    factory.osCount = 0
-    factory.save()
+    const factory = new DefaultOSFactory(FACTORY_ADDRESS);
+    factory.osCount = 0;
+    factory.save();
 
-    const osCreatedEvent = createOSCreatedEvent(
+    // simulate first OS creation
+
+    const osCreatedEvent = createOSCreatedMockEvent(
       ADDRESSES[1], "default"
-    )
-    handleOSCreated(osCreatedEvent)
+    );
+    handleOSCreated(osCreatedEvent);
 
-    assert.fieldEquals(FACTORY_ENTITY, FACTORY_ADDRESS, "osCount", "1")
+    assert.fieldEquals(FACTORY_ENTITY, FACTORY_ADDRESS, "osCount", "1");
 
-    const osCreatedEvent2 = createOSCreatedEvent(
+    // simulate second OS creation
+
+    const osCreatedEvent2 = createOSCreatedMockEvent(
       ADDRESSES[2], "station"
-    )
-    handleOSCreated(osCreatedEvent2)
+    );
+    handleOSCreated(osCreatedEvent2);
 
-    assert.fieldEquals(FACTORY_ENTITY, FACTORY_ADDRESS, "osCount", "2")
+    assert.fieldEquals(FACTORY_ENTITY, FACTORY_ADDRESS, "osCount", "2");
 
-    clearStore()
+    clearStore();
   });
 }
