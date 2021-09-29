@@ -10,7 +10,7 @@ import { debug } from "matchstick-as/assembly/log";
 export function runTests(): void {
   test("Should save token entity", () => {    
     const moduleInstalledEvent = createModuleInstalledEvent(
-      ADDRESSES[0], ADDRESSES[1], Bytes.fromUTF8("TKN").toHexString()
+      ADDRESSES[0], ADDRESSES[1], "TKN"
     )
 
     handleModuleInstalled(moduleInstalledEvent);
@@ -24,7 +24,7 @@ export function runTests(): void {
   test("Should save module", () => {    
     const moduleKeyCode = "TKN"
     const moduleInstalledEvent = createModuleInstalledEvent(
-      ADDRESSES[0], ADDRESSES[1], Bytes.fromUTF8(moduleKeyCode).toHexString()
+      ADDRESSES[0], ADDRESSES[1], moduleKeyCode
     )
 
     handleModuleInstalled(moduleInstalledEvent);
@@ -36,7 +36,7 @@ export function runTests(): void {
 
     const moduleKeyCode2 = "EPC"
     const moduleInstalledEvent2 = createModuleInstalledEvent(
-      ADDRESSES[2], ADDRESSES[3], Bytes.fromUTF8(moduleKeyCode2).toHexString()
+      ADDRESSES[2], ADDRESSES[3], moduleKeyCode2
     )
 
     handleModuleInstalled(moduleInstalledEvent2);
@@ -52,14 +52,14 @@ export function runTests(): void {
   test("Should replace module", () => {    
     const moduleKeyCode = "TKN"
     const moduleInstalledEvent = createModuleInstalledEvent(
-      ADDRESSES[0], ADDRESSES[1], Bytes.fromUTF8(moduleKeyCode).toHexString()
+      ADDRESSES[0], ADDRESSES[1], moduleKeyCode
     )
 
     handleModuleInstalled(moduleInstalledEvent);
 
     const moduleInstalledEvent2 = createModuleInstalledEvent(
       //OS address stays the same, module address is different
-      ADDRESSES[0], ADDRESSES[2], Bytes.fromUTF8(moduleKeyCode).toHexString()
+      ADDRESSES[0], ADDRESSES[2], moduleKeyCode
     )
 
     handleModuleInstalled(moduleInstalledEvent2);

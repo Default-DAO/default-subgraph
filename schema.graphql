@@ -59,7 +59,7 @@ enum StakeType {
 }
 
 type Stake @entity {
-  id: ID!  # os-uniqueEventId
+  id: ID!  # uniqueEventId
   os: DefaultOS!
   epochNumber: Int!
   type: StakeType!

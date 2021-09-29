@@ -64,7 +64,7 @@ export function getOrCreateMember(
     member.address = address.toHexString();
     member.os = getOrCreateOs(osAddress).id
     member.epoch = getOrCreateEpoch(osAddress, epoch).id;
-    member.alias = alias.toHexString() // default to address if no alias
+    member.alias = alias.toString()
     member.stakedAmt = BIGDECIMAL_ZERO;
     member.miningRewards = BIGDECIMAL_ZERO;
     member.bonus = BIGDECIMAL_ZERO;
@@ -79,10 +79,11 @@ export function getOrCreateEndorsement(
   fromAddress: Address,
   epoch: i32,
 ): Endorsement {
-  let id = generateId([toAddress.toHexString(), fromAddress.toHexString(), epoch.toString()])
+  let id = generateId([os.toHexString(), fromAddress.toHexString(), toAddress.toHexString(), epoch.toString()])
   let endorsement = Endorsement.load(id)
   if (endorsement === null) {
     endorsement = new Endorsement(id)
+    endorsement.os = getOrCreateOs(os).id
     endorsement.amount = BIGDECIMAL_ZERO
     endorsement.epochNumber = epoch
     endorsement.to = getOrCreateMember(os, toAddress).id
@@ -120,7 +121,7 @@ export function getOrCreateAllocation(
   epochNumber: i32,    
   amount: BigDecimal = BIGDECIMAL_ZERO
 ): Allocation {
-  let id = generateId([os.toHexString(), epochNumber.toString(), fromMember.toHexString(), toMember.toHexString()])
+  let id = generateId([os.toHexString(), fromMember.toHexString(), toMember.toHexString(), epochNumber.toString()])
   let allocation = Allocation.load(id)
   if (allocation == null) {
     allocation = new Allocation(id)
