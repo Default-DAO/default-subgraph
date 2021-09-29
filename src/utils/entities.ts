@@ -1,4 +1,4 @@
-import { Address, BigDecimal, BigInt, Bytes } from '@graphprotocol/graph-ts'
+import { Address, BigDecimal, Bytes } from '@graphprotocol/graph-ts'
 
 import { 
   Member, 
@@ -84,7 +84,7 @@ export function getOrCreateEndorsement(
   fromAddress: Address,
   epoch: i32,
 ): Endorsement {
-  let id = generateId([os.toHexString(), fromAddress.toHexString(), toAddress.toHexString(), epoch.toString()])
+  let id = generateId([os.toHexString(), epoch.toString(), fromAddress.toHexString(), toAddress.toHexString()])
   let endorsement = Endorsement.load(id)
   if (endorsement === null) {
     endorsement = new Endorsement(id)
@@ -123,12 +123,12 @@ export function getOrCreateVault(
 
 export function getOrCreateAllocation(
   os: Address,
-  toMember: Address,
-  fromMember: Address,  
+  fromMember: Address, 
+  toMember: Address,   
   epochNumber: i32,    
   amount: BigDecimal = BIGDECIMAL_ZERO
 ): Allocation {
-  let id = generateId([os.toHexString(), fromMember.toHexString(), toMember.toHexString(), epochNumber.toString()])
+  let id = generateId([os.toHexString(), epochNumber.toString(), fromMember.toHexString(), toMember.toHexString()])
   let allocation = Allocation.load(id)
   if (allocation == null) {
     allocation = new Allocation(id);

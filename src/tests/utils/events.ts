@@ -4,6 +4,7 @@ import { ModuleInstalled, OwnershipTransferred } from "../../../generated/templa
 import { Address, Bytes, ethereum } from "@graphprotocol/graph-ts";
 import { EpochIncremented } from '../../../generated/templates/Epoch/Epoch';
 import { EndorsementGiven, EndorsementWithdrawn, MemberRegistered, TokensStaked, TokensUnstaked } from '../../../generated/templates/Members/Members';
+import { MemberRegistered as PeerRewardsMemberRegistered, AllocationSet, AllocationGiven, RewardsClaimed } from '../../../generated/templates/PeerRewards/PeerRewards';
 import { debug } from "matchstick-as/assembly/log";
 
 function stringToBytes(str: string): Bytes {
@@ -202,4 +203,89 @@ export function createEndorsementWithdrawnMockEvent(os: string, fromMember: stri
   endorsementWithdrawnEvent.parameters.push(epochparam);
 
   return endorsementWithdrawnEvent
+}
+
+
+// ##################################
+// ######### PeerRewards ############
+// ##################################
+
+export function createPeerReviewMemberRegisteredMockEvent(os: string, member: string, epochRegisteredFor: i32, ptsRegistered: i32): PeerRewardsMemberRegistered {
+  let mockEvent = newMockEvent()
+  let prMemberRegisteredEvent = new PeerRewardsMemberRegistered(mockEvent.address, mockEvent.logIndex, mockEvent.transactionLogIndex,
+    mockEvent.logType, mockEvent.block, mockEvent.transaction, mockEvent.parameters)
+
+  let osParam = new ethereum.EventParam("os", ethereum.Value.fromAddress(Address.fromString(os)));
+  let memberParam = new ethereum.EventParam("member", ethereum.Value.fromAddress(Address.fromString(member)));  
+  let epochRegisteredForParam = new ethereum.EventParam("epochRegisteredFor", ethereum.Value.fromI32(epochRegisteredFor));
+  let ptsRegisteredParam = new ethereum.EventParam("ptsRegistered", ethereum.Value.fromI32(ptsRegistered));
+
+  prMemberRegisteredEvent.parameters = new Array();
+  prMemberRegisteredEvent.parameters.push(osParam);
+  prMemberRegisteredEvent.parameters.push(memberParam);
+  prMemberRegisteredEvent.parameters.push(epochRegisteredForParam);
+  prMemberRegisteredEvent.parameters.push(ptsRegisteredParam);
+
+  return prMemberRegisteredEvent
+}
+
+export function createAllocationSetMockEvent(os: string, fromMember: string, toMember: string, allocPts: i32, currentEpoch: i32): AllocationSet {
+  let mockEvent = newMockEvent()
+  let allocationSetEvent = new AllocationSet(mockEvent.address, mockEvent.logIndex, mockEvent.transactionLogIndex,
+    mockEvent.logType, mockEvent.block, mockEvent.transaction, mockEvent.parameters)
+
+  let osParam = new ethereum.EventParam("os", ethereum.Value.fromAddress(Address.fromString(os)));
+  let fromMemberParam = new ethereum.EventParam("fromMember", ethereum.Value.fromAddress(Address.fromString(fromMember)));  
+  let toMemberParam = new ethereum.EventParam("toMember", ethereum.Value.fromAddress(Address.fromString(toMember)));  
+  let allocPtsParam = new ethereum.EventParam("allocPts", ethereum.Value.fromI32(allocPts));
+  let currentEpochParam = new ethereum.EventParam("currentEpoch", ethereum.Value.fromI32(currentEpoch));
+
+  allocationSetEvent.parameters = new Array();
+  allocationSetEvent.parameters.push(osParam);
+  allocationSetEvent.parameters.push(fromMemberParam);
+  allocationSetEvent.parameters.push(toMemberParam);
+  allocationSetEvent.parameters.push(allocPtsParam);
+  allocationSetEvent.parameters.push(currentEpochParam);
+
+  return allocationSetEvent
+}
+
+export function createAllocationGivenMockEvent(os: string, fromMember: string, toMember: string, allocGiven: i32, currentEpoch: i32): AllocationGiven {
+  let mockEvent = newMockEvent()
+  let allocationGivenEvent = new AllocationGiven(mockEvent.address, mockEvent.logIndex, mockEvent.transactionLogIndex,
+    mockEvent.logType, mockEvent.block, mockEvent.transaction, mockEvent.parameters)
+
+  let osParam = new ethereum.EventParam("os", ethereum.Value.fromAddress(Address.fromString(os)));
+  let fromMemberParam = new ethereum.EventParam("fromMember", ethereum.Value.fromAddress(Address.fromString(fromMember)));  
+  let toMemberParam = new ethereum.EventParam("toMember", ethereum.Value.fromAddress(Address.fromString(toMember)));  
+  let allocGivenParam = new ethereum.EventParam("allocGiven", ethereum.Value.fromI32(allocGiven));
+  let currentEpochParam = new ethereum.EventParam("currentEpoch", ethereum.Value.fromI32(currentEpoch));
+
+  allocationGivenEvent.parameters = new Array();
+  allocationGivenEvent.parameters.push(osParam);
+  allocationGivenEvent.parameters.push(fromMemberParam);
+  allocationGivenEvent.parameters.push(toMemberParam);
+  allocationGivenEvent.parameters.push(allocGivenParam);
+  allocationGivenEvent.parameters.push(currentEpochParam);
+
+  return allocationGivenEvent
+}
+
+export function createRewardsClaimedMockEvent(os: string, member: string, totalRewardsClaimed: i32, epochClaimed: i32): RewardsClaimed {
+  let mockEvent = newMockEvent()
+  let rewardsClaimedEvent = new RewardsClaimed(mockEvent.address, mockEvent.logIndex, mockEvent.transactionLogIndex,
+    mockEvent.logType, mockEvent.block, mockEvent.transaction, mockEvent.parameters)
+
+  let osParam = new ethereum.EventParam("os", ethereum.Value.fromAddress(Address.fromString(os)));
+  let memberParam = new ethereum.EventParam("member", ethereum.Value.fromAddress(Address.fromString(member)));  
+  let totalRewardsClaimedParam = new ethereum.EventParam("totalRewardsClaimed", ethereum.Value.fromI32(totalRewardsClaimed));  
+  let epochClaimedParam = new ethereum.EventParam("epochClaimed", ethereum.Value.fromI32(epochClaimed));  
+
+  rewardsClaimedEvent.parameters = new Array();
+  rewardsClaimedEvent.parameters.push(osParam);
+  rewardsClaimedEvent.parameters.push(memberParam);
+  rewardsClaimedEvent.parameters.push(totalRewardsClaimedParam);
+  rewardsClaimedEvent.parameters.push(epochClaimedParam);  
+
+  return rewardsClaimedEvent
 }

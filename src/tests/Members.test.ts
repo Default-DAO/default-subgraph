@@ -3,7 +3,7 @@ import { createEndorsementGivenMockEvent, createEndorsementWithdrawnMockEvent, c
 import { ADDRESSES, ENDORSEMENT_ENTITY, MEMBER_ENTITY, STAKE_ENTITY } from './utils/constants';
 import { STAKETYPE_STAKE, STAKETYPE_UNSTAKE } from '../utils/constants';
 import { handleEndorsementGiven, handleEndorsementWithdrawn, handleMemberRegistered, handleTokensStaked, handleTokensUnstaked } from '../mappings/Members';
-import { generateId } from '../utils/helpers';
+import { generateEventId, generateId } from '../utils/helpers';
 import { debug } from "matchstick-as/assembly/log";
 
 export function runTests(): void {
@@ -33,9 +33,7 @@ export function runTests(): void {
     handleTokensStaked(tokensStakedEvent);
 
     const memberId = generateId([ADDRESSES[0], ADDRESSES[1]]);
-    const stakeId = generateId(
-      [tokensStakedEvent.transaction.hash.toHex(), tokensStakedEvent.logIndex.toString()]
-    );
+    const stakeId = generateEventId(tokensStakedEvent)
     assert.fieldEquals(MEMBER_ENTITY, memberId, "stakedAmt", "1");
     assert.fieldEquals(STAKE_ENTITY, stakeId, "os", ADDRESSES[0]);
     assert.fieldEquals(STAKE_ENTITY, stakeId, "epochNumber", "1");
@@ -61,9 +59,7 @@ export function runTests(): void {
     handleTokensUnstaked(tokensUnstakedEvent);
 
     const memberId = generateId([ADDRESSES[0], ADDRESSES[1]]);
-    const stakeId = generateId(
-      [tokensUnstakedEvent.transaction.hash.toHex(), tokensUnstakedEvent.logIndex.toString()]
-    );
+    const stakeId = generateEventId(tokensUnstakedEvent)
     assert.fieldEquals(MEMBER_ENTITY, memberId, "stakedAmt", "0");
     assert.fieldEquals(STAKE_ENTITY, stakeId, "os", ADDRESSES[0]);
     assert.fieldEquals(STAKE_ENTITY, stakeId, "epochNumber", "1");
@@ -83,9 +79,7 @@ export function runTests(): void {
     handleTokensStaked(initialStake);
 
     const memberId = generateId([ADDRESSES[0], ADDRESSES[1]]);
-    const stakeId = generateId(
-      [initialStake.transaction.hash.toHex(), initialStake.logIndex.toString()]
-    );
+    const stakeId = generateEventId(initialStake)
     assert.fieldEquals(MEMBER_ENTITY, memberId, "stakedAmt", "1");
     assert.fieldEquals(STAKE_ENTITY, stakeId, "type", STAKETYPE_STAKE);
     assert.fieldEquals(STAKE_ENTITY, stakeId, "amount", "1");
@@ -96,9 +90,7 @@ export function runTests(): void {
 
     handleTokensStaked(tokensStakedEvent);
 
-    const stakeId2 = generateId(
-      [tokensStakedEvent.transaction.hash.toHex(), tokensStakedEvent.logIndex.toString()]
-    );
+    const stakeId2 = generateEventId(tokensStakedEvent)
     assert.fieldEquals(MEMBER_ENTITY, memberId, "stakedAmt", "11");
     assert.fieldEquals(STAKE_ENTITY, stakeId2, "type", STAKETYPE_STAKE);
     assert.fieldEquals(STAKE_ENTITY, stakeId2, "amount", "10");
@@ -110,9 +102,7 @@ export function runTests(): void {
     handleTokensUnstaked(tokensUnstakedEvent);
 
     //Seems like these mock events generate the same hash everytime. Something to beware of
-    const stakeId3 = generateId(
-      [tokensUnstakedEvent.transaction.hash.toHex(), tokensUnstakedEvent.logIndex.toString()]
-    );
+    const stakeId3 = generateEventId(tokensUnstakedEvent)
     assert.fieldEquals(MEMBER_ENTITY, memberId, "stakedAmt", "0");
     assert.fieldEquals(STAKE_ENTITY, stakeId3, "type", STAKETYPE_UNSTAKE);
     assert.fieldEquals(STAKE_ENTITY, stakeId3, "amount", "11");
@@ -127,7 +117,7 @@ export function runTests(): void {
 
     handleEndorsementGiven(endorsementGivenEvent);
 
-    let endorsementId = generateId([ADDRESSES[0], ADDRESSES[1], ADDRESSES[2], "1"]);
+    let endorsementId = generateId([ADDRESSES[0], "1", ADDRESSES[1], ADDRESSES[2]]);
     let fromId = generateId([ADDRESSES[0], ADDRESSES[1]]);
     let toId = generateId([ADDRESSES[0], ADDRESSES[2]]); 
     assert.fieldEquals(ENDORSEMENT_ENTITY, endorsementId, "os", ADDRESSES[0]);
@@ -153,7 +143,7 @@ export function runTests(): void {
 
     handleEndorsementWithdrawn(endorsementWithdrawnEvent);
 
-    let endorsementId = generateId([ADDRESSES[0], ADDRESSES[1], ADDRESSES[2], "1"]);    
+    let endorsementId = generateId([ADDRESSES[0], "1", ADDRESSES[1], ADDRESSES[2]]);    
     let fromId = generateId([ADDRESSES[0], ADDRESSES[1]]);
     let toId = generateId([ADDRESSES[0], ADDRESSES[2]]);    
     assert.fieldEquals(ENDORSEMENT_ENTITY, endorsementId, "os", ADDRESSES[0]);
