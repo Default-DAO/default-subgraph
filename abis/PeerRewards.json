@@ -14,13 +14,13 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "address",
         "name": "os",
         "type": "address"
       },
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "address",
         "name": "fromMember",
         "type": "address"
@@ -38,7 +38,7 @@
         "type": "uint256"
       },
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "uint16",
         "name": "currentEpoch",
         "type": "uint16"
@@ -51,13 +51,13 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "address",
         "name": "os",
         "type": "address"
       },
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "address",
         "name": "fromMember",
         "type": "address"
@@ -75,7 +75,7 @@
         "type": "uint8"
       },
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "uint16",
         "name": "currentEpoch",
         "type": "uint16"
@@ -88,28 +88,28 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "address",
         "name": "os",
         "type": "address"
       },
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "address",
         "name": "member",
         "type": "address"
       },
       {
         "indexed": false,
-        "internalType": "uint16",
-        "name": "epochRegisteredFor",
-        "type": "uint16"
-      },
-      {
-        "indexed": false,
         "internalType": "uint256",
         "name": "ptsRegistered",
         "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint16",
+        "name": "epochRegisteredFor",
+        "type": "uint16"
       }
     ],
     "name": "MemberRegistered",
@@ -138,13 +138,13 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "address",
         "name": "os",
         "type": "address"
       },
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "address",
         "name": "member",
         "type": "address"
@@ -156,7 +156,7 @@
         "type": "uint256"
       },
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "uint16",
         "name": "epochClaimed",
         "type": "uint16"

@@ -8,7 +8,7 @@ dataSources:
     name: DefaultOSFactory
     network: mainnet
     source:
-      address: '0x5FbDB2315678afecb367f032d93F642f64180aa3'
+      address: '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512'
       abi: DefaultOSFactory
     mapping:
       kind: ethereum/events
@@ -62,7 +62,7 @@ templates:
         - name: Epoch
           file: ./abis/Epoch.json
       eventHandlers:
-        - event: EpochIncremented(address,uint16,uint256)
+        - event: EpochIncremented(indexed address,indexed uint16,uint256)
           handler: handleEpochIncremented
   - name: Members
     kind: ethereum/contract
@@ -83,15 +83,15 @@ templates:
         - name: Members
           file: ./abis/Members.json
       eventHandlers:
-        - event: MemberRegistered(address,address,bytes32,uint16)
+        - event: MemberRegistered(indexed address,indexed address,bytes32,indexed uint16)
           handler: handleMemberRegistered
-        - event: TokensStaked(address,address,uint256,uint16,uint16)
+        - event: TokensStaked(indexed address,indexed address,uint256,uint16,indexed uint16)
           handler: handleTokensStaked
-        - event: TokensUnstaked(address,address,uint256,uint16,uint16)
+        - event: TokensUnstaked(indexed address,indexed address,uint256,uint16,indexed uint16)
           handler: handleTokensUnstaked
-        - event: EndorsementGiven(address,address,address,uint256,uint16)
+        - event: EndorsementGiven(indexed address,indexed address,address,uint256,indexed uint16)
           handler: handleEndorsementGiven
-        - event: EndorsementWithdrawn(address,address,address,uint256,uint16)
+        - event: EndorsementWithdrawn(indexed address,indexed address,address,uint256,indexed uint16)
           handler: handleEndorsementWithdrawn
   - name: Treasury
     kind: ethereum/contract
@@ -141,13 +141,13 @@ templates:
         - name: PeerRewards
           file: ./abis/PeerRewards.json
       eventHandlers:
-        - event: MemberRegistered(address,address,uint16,uint256)
+        - event: MemberRegistered(indexed address,indexed address,uint256,indexed uint16)
           handler: handleMemberRegistered
-        - event: AllocationSet(address,address,address,uint8,uint16)
+        - event: AllocationSet(indexed address,indexed address,address,uint8,indexed uint16)
           handler: handleAllocationSet
-        - event: AllocationGiven(address,address,address,uint256,uint16)
+        - event: AllocationGiven(indexed address,indexed address,address,uint256,indexed uint16)
           handler: handleAllocationGiven
-        - event: RewardsClaimed(address,address,uint256,uint16)
+        - event: RewardsClaimed(indexed address,indexed address,uint256,indexed uint16)
           handler: handleRewardsClaimed
   - name: Mining
     kind: ethereum/contract
