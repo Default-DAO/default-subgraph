@@ -12,9 +12,9 @@
   ```
   npx hardhat node --hostname 0.0.0.0
   ```
-- deploy Default contracts to local network from the default-core project
+- deploy Default contracts to local network from the default-core project along with seed data
   ```
-  npx hardhat run scripts/init.js --network dev
+  npx hardhat run scripts/seedData.js --network dev
   ```
   - once the contracts have been deployed copy the DefaultOSFactory address and overwrite the DefaultOSFactory address in default-subgraph/subgraph.yml. Unfortunately, this needs to be done on every contract deployment or anytime you reset the local network.
 - start up a local graph node by entering the graph-node-docker-file project directory and running:
@@ -30,32 +30,23 @@
 This should deploy the subgraph to your local graph node which is listening to your local network.
 
 ### Generating contract data 
-At the moment there is no seed data script. You can generate data by interacting with the contracts through node shell. 
-
-Here's an example script you can run which will generate a new OS:
+From the default-core project spin up a local hardhat node:
 ```
-let factoryAddress = '0x5FbDB2315678afecb367f032d93F642f64180aa3' 
-let myAddress = '0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266'
-let Web3 = require('web3');
-let { ethers } = require("hardhat");
-
-let factoryAbi = require('./artifacts/contracts/os/DefaultOSFactory.sol/DefaultOSFactory.json').abi;
-let osAbi = require('./artifacts/contracts/os/DefaultOS.sol/DefaultOS.json').abi;
-let web3 = new Web3('http://localhost:8545');
-let accounts = await web3.eth.getAccounts();
-accounts
-let factory = new web3.eth.Contract(factoryAbi, factoryAddress);
-await factory.methods.setOS(ethers.utils.formatBytes32String('testOS')).send({from: myAddress});
+npx hardhat node --hostname 0.0.0.0
 ```
 
-
-
-Make sure you run node shell within the default-core project and with the experimental-repl-await flag to use async code. 
+then run the seed data script
 ```
-node --experimental-repl-await
+npx hardhat run scripts/seedData.js --network dev
 ```
 
 ### Testing using matchstick
+- Must export the test functions in the mappings file when running the tests. These exports must be commented out during production.
+
+Run the tests with this command:
+```
+yarn test
+```
 
 - Helpful docs:
 https://github.com/LimeChain/matchstick
@@ -64,15 +55,3 @@ https://github.com/LimeChain/demo-subgraph
 
 https://limechain.tech/blog/matchstick-what-it-is-and-how-to-use-it/
 
-- Must export the test functions in the mappings file when running the tests. These exports must be commented out during production.
-
-Before running the tests, make sure to build using the following command if you've made changes to any code:
-```
-graph build
-```
-
-To run tests, use the following command:
-
-```
-graph test path_to_file
-```
