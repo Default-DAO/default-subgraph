@@ -5,7 +5,7 @@ import {
   Withdrawn
 } from '../../generated/templates/Treasury/Treasury';
 import { VaultTransaction } from '../../generated/schema'
-import { toDecimal } from '../utils/helpers';
+import { generateId, toDecimal } from '../utils/helpers';
 import { 
   getOrCreateOs, 
   getOrCreateVault, 
@@ -63,7 +63,7 @@ export function _handleVaultTransaction<T>(event: T, type: string): void {
   vaultSchema.save();
 
   // save the actual transaction data (deposit / withdraw)
-  let vaultTransactionId = `${os.toHexString()}-${vault.toHexString()}-${epoch}`;
+  let vaultTransactionId = generateId([os.toHexString(), vault.toHexString(), epoch.toString()])
   let vaultTransaction = new VaultTransaction(vaultTransactionId);
   vaultTransaction.os = osId;
   vaultTransaction.vault = vaultId;

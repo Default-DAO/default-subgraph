@@ -3,6 +3,11 @@
 - graph-node needs to be version 0.24.1
 - graph-cli needs to be version 0.22.1
 
+- installing graph-cli:
+  ```
+  yarn global add @graphprotocol/graph-cli
+  ```
+
 - start a local hardhat network (hostname must be 0.0.0.0):
   ```
   npx hardhat node --hostname 0.0.0.0
@@ -61,6 +66,10 @@ https://limechain.tech/blog/matchstick-what-it-is-and-how-to-use-it/
 
 - Must export the test functions in the mappings file when running the tests. These exports must be commented out during production.
 
+Before running the tests, make sure to build using the following command if you've made changes to any code:
+```
+graph build
+```
 
 To run tests, use the following command:
 

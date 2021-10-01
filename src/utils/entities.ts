@@ -1,4 +1,4 @@
-import { Address, BigDecimal, BigInt, Bytes } from '@graphprotocol/graph-ts'
+import { Address, BigDecimal, Bytes } from '@graphprotocol/graph-ts'
 
 import { 
   Member, 
@@ -67,7 +67,7 @@ export function getOrCreateMember(
     member.address = address.toHexString();
     member.os = getOrCreateOs(osAddress).id;
     member.epoch = getOrCreateEpoch(osAddress, epoch).id;
-    member.alias = alias.toHexString(); // default to address if no alias
+    member.alias = alias.toString()
     member.stakedAmt = BIGDECIMAL_ZERO;
     member.miningRewards = BIGDECIMAL_ZERO;
     member.bonus = BIGDECIMAL_ZERO;
@@ -83,14 +83,15 @@ export function getOrCreateEndorsement(
   fromAddress: Address,
   epoch: i32,
 ): Endorsement {
-  let id = generateId([toAddress.toHexString(), fromAddress.toHexString(), epoch.toString()]);
-  let endorsement = Endorsement.load(id);
+  let id = generateId([os.toHexString(), epoch.toString(), fromAddress.toHexString(), toAddress.toHexString()])
+  let endorsement = Endorsement.load(id)
   if (endorsement === null) {
-    endorsement = new Endorsement(id);
-    endorsement.amount = BIGDECIMAL_ZERO;
-    endorsement.epochNumber = epoch;
-    endorsement.to = getOrCreateMember(os, toAddress).id;
-    endorsement.from = getOrCreateMember(os, fromAddress).id;
+    endorsement = new Endorsement(id)
+    endorsement.os = getOrCreateOs(os).id
+    endorsement.amount = BIGDECIMAL_ZERO
+    endorsement.epochNumber = epoch
+    endorsement.to = getOrCreateMember(os, toAddress).id
+    endorsement.from = getOrCreateMember(os, fromAddress).id
   }
 
   return endorsement as Endorsement;
@@ -121,13 +122,13 @@ export function getOrCreateVault(
 
 export function getOrCreateAllocation(
   os: Address,
-  toMember: Address,
-  fromMember: Address,  
+  fromMember: Address, 
+  toMember: Address,   
   epochNumber: i32,    
   amount: BigDecimal = BIGDECIMAL_ZERO
 ): Allocation {
-  let id = generateId([os.toHexString(), epochNumber.toString(), fromMember.toHexString(), toMember.toHexString()]);
-  let allocation = Allocation.load(id);
+  let id = generateId([os.toHexString(), epochNumber.toString(), fromMember.toHexString(), toMember.toHexString()])
+  let allocation = Allocation.load(id)
   if (allocation == null) {
     allocation = new Allocation(id);
     allocation.committed = false;

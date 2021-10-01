@@ -29,6 +29,7 @@ import {
   toDecimal,
 } from '../utils/helpers';
 
+// export { runTests } from '../tests/Members.test'
 
 // MEMBERS ENTITY
 
@@ -50,7 +51,7 @@ export function handleTokensStaked(event: TokensStaked): void {
   handleStakeEvent(event, STAKETYPE_STAKE);
 }
 
-export function handleTokensUnStaked(event: TokensUnstaked): void {
+export function handleTokensUnstaked(event: TokensUnstaked): void {
   handleStakeEvent(event, STAKETYPE_UNSTAKE);
 }
 
