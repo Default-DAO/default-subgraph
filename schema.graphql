@@ -27,7 +27,6 @@ type DefaultOSFactory @entity {
 
 type DefaultOS @entity {
   id: ID! # address
-  alias: String!
   name: String!
 }
 

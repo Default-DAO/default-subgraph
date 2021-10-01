@@ -12,9 +12,8 @@ export function handleOSCreated(event: OSCreated): void {
   factory.save();
 
   let id = event.params.os;
-  let alias = event.params.alias_;
   let name = event.params.name; // id is the name of the OS
-  let defaultOs = getOrCreateOs(id, alias.toString(), name.toString());
+  let defaultOs = getOrCreateOs(id, name.toString());
   defaultOs.save();
 
   DefaultOSTemplate.create(id);

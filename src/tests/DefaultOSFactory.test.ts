@@ -15,7 +15,6 @@ export function runTests(): void {
 
     handleOSCreated(osCreatedEvent);
     
-    assert.fieldEquals(OS_ENTITY, ADDRESSES[0], "alias", "default");
     assert.fieldEquals(OS_ENTITY, ADDRESSES[0], "name", "Default");
 
     clearStore();

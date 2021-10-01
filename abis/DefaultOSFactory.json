@@ -7,13 +7,7 @@
         "internalType": "address",
         "name": "os",
         "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "bytes32",
-        "name": "alias_",
-        "type": "bytes32"
-      },
+      },      
       {
         "indexed": false,
         "internalType": "bytes32",

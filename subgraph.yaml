@@ -21,7 +21,7 @@ dataSources:
         - name: DefaultOSFactory
           file: ./abis/DefaultOSFactory.json
       eventHandlers:
-        - event: OSCreated(address,bytes32,bytes32)
+        - event: OSCreated(address,bytes32)
           handler: handleOSCreated
       file: ./src/mappings/DefaultOSFactory.ts
 templates:

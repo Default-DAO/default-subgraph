@@ -20,12 +20,7 @@ export function createOSCreatedMockEvent(os: string, alias: string, name: string
   let osCreatedEvent = new OSCreated(mockEvent.address, mockEvent.logIndex, mockEvent.transactionLogIndex,
     mockEvent.logType, mockEvent.block, mockEvent.transaction, mockEvent.parameters);
 
-  let osParam = new ethereum.EventParam("os", ethereum.Value.fromAddress(Address.fromString(os)));
-  let aliasParam = new ethereum.EventParam(
-    "alias",
-    //Not sure why just converting to Bytes straight from UTF8 fails
-    ethereum.Value.fromBytes(stringToBytes(alias))
-  );
+  let osParam = new ethereum.EventParam("os", ethereum.Value.fromAddress(Address.fromString(os)));  
   let nameParam = new ethereum.EventParam(
     "name",
     //Not sure why just converting to Bytes straight from UTF8 fails
@@ -34,7 +29,6 @@ export function createOSCreatedMockEvent(os: string, alias: string, name: string
 
   osCreatedEvent.parameters = new Array();
   osCreatedEvent.parameters.push(osParam);
-  osCreatedEvent.parameters.push(aliasParam);
   osCreatedEvent.parameters.push(nameParam);
 
   return osCreatedEvent
