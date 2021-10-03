@@ -10,7 +10,6 @@ import {
   Allocation,
   DefaultOSFactory
 } from '../../generated/schema';
-import { AllocationSet } from '../../generated/templates/PeerRewards/PeerRewards';
 
 import { BIGDECIMAL_ZERO, DEFAULT_DECIMALS } from './constants';
 import { generateId } from './helpers'
