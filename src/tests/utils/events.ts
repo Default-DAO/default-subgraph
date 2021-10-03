@@ -204,21 +204,21 @@ export function createEndorsementWithdrawnMockEvent(os: string, fromMember: stri
 // ######### PeerRewards ############
 // ##################################
 
-export function createPeerReviewMemberRegisteredMockEvent(os: string, member: string, epochRegisteredFor: i32, ptsRegistered: i32): PeerRewardsMemberRegistered {
+export function createPeerReviewMemberRegisteredMockEvent(os: string, member: string, ptsRegistered: i32, epochRegisteredFor: i32): PeerRewardsMemberRegistered {
   let mockEvent = newMockEvent()
   let prMemberRegisteredEvent = new PeerRewardsMemberRegistered(mockEvent.address, mockEvent.logIndex, mockEvent.transactionLogIndex,
     mockEvent.logType, mockEvent.block, mockEvent.transaction, mockEvent.parameters)
 
   let osParam = new ethereum.EventParam("os", ethereum.Value.fromAddress(Address.fromString(os)));
   let memberParam = new ethereum.EventParam("member", ethereum.Value.fromAddress(Address.fromString(member)));  
-  let epochRegisteredForParam = new ethereum.EventParam("epochRegisteredFor", ethereum.Value.fromI32(epochRegisteredFor));
   let ptsRegisteredParam = new ethereum.EventParam("ptsRegistered", ethereum.Value.fromI32(ptsRegistered));
+  let epochRegisteredForParam = new ethereum.EventParam("epochRegisteredFor", ethereum.Value.fromI32(epochRegisteredFor));  
 
   prMemberRegisteredEvent.parameters = new Array();
   prMemberRegisteredEvent.parameters.push(osParam);
   prMemberRegisteredEvent.parameters.push(memberParam);
-  prMemberRegisteredEvent.parameters.push(epochRegisteredForParam);
   prMemberRegisteredEvent.parameters.push(ptsRegisteredParam);
+  prMemberRegisteredEvent.parameters.push(epochRegisteredForParam);  
 
   return prMemberRegisteredEvent
 }

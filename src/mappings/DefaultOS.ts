@@ -8,7 +8,7 @@ import { getOrCreateOs, getOrCreateModule } from '../utils/entities';
 import { Token } from '../../generated/schema';
 import { generateId } from '../utils/helpers';
 
-//export { runTests } from '../tests/DefaultOS.test'
+// export { runTests } from '../tests/DefaultOS.test'
 
 export function handleModuleInstalled(event: ModuleInstalled): void {
   const os = event.params.os;

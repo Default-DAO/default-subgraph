@@ -9,7 +9,7 @@ import { debug } from "matchstick-as/assembly/log";
 export function runTests(): void {
   test("Should successfully save peer rewards registration", () => { 
     const memberRegisteredEvent = createPeerReviewMemberRegisteredMockEvent(
-      ADDRESSES[0], ADDRESSES[1], 1, 10
+      ADDRESSES[0], ADDRESSES[1], 10, 1
     );
 
     handleMemberRegistered(memberRegisteredEvent);
@@ -33,7 +33,8 @@ export function runTests(): void {
     const allocationId = generateId([ADDRESSES[0], "1", ADDRESSES[1], ADDRESSES[2]]);    
     assert.fieldEquals(ALLOCATION_ENTITY, allocationId, "os", ADDRESSES[0]);
     assert.fieldEquals(ALLOCATION_ENTITY, allocationId, "epochNumber", "1");
-    assert.fieldEquals(ALLOCATION_ENTITY, allocationId, "amount", "10");
+    assert.fieldEquals(ALLOCATION_ENTITY, allocationId, "points", "10");
+    assert.fieldEquals(ALLOCATION_ENTITY, allocationId, "rewards", "0");
     assert.fieldEquals(ALLOCATION_ENTITY, allocationId, "committed", "false");
     assert.fieldEquals(ALLOCATION_ENTITY, allocationId, "from", ADDRESSES[1]);
     assert.fieldEquals(ALLOCATION_ENTITY, allocationId, "to", ADDRESSES[2]);
@@ -47,7 +48,8 @@ export function runTests(): void {
     const allocationId2 = generateId([ADDRESSES[0], "1", ADDRESSES[2], ADDRESSES[1]]);    
     assert.fieldEquals(ALLOCATION_ENTITY, allocationId2, "os", ADDRESSES[0]);
     assert.fieldEquals(ALLOCATION_ENTITY, allocationId2, "epochNumber", "1");
-    assert.fieldEquals(ALLOCATION_ENTITY, allocationId2, "amount", "5");
+    assert.fieldEquals(ALLOCATION_ENTITY, allocationId2, "points", "5");
+    assert.fieldEquals(ALLOCATION_ENTITY, allocationId, "rewards", "0");
     assert.fieldEquals(ALLOCATION_ENTITY, allocationId2, "committed", "false");
     assert.fieldEquals(ALLOCATION_ENTITY, allocationId2, "from", ADDRESSES[2]);
     assert.fieldEquals(ALLOCATION_ENTITY, allocationId2, "to", ADDRESSES[1]);
@@ -65,7 +67,8 @@ export function runTests(): void {
     const allocationId = generateId([ADDRESSES[0], "1", ADDRESSES[1], ADDRESSES[2]]);    
     assert.fieldEquals(ALLOCATION_ENTITY, allocationId, "os", ADDRESSES[0]);
     assert.fieldEquals(ALLOCATION_ENTITY, allocationId, "epochNumber", "1");
-    assert.fieldEquals(ALLOCATION_ENTITY, allocationId, "amount", "10");
+    assert.fieldEquals(ALLOCATION_ENTITY, allocationId, "points", "10");
+    assert.fieldEquals(ALLOCATION_ENTITY, allocationId, "rewards", "0");
     assert.fieldEquals(ALLOCATION_ENTITY, allocationId, "committed", "false");
     assert.fieldEquals(ALLOCATION_ENTITY, allocationId, "from", ADDRESSES[1]);
     assert.fieldEquals(ALLOCATION_ENTITY, allocationId, "to", ADDRESSES[2]);
@@ -79,7 +82,8 @@ export function runTests(): void {
     const allocationId2 = generateId([ADDRESSES[0], "1", ADDRESSES[1], ADDRESSES[2]]);    
     assert.fieldEquals(ALLOCATION_ENTITY, allocationId2, "os", ADDRESSES[0]);
     assert.fieldEquals(ALLOCATION_ENTITY, allocationId2, "epochNumber", "1");
-    assert.fieldEquals(ALLOCATION_ENTITY, allocationId2, "amount", "100");
+    assert.fieldEquals(ALLOCATION_ENTITY, allocationId2, "points", "100");
+    assert.fieldEquals(ALLOCATION_ENTITY, allocationId, "rewards", "0");
     assert.fieldEquals(ALLOCATION_ENTITY, allocationId2, "committed", "false");
     assert.fieldEquals(ALLOCATION_ENTITY, allocationId2, "from", ADDRESSES[1]);
     assert.fieldEquals(ALLOCATION_ENTITY, allocationId2, "to", ADDRESSES[2]);
@@ -97,20 +101,22 @@ export function runTests(): void {
     const allocationId = generateId([ADDRESSES[0], "1", ADDRESSES[1], ADDRESSES[2]]);    
     assert.fieldEquals(ALLOCATION_ENTITY, allocationId, "os", ADDRESSES[0]);
     assert.fieldEquals(ALLOCATION_ENTITY, allocationId, "epochNumber", "1");
-    assert.fieldEquals(ALLOCATION_ENTITY, allocationId, "amount", "10");
+    assert.fieldEquals(ALLOCATION_ENTITY, allocationId, "points", "10");
+    assert.fieldEquals(ALLOCATION_ENTITY, allocationId, "rewards", "0");
     assert.fieldEquals(ALLOCATION_ENTITY, allocationId, "committed", "false");
     assert.fieldEquals(ALLOCATION_ENTITY, allocationId, "from", ADDRESSES[1]);
     assert.fieldEquals(ALLOCATION_ENTITY, allocationId, "to", ADDRESSES[2]);
 
     const allocationGivenEvent = createAllocationGivenMockEvent(
-      ADDRESSES[0], ADDRESSES[1], ADDRESSES[2], 10, 1
+      ADDRESSES[0], ADDRESSES[1], ADDRESSES[2], 20, 1
     );
 
     handleAllocationGiven(allocationGivenEvent);
     
     assert.fieldEquals(ALLOCATION_ENTITY, allocationId, "os", ADDRESSES[0]);
     assert.fieldEquals(ALLOCATION_ENTITY, allocationId, "epochNumber", "1");
-    assert.fieldEquals(ALLOCATION_ENTITY, allocationId, "amount", "10");
+    assert.fieldEquals(ALLOCATION_ENTITY, allocationId, "points", "10");
+    assert.fieldEquals(ALLOCATION_ENTITY, allocationId, "rewards", "20");
     assert.fieldEquals(ALLOCATION_ENTITY, allocationId, "committed", "true");
     assert.fieldEquals(ALLOCATION_ENTITY, allocationId, "from", ADDRESSES[1]);
     assert.fieldEquals(ALLOCATION_ENTITY, allocationId, "to", ADDRESSES[2]);

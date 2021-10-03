@@ -171,7 +171,8 @@ type Allocation @entity {
   id: ID!  # os-epoch-from-to
   os: DefaultOS!
   epochNumber: Int!
-  amount: BigDecimal!
+  points: BigDecimal!
+  rewards: BigDecimal!
   committed: Boolean!
   from: Member!
   to: Member!
@@ -185,7 +186,7 @@ type Endorsement @entity {
   id: ID!  # os-epoch-from-to
   os: DefaultOS!
   epochNumber: Int!
-  amount: BigDecimal!
+  amount: BigDecimal!  
   from: Member!
   to: Member!
 }

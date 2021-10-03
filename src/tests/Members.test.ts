@@ -121,7 +121,6 @@ export function runTests(): void {
     let fromId = generateId([ADDRESSES[0], ADDRESSES[1]]);
     let toId = generateId([ADDRESSES[0], ADDRESSES[2]]); 
     assert.fieldEquals(ENDORSEMENT_ENTITY, endorsementId, "os", ADDRESSES[0]);
-    assert.fieldEquals(ENDORSEMENT_ENTITY, endorsementId, "os", ADDRESSES[0]);
     assert.fieldEquals(ENDORSEMENT_ENTITY, endorsementId, "epochNumber", "1");
     assert.fieldEquals(ENDORSEMENT_ENTITY, endorsementId, "amount", "0.01");
     assert.fieldEquals(ENDORSEMENT_ENTITY, endorsementId, "from", fromId);
