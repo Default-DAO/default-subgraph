@@ -10,6 +10,7 @@ import {
   Allocation,
   DefaultOSFactory
 } from '../../generated/schema';
+import { AllocationSet } from '../../generated/templates/PeerRewards/PeerRewards';
 
 import { BIGDECIMAL_ZERO, DEFAULT_DECIMALS } from './constants';
 import { generateId } from './helpers'
@@ -125,7 +126,7 @@ export function getOrCreateAllocation(
   fromMember: Address, 
   toMember: Address,   
   epochNumber: i32,    
-  amount: BigDecimal = BIGDECIMAL_ZERO
+  points: BigDecimal = BIGDECIMAL_ZERO
 ): Allocation {
   let id = generateId([os.toHexString(), epochNumber.toString(), fromMember.toHexString(), toMember.toHexString()])
   let allocation = Allocation.load(id)
@@ -136,7 +137,8 @@ export function getOrCreateAllocation(
     allocation.os = os.toHexString();
     allocation.from = fromMember.toHexString();
     allocation.to = toMember.toHexString();
-    allocation.amount = amount;
+    allocation.points = points;
+    allocation.rewards = BIGDECIMAL_ZERO;
   } 
 
   return allocation as Allocation;

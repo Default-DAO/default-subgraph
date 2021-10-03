@@ -18,7 +18,7 @@ import { PEER_REWARD } from '../utils/constants';
 import { BigDecimal, BigInt } from '@graphprotocol/graph-ts';
 import { generateEventId } from '../utils/helpers';
 
-//export { runTests } from '../tests/PeerRewards.test'
+// export { runTests } from '../tests/PeerRewards.test'
 
 // Record when a contributor has successfully registered for the allocations
 export function handleMemberRegistered(event: MemberRegistered): void {
@@ -46,7 +46,7 @@ export function handleAllocationSet(event: AllocationSet): void {
     event.params.currentEpoch,
     new BigDecimal(BigInt.fromI32(event.params.allocPts)),
   );
-  allocation.amount = new BigDecimal(BigInt.fromI32(event.params.allocPts))
+  allocation.points = new BigDecimal(BigInt.fromI32(event.params.allocPts));
 
   allocation.save();
 }
@@ -60,6 +60,7 @@ export function handleAllocationGiven(event: AllocationGiven): void {
     event.params.currentEpoch
   );
 
+  allocation.rewards = event.params.allocGiven.toBigDecimal();
   allocation.committed = true;
   allocation.save();
 }

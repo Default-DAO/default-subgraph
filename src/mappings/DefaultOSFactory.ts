@@ -3,7 +3,7 @@ import { FACTORY_ADDRESS } from '../utils/constants';
 import { DefaultOS as DefaultOSTemplate } from '../../generated/templates';
 import { getOrCreateFactory, getOrCreateOs } from '../utils/entities';
 
-//export { runTests } from '../tests/DefaultOSFactory.test'
+// export { runTests } from '../tests/DefaultOSFactory.test'
 
 export function handleOSCreated(event: OSCreated): void {
   // look for the factory entity, or create a new one

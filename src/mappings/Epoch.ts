@@ -1,7 +1,7 @@
 import { EpochIncremented } from '../../generated/templates/Epoch/Epoch'
 import { getOrCreateEpoch } from '../utils/entities'
 
-//export { runTests } from '../tests/Epoch.test'
+// export { runTests } from '../tests/Epoch.test'
 
 export function handleEpochIncremented(event: EpochIncremented): void {
   // address of the os contract that generated the event
