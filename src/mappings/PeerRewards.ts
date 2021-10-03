@@ -18,7 +18,7 @@ import { PEER_REWARD } from '../utils/constants';
 import { BigDecimal, BigInt } from '@graphprotocol/graph-ts';
 import { generateEventId } from '../utils/helpers';
 
-// export { runTests } from '../tests/PeerRewards.test'
+//export { runTests } from '../tests/PeerRewards.test'
 
 // Record when a contributor has successfully registered for the allocations
 export function handleMemberRegistered(event: MemberRegistered): void {

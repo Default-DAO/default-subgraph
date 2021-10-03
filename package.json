@@ -7,7 +7,8 @@
     "codegen": "graph codegen",
     "build": "graph build",    
     "deploy": "graph deploy zaqk/default-subgraph --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/",
-    "deploy-local": "graph deploy zaqk/default-subgraph --ipfs http://localhost:5001 --node http://127.0.0.1:8020"
+    "deploy-local": "graph deploy zaqk/default-subgraph --ipfs http://localhost:5001 --node http://127.0.0.1:8020",
+    "test": "graph build && graph test DefaultOSFactory && graph test DefaultOS && graph test Epoch && graph test Members && graph test PeerRewards"
   },
   "devDependencies": {
     "@graphprotocol/graph-cli": "^0.22.0",
