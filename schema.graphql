@@ -51,6 +51,7 @@ type Member @entity {
   miningRewards: BigDecimal!
   bonus: BigDecimal!
   peerRewards: BigDecimal!
+  endorsementsReceived: BigDecimal!
 }
 
 enum StakeType {
