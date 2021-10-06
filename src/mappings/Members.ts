@@ -118,12 +118,11 @@ export function handleEndorsementEvent<T>(
   );
   if (type === ENDORSEMENTTYPE_GIVEN) {
     endorsement.amount = endorsement.amount.plus(amount);
+    toMember.endorsementsReceived = toMember.endorsementsReceived.plus(amount)
   } else {
     endorsement.amount = endorsement.amount.minus(amount);
-  }
-
-  endorsement.save();
-
+    toMember.endorsementsReceived = toMember.endorsementsReceived.minus(amount)
+  }  
 
   // if the endorsement amount is 0 then delete the endorsement row
   let endorsementRevoked = endorsement.amount === BIGDECIMAL_ZERO;
@@ -133,4 +132,5 @@ export function handleEndorsementEvent<T>(
     // otherwise save it
     endorsement.save();
   }
+  toMember.save()
 }

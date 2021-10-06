@@ -72,6 +72,7 @@ export function getOrCreateMember(
     member.miningRewards = BIGDECIMAL_ZERO;
     member.bonus = BIGDECIMAL_ZERO;
     member.peerRewards = BIGDECIMAL_ZERO;
+    member.endorsementsReceived = BIGDECIMAL_ZERO
   }
 
   return member as Member;
@@ -134,8 +135,8 @@ export function getOrCreateAllocation(
     allocation.committed = false;
     allocation.epochNumber = epochNumber;
     allocation.os = os.toHexString();
-    allocation.from = fromMember.toHexString();
-    allocation.to = toMember.toHexString();
+    allocation.from = getOrCreateMember(os, fromMember).id
+    allocation.to = getOrCreateMember(os, toMember).id
     allocation.points = points;
     allocation.rewards = BIGDECIMAL_ZERO;
   } 

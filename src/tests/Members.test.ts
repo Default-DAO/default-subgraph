@@ -21,6 +21,11 @@ export function runTests(): void {
     assert.fieldEquals(MEMBER_ENTITY, memberId, "address", ADDRESSES[1]);
     assert.fieldEquals(MEMBER_ENTITY, memberId, "alias", alias);
     assert.fieldEquals(MEMBER_ENTITY, memberId, "epoch", epochId);
+    assert.fieldEquals(MEMBER_ENTITY, memberId, "stakedAmt", "0");
+    assert.fieldEquals(MEMBER_ENTITY, memberId, "miningRewards", "0");
+    assert.fieldEquals(MEMBER_ENTITY, memberId, "bonus", "0");
+    assert.fieldEquals(MEMBER_ENTITY, memberId, "peerRewards", "0");
+    assert.fieldEquals(MEMBER_ENTITY, memberId, "endorsementsReceived", "0");    
 
     clearStore()
   });
@@ -124,7 +129,23 @@ export function runTests(): void {
     assert.fieldEquals(ENDORSEMENT_ENTITY, endorsementId, "epochNumber", "1");
     assert.fieldEquals(ENDORSEMENT_ENTITY, endorsementId, "amount", "0.01");
     assert.fieldEquals(ENDORSEMENT_ENTITY, endorsementId, "from", fromId);
-    assert.fieldEquals(ENDORSEMENT_ENTITY, endorsementId, "to", toId);
+    assert.fieldEquals(ENDORSEMENT_ENTITY, endorsementId, "to", toId);    
+    assert.fieldEquals(MEMBER_ENTITY, toId, "endorsementsReceived", "0.01");
+
+    const endorsementGivenEvent2 = createEndorsementGivenMockEvent(
+      ADDRESSES[0], ADDRESSES[3], ADDRESSES[2], 20, 1
+    );
+
+    handleEndorsementGiven(endorsementGivenEvent2);
+
+    let endorsementId2 = generateId([ADDRESSES[0], "1", ADDRESSES[3], ADDRESSES[2]]);
+    let fromId2 = generateId([ADDRESSES[0], ADDRESSES[3]]);
+    assert.fieldEquals(ENDORSEMENT_ENTITY, endorsementId2, "os", ADDRESSES[0]);
+    assert.fieldEquals(ENDORSEMENT_ENTITY, endorsementId2, "epochNumber", "1");
+    assert.fieldEquals(ENDORSEMENT_ENTITY, endorsementId2, "amount", "0.02");
+    assert.fieldEquals(ENDORSEMENT_ENTITY, endorsementId2, "from", fromId2);
+    assert.fieldEquals(ENDORSEMENT_ENTITY, endorsementId2, "to", toId);
+    assert.fieldEquals(MEMBER_ENTITY, toId, "endorsementsReceived", "0.03");
 
     clearStore()
   });
@@ -150,6 +171,7 @@ export function runTests(): void {
     assert.fieldEquals(ENDORSEMENT_ENTITY, endorsementId, "amount", "0.005");
     assert.fieldEquals(ENDORSEMENT_ENTITY, endorsementId, "from", fromId);
     assert.fieldEquals(ENDORSEMENT_ENTITY, endorsementId, "to", toId);
+    assert.fieldEquals(MEMBER_ENTITY, toId, "endorsementsReceived", "0.005");
 
     clearStore();
   });

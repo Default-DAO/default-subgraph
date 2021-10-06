@@ -1,7 +1,7 @@
 import { OSCreated } from '../../generated/DefaultOSFactory/DefaultOSFactory';
 import { FACTORY_ADDRESS } from '../utils/constants';
 import { DefaultOS as DefaultOSTemplate } from '../../generated/templates';
-import { getOrCreateFactory, getOrCreateOs } from '../utils/entities';
+import { getOrCreateEpoch, getOrCreateFactory, getOrCreateOs } from '../utils/entities';
 
 // export { runTests } from '../tests/DefaultOSFactory.test'
 
@@ -14,6 +14,10 @@ export function handleOSCreated(event: OSCreated): void {
   let os = event.params.os;
   let name = event.params.id; // id is the name of the OS
   let defaultOs = getOrCreateOs(os, name.toString());
+
+  let epoch = getOrCreateEpoch(os, 1);
+
+  epoch.save();
   defaultOs.save();
 
   DefaultOSTemplate.create(os);

@@ -51,6 +51,7 @@ type Member @entity {
   miningRewards: BigDecimal!
   bonus: BigDecimal!
   peerRewards: BigDecimal!
+  endorsementsReceived: BigDecimal!
 }
 
 enum StakeType {
@@ -75,8 +76,7 @@ type Stake @entity {
 type Epoch @entity {
   id: ID!  # os-number
   os: DefaultOS!
-  number: Int!
-  time: BigInt!
+  number: Int!  
 
   staked: BigDecimal!      
 }
