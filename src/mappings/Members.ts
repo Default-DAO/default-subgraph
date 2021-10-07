@@ -40,6 +40,7 @@ export function handleMemberRegistered(event: MemberRegistered): void {
     event.params.alias_,
     event.params.epoch
   );
+  member.alias = event.params.alias_.toString(),
   
   member.save();
 }
