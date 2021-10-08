@@ -5,6 +5,7 @@ import { STAKETYPE_STAKE, STAKETYPE_UNSTAKE } from '../utils/constants';
 import { handleEndorsementGiven, handleEndorsementWithdrawn, handleMemberRegistered, handleTokensStaked, handleTokensUnstaked } from '../mappings/Members';
 import { generateEventId, generateId } from '../utils/helpers';
 import { debug } from "matchstick-as/assembly/log";
+import { getOrCreateEpoch } from '../utils/entities';
 
 export function runTests(): void {
   test("Should successfully create member", () => { 
@@ -27,6 +28,34 @@ export function runTests(): void {
     assert.fieldEquals(MEMBER_ENTITY, memberId, "peerRewards", "0");
     assert.fieldEquals(MEMBER_ENTITY, memberId, "endorsementsReceived", "0");    
 
+    clearStore()
+  });
+
+  test("Should successfully chanage alias", () => { 
+    const alias = 'alias1';
+    const memberRegisteredEvent = createMemberRegisteredMockEvent(
+      ADDRESSES[0], ADDRESSES[1], alias, 1
+    );
+
+    handleMemberRegistered(memberRegisteredEvent);
+    
+    const memberId = generateId([ADDRESSES[0], ADDRESSES[1]]);  
+    const epochId = generateId([ADDRESSES[0], "1"]);
+
+    assert.fieldEquals(MEMBER_ENTITY, memberId, "alias", alias);
+    assert.fieldEquals(MEMBER_ENTITY, memberId, "epoch", epochId);
+
+    const alias2 = 'alias2';
+    const memberRegisteredEvent2 = createMemberRegisteredMockEvent(
+      ADDRESSES[0], ADDRESSES[1], alias2, 2
+    );
+
+    handleMemberRegistered(memberRegisteredEvent2);    
+
+    assert.fieldEquals(MEMBER_ENTITY, memberId, "alias", alias2);
+    //Epoch should not change on change alias!
+    assert.fieldEquals(MEMBER_ENTITY, memberId, "epoch", epochId);
+    
     clearStore()
   });
 
