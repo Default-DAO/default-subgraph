@@ -5,7 +5,6 @@ import { DefaultOS } from "../../generated/schema";
 import { createModuleInstalledMockEvent, createOwnershipTransferredMockEvent } from './utils/events';
 import { generateId } from '../utils/helpers';
 import { ADDRESSES, TOKEN_ENTITY, MODULE_ENTITY, OS_ENTITY } from './utils/constants';
-import { debug } from "matchstick-as/assembly/log";
 
 export function runTests(): void {
   test("Should save token entity", () => {    

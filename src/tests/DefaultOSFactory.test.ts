@@ -4,7 +4,6 @@ import { DefaultOSFactory } from "../../generated/schema";
 import { createOSCreatedMockEvent } from './utils/events';
 import { ADDRESSES, EPOCH_ENTITY, FACTORY_ENTITY, OS_ENTITY } from './utils/constants';
 import { FACTORY_ADDRESS } from '../utils/constants';
-import { debug } from "matchstick-as/assembly/log";
 import { generateId } from '../utils/helpers';
 
 export function runTests(): void {

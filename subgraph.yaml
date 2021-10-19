@@ -8,7 +8,12 @@ dataSources:
     name: DefaultOSFactory
     network: mainnet
     source:
-      address: '0x5FbDB2315678afecb367f032d93F642f64180aa3'
+      # Development factory address
+      address: '0x5FbDB2315678afecb367f032d93F642f64180aa3'      
+      # Matic factory address
+      # address: '0x14cD7473871fb2dD272490EBde5BD05EaB59B58B'
+      # Fantom factory address
+      # address: '0xd093D0D829c4D775e84689E7e60Bd36a51Dc07f9'
       abi: DefaultOSFactory
     mapping:
       kind: ethereum/events

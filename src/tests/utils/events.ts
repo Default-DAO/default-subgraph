@@ -5,7 +5,6 @@ import { Address, Bytes, ethereum } from "@graphprotocol/graph-ts";
 import { EpochIncremented } from '../../../generated/templates/Epoch/Epoch';
 import { EndorsementGiven, EndorsementWithdrawn, MemberRegistered, TokensStaked, TokensUnstaked } from '../../../generated/templates/Members/Members';
 import { MemberRegistered as PeerRewardsMemberRegistered, AllocationSet, AllocationGiven, RewardsClaimed } from '../../../generated/templates/PeerRewards/PeerRewards';
-import { debug } from "matchstick-as/assembly/log";
 
 function stringToBytes(str: string): Bytes {
   return Bytes.fromHexString(Bytes.fromUTF8(str).toHexString()) as Bytes

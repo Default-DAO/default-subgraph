@@ -8,6 +8,7 @@ import {
   Vault,
   Module,
   Allocation,
+  CommittedAllocation,
   DefaultOSFactory
 } from '../../generated/schema';
 
@@ -125,23 +126,42 @@ export function getOrCreateAllocation(
   os: Address,
   fromMember: Address, 
   toMember: Address,   
-  epochNumber: i32,    
   points: BigDecimal = BIGDECIMAL_ZERO
 ): Allocation {
-  let id = generateId([os.toHexString(), epochNumber.toString(), fromMember.toHexString(), toMember.toHexString()])
+  let id = generateId([os.toHexString(), fromMember.toHexString(), toMember.toHexString()])
   let allocation = Allocation.load(id)
   if (allocation == null) {
     allocation = new Allocation(id);
-    allocation.committed = false;
-    allocation.epochNumber = epochNumber;
     allocation.os = os.toHexString();
     allocation.from = getOrCreateMember(os, fromMember).id
     allocation.to = getOrCreateMember(os, toMember).id
     allocation.points = points;
-    allocation.rewards = BIGDECIMAL_ZERO;
   } 
 
   return allocation as Allocation;
+}
+
+export function getOrCreateCommittedAllocation(
+  os: Address,
+  fromMember: Address, 
+  toMember: Address,   
+  epochNumber: i32,    
+  points: BigDecimal = BIGDECIMAL_ZERO,
+  rewards: BigDecimal = BIGDECIMAL_ZERO
+): CommittedAllocation {
+  let id = generateId([os.toHexString(), fromMember.toHexString(), toMember.toHexString()])
+  let commitedAllocation = CommittedAllocation.load(id)
+  if (commitedAllocation == null) {
+    commitedAllocation = new CommittedAllocation(id);
+    commitedAllocation.epochNumber = epochNumber;
+    commitedAllocation.os = os.toHexString();
+    commitedAllocation.from = getOrCreateMember(os, fromMember).id
+    commitedAllocation.to = getOrCreateMember(os, toMember).id
+    commitedAllocation.points = points;
+    commitedAllocation.rewards = rewards;
+  }
+
+  return commitedAllocation as CommittedAllocation;
 }
 
 export function getOrCreateModule(os: Address, module: Address, moduleKeyCode: string): Module {

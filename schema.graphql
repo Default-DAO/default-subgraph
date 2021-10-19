@@ -170,13 +170,21 @@ type RewardsRegistration @entity {
 type Allocation @entity {
   id: ID!  # os-epoch-from-to
   os: DefaultOS!
-  epochNumber: Int!
   points: BigDecimal!
-  rewards: BigDecimal!
-  committed: Boolean!
   from: Member!
   to: Member!
 }
+
+type CommittedAllocation @entity {
+  id: ID!  # os-epoch-from-to
+  os: DefaultOS!
+  epochNumber: Int!
+  points: BigDecimal!
+  rewards: BigDecimal!
+  from: Member!
+  to: Member!
+}
+
 
 ##################################
 ########### ENDORSEMENT ##########

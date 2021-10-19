@@ -12,6 +12,7 @@ import {
   getOrCreateOs,
   getOrCreateMember,
   getOrCreateAllocation,
+  getOrCreateCommittedAllocation
 } from '../utils/entities';
 import { generateId } from '../utils/helpers'
 import { PEER_REWARD } from '../utils/constants';
@@ -43,7 +44,6 @@ export function handleAllocationSet(event: AllocationSet): void {
     event.params.os,     
     event.params.fromMember, 
     event.params.toMember,    
-    event.params.currentEpoch,
     new BigDecimal(BigInt.fromI32(event.params.allocPts)),
   );
   allocation.points = new BigDecimal(BigInt.fromI32(event.params.allocPts));
@@ -52,17 +52,21 @@ export function handleAllocationSet(event: AllocationSet): void {
 }
 
 // Record when a contributor gives an allocation
-export function handleAllocationGiven(event: AllocationGiven): void {  
+export function handleAllocationGiven(event: AllocationGiven): void {
   let allocation = getOrCreateAllocation(
     event.params.os,     
     event.params.fromMember, 
+    event.params.toMember    
+  )
+  let committedAllocation = getOrCreateCommittedAllocation(
+    event.params.os,     
+    event.params.fromMember, 
     event.params.toMember,    
-    event.params.currentEpoch
-  );
-
-  allocation.rewards = event.params.allocGiven.toBigDecimal();
-  allocation.committed = true;
-  allocation.save();
+    event.params.currentEpoch,
+    allocation.points,
+    event.params.allocGiven.toBigDecimal()
+  );  
+  committedAllocation.save();
 }
 
 // Record when a contributor claims their rewarded allocations

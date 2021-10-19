@@ -3,7 +3,6 @@ import { createEpochIncrementedMockEvent } from './utils/events';
 import { ADDRESSES, EPOCH_ENTITY } from './utils/constants';
 import { handleEpochIncremented } from '../mappings/Epoch';
 import { generateId } from '../utils/helpers';
-import { debug } from "matchstick-as/assembly/log";
 
 export function runTests(): void {
   test("Should save updated epochs successfully", () => {    
