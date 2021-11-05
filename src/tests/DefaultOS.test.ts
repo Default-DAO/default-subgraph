@@ -1,5 +1,4 @@
 import { test, assert, clearStore } from 'matchstick-as/assembly/index'
-import { Bytes } from "@graphprotocol/graph-ts";
 import { handleModuleInstalled, handleOwnershipTransferred } from "../mappings/DefaultOS";
 import { DefaultOS } from "../../generated/schema";
 import { createModuleInstalledMockEvent, createOwnershipTransferredMockEvent } from './utils/events';
